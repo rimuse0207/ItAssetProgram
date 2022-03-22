@@ -20,7 +20,7 @@ const MoniterMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
     const MonitorInfo = useSelector((state: RootState) => state.MonitorAssetData.MonitorAssetData);
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
     const dispatch = useDispatch();
-    console.log('COmponents', MonitorInfo);
+
     useEffect(() => {
         getDataAssetDeskTop();
     }, [SelectCompany, FilteringData]);
@@ -40,7 +40,6 @@ const MoniterMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
     };
     const handlePlusUsered = async (data: DeskTopInfoDataType) => {
         try {
-            console.log(data);
             setSelectAssetData(data);
             setUserAddModalOpen(true);
         } catch (error) {

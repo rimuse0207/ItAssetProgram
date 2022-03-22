@@ -16,3 +16,9 @@ export const RandomCodeDataGet = (RequestURL: string, ParamasData: {}) => {
         params: ParamasData,
     });
 };
+
+export const PersonalInfoGet = (RequestURL: string, ParamasData: {}) => {
+    return request.get(RequestURL, {
+        params: ParamasData,
+    });
+};

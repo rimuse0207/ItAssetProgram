@@ -122,7 +122,6 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
 
     const handlePlusUsered = async (data: DeskTopInfoDataType) => {
         try {
-            console.log(data);
             setSelectAssetData(data);
             setUserAddModalOpen(true);
         } catch (error) {

@@ -8,6 +8,7 @@ import { VscGraphLine } from 'react-icons/vsc';
 import { AiFillFolderOpen, AiFillSetting } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import { RouteComponentProps } from 'react-router-dom';
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
     MenuCheckedSubLists: {};
@@ -19,7 +20,10 @@ const NavigationMenuBarMainPageMainDivBox = styled.nav<NavigationMenuBarMainPage
     min-height: 100vh;
     position: sticky;
 
-    background-color: #515151;
+    background-color: #368;
+    /* background-color: rgb(51, 63, 80); */
+
+    /* background-color: rgb(32, 56, 100); */
     ${props =>
         props.menuStatus
             ? `animation-name: MenustatushiddenOn;
@@ -122,9 +126,10 @@ const NavigationMenuBarMainPageMainDivBox = styled.nav<NavigationMenuBarMainPage
             .MenuListsCotainerUl {
                 li {
                     color: white;
-                    padding: 20px;
+                    padding: 12px;
                     width: 200px;
                     :hover {
+                        background-color: darkgray;
                         cursor: pointer;
                     }
                 }
@@ -172,6 +177,7 @@ const NavigationMenuBarMainPage = () => {
         license: true,
     });
     let { type } = useParams<URLParams>();
+    console.log();
     return (
         <NavigationMenuBarMainPageMainDivBox menuStatus={MenuHiddenCheck} MenuCheckedSubLists={MenuCheckedSubLists}>
             {MenuHiddenCheck ? (
@@ -224,13 +230,15 @@ const NavigationMenuBarMainPage = () => {
                     </div>
                     <div className="MenuListsCotainerDiv">
                         <ul className="MenuListsCotainerUl">
-                            <li>
-                                <div className="listStyleDivBox">
-                                    <div>
-                                        <BsFillPersonFill></BsFillPersonFill>
+                            <li className={window.location.pathname === '/Personal' ? 'NowPageSelect' : ''}>
+                                <Link to="/Personal">
+                                    <div className="listStyleDivBox">
+                                        <div>
+                                            <BsFillPersonFill></BsFillPersonFill>
+                                        </div>
+                                        <div className="listStyleSubLists">Personal</div>
                                     </div>
-                                    <div className="listStyleSubLists">Personal</div>
-                                </div>
+                                </Link>
                             </li>
                             <li>
                                 <div className="listStyleDivBox">
@@ -286,7 +294,7 @@ const NavigationMenuBarMainPage = () => {
                                     ''
                                 )}
                             </div>
-                            <li>
+                            <li className={window.location.pathname === '/PCAsset' ? 'NowPageSelect' : ''}>
                                 <Link to="/PCAsset">
                                     <div className="listStyleDivBox">
                                         <div>

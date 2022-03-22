@@ -134,9 +134,10 @@ const PcAssetMainPage = () => {
                         </div>
                     </LicenseMainPageMainDivBox>
 
-                    {CompanySelectAccessKey.map((list, i) =>
+                    {/* {CompanySelectAccessKey.map((list, i) =>
                         list.AccessKey ? <DeskTopMainPage SelectCompany={list.name} type={type} key={list.name}></DeskTopMainPage> : ''
-                    )}
+                    )} */}
+                    <h1>IT 자산 프로그램</h1>
                 </LicenseMainPageContentMainPageDiv>
             </div>
         </div>

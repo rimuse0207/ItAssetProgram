@@ -11,6 +11,7 @@ import { VolumeLicenseMainPageProps, LicenseDataType } from './VolumeLicenseData
 import { License_getLicenseDataThunk } from '../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Models';
+import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
 export const LicensMainTableIncludeBox = styled.div`
     table.type09 {
         border-collapse: collapse;
@@ -129,6 +130,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
 
     return (
         <div>
+            <LicenseGoogleGraphMainPage></LicenseGoogleGraphMainPage>
             <DownLoadMainPage
                 SelectCompany={SelectCompany}
                 UserAddModals={UserAddModals}
