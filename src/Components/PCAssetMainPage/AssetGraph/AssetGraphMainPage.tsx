@@ -39,24 +39,6 @@ type AssetGraphMainPageProps = {
 };
 
 const AssetGraphMainPage = ({ assetType, usedData }: AssetGraphMainPageProps) => {
-    // const options = {
-    //     plugins: {
-    //         tooltip: {
-    //             boxWidth: 5,
-    //         },
-    //         legend: {
-    //             display: true,
-    //             position: 'left',
-    //             labels: {},
-    //         },
-    //     },
-
-    //     animation: { duration: 500 },
-    //     responsive: false,
-    //     maintainAspectRatio: false,
-    //     // aspectRatio: 1,
-    // };
-
     const options = {
         responsive: true,
         plugins: {
@@ -75,8 +57,8 @@ const AssetGraphMainPage = ({ assetType, usedData }: AssetGraphMainPageProps) =>
         datasets: [
             {
                 label: assetType,
-                backgroundColor: ['rgba(178, 31, 0, 0.7)', 'rgba(47, 222, 0, 0.7)', 'rgba(32, 122, 199, 0.7)'],
-                hoverBackgroundColor: ['rgba(80, 24, 0, 1)', '#175000', '#200bf9'],
+                backgroundColor: ['rgba(178, 31, 0, 0.7)', 'rgba(32, 122, 199, 0.7)', 'rgba(47, 222, 0, 0.7)'],
+                hoverBackgroundColor: ['rgba(80, 24, 0, 1)', '#200bf9', '#175000'],
                 data: usedData,
             },
         ],

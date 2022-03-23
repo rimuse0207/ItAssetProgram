@@ -92,7 +92,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
     useEffect(() => {
         GetInfoLicensData();
-        console.log(LicenseData);
     }, [SortTable, type]);
 
     useEffect(() => {
@@ -100,7 +99,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     }, [type]);
 
     const handleClicksUserAdd = (data: LicenseDataType) => {
-        console.log(data);
         setUserClickLicenseData(data);
         setUserAddModals(true);
     };
@@ -129,8 +127,8 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     };
 
     return (
-        <div>
-            <LicenseGoogleGraphMainPage></LicenseGoogleGraphMainPage>
+        <div style={{ marginBottom: '100px' }}>
+            <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
             <DownLoadMainPage
                 SelectCompany={SelectCompany}
                 UserAddModals={UserAddModals}

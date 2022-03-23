@@ -13,6 +13,7 @@ const LicenseMainPageMainDivBox = styled.div`
     border-bottom: 2px solid lightgray;
     margin-top: 20px;
     margin-bottom: 20px;
+
     ul {
         display: flex;
         li {
@@ -52,6 +53,26 @@ const LicenseMainPageContentMainPageDiv = styled.div`
     min-height: 100vh;
     width: 100%;
     background-color: #efefef;
+    max-height: 100vh;
+    overflow: auto;
+    direction: ltr;
+    scrollbar-color: #d4aa70 #e4e4e4;
+    scrollbar-width: thin;
+    ::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #e4e4e4;
+        border-radius: 100px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 100px;
+        border: 7px solid transparent;
+        background-clip: content-box;
+        background-color: gray;
+    }
 `;
 type CompanySelectTypes = {
     name: string;
@@ -59,9 +80,7 @@ type CompanySelectTypes = {
 };
 const LicenseMainPage = () => {
     let { type } = useParams<URLParamsType>();
-    useEffect(() => {
-        console.log(type);
-    }, [type]);
+
     const [CompanySelectAccessKey, setCompanySelectAccessKey] = useState<CompanySelectTypes[]>([
         { name: 'DHKS', AccessKey: true },
         { name: 'YIKC', AccessKey: false },
@@ -122,58 +141,6 @@ const LicenseMainPage = () => {
                             ''
                         )
                     )}
-                    {/* <div>
-                        {type === 'VolumeLicense' ? (
-                            CompanySelectAccessKey.map((list, i) =>
-                                list.AccessKey ? (
-                                    <VolumeLicenseMainPage SelectCompany={list.name} key={list.name}></VolumeLicenseMainPage>
-                                ) : (
-                                    ''
-                                )
-                            )
-                        ) : (
-                            <div></div>
-                        )}
-                    </div> */}
-                    {/* <div>
-                        {type === 'PackageLicense' ? (
-                            CompanySelectAccessKey.map((list, i) =>
-                                list.AccessKey ? (
-                                    <PackageLicenseMainPage SelectCompany={list.name} key={list.name}></PackageLicenseMainPage>
-                                ) : (
-                                    ''
-                                )
-                            )
-                        ) : (
-                            <div></div>
-                        )}
-                    </div>
-                    <div>
-                        {type === 'USBTypeLicense' ? (
-                            CompanySelectAccessKey.map((list, i) =>
-                                list.AccessKey ? (
-                                    <USBTypeLicenseMainPage SelectCompany={list.name} key={list.name}></USBTypeLicenseMainPage>
-                                ) : (
-                                    ''
-                                )
-                            )
-                        ) : (
-                            <div></div>
-                        )}
-                    </div>
-                    <div>
-                        {type === 'NetworkLicense' ? (
-                            CompanySelectAccessKey.map((list, i) =>
-                                list.AccessKey ? (
-                                    <NetworkLicenseMainPage SelectCompany={list.name} key={list.name}></NetworkLicenseMainPage>
-                                ) : (
-                                    ''
-                                )
-                            )
-                        ) : (
-                            <div></div>
-                        )}
-                    </div> */}
                 </LicenseMainPageContentMainPageDiv>
             </div>
         </div>

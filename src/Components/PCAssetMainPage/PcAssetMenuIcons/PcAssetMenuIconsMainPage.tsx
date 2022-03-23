@@ -251,7 +251,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                             setSelectClicksModals({
                                 NewDataModal: true,
                                 ExcelDownloadModal: false,
-                                FilterSearch: false,
+                                FilterSearch: SelectClicksModals.FilterSearch,
                             })
                         }
                     >
@@ -267,7 +267,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                             setSelectClicksModals({
                                 NewDataModal: false,
                                 ExcelDownloadModal: true,
-                                FilterSearch: false,
+                                FilterSearch: SelectClicksModals.FilterSearch,
                             })
                         }
                     >
@@ -283,7 +283,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                     setSelectClicksModals({
                         NewDataModal: false,
                         ExcelDownloadModal: false,
-                        FilterSearch: false,
+                        FilterSearch: SelectClicksModals.FilterSearch,
                     })
                 }
                 SelectCompany={SelectCompany}

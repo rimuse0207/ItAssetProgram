@@ -9,6 +9,24 @@ const PersonalMainPageDivBox = styled.div`
     background-color: #efefef;
     overflow-y: auto;
     max-height: 100vh;
+    direction: ltr;
+    scrollbar-color: #d4aa70 #e4e4e4;
+    scrollbar-width: thin;
+    ::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #e4e4e4;
+        border-radius: 100px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 100px;
+        border: 7px solid transparent;
+        background-clip: content-box;
+        background-color: gray;
+    }
     .PersonInfo {
         height: 15vh;
         text-align: end;

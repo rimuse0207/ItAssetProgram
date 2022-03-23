@@ -2,6 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
+import styled from 'styled-components';
+import { VolumeLicenseMainPageProps, LicenseDataType } from '../VolumeLicenseMainPage/VolumeLicenseDataTypes';
+const GraphContainer = styled.div`
+    width: 97%;
+    height: 40vh;
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+`;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 export const options = {
@@ -24,76 +34,38 @@ export const options = {
             stacked: true,
         },
     },
+    maintainAspectRatio: false,
 };
 
-const labels = ['한글과 컴퓨터', 'Windows Office 2013', '알집', 'PDF', 'Adobe 포토샵', 'Windows 10 Pro'];
-
-export const data = {
-    labels,
-    datasets: [
-        {
-            label: '사용 인원',
-            data: [10],
-            backgroundColor: 'rgb(255, 99, 132)',
-            stack: 'Volume_license',
-        },
-        {
-            label: '전체 사용 가능 인원',
-            data: [40],
-            backgroundColor: 'rgb(53, 162, 235)',
-            stack: 'Volume_license',
-        },
-        // {
-        //     label: '사용 인원',
-        //     data: [80],
-        //     backgroundColor: 'rgb(255, 99, 132)',
-        //     stack: 'Windows Office 2013',
-        // },
-        // {
-        //     label: '전체 사용 가능 인원',
-        //     data: [109],
-        //     backgroundColor: 'rgb(53, 162, 235)',
-        //     stack: 'Windows Office 2013',
-        // },
-    ],
-};
-const LicenseGoogleGraphMainPage = () => {
+const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPageProps) => {
     const [datas, setdata] = useState({
-        labels,
+        labels: ['nothing'],
         datasets: [
             {
                 label: '사용 인원',
-                data: [10],
+                data: [0],
                 backgroundColor: 'rgb(255, 99, 132)',
-                stack: 'Volume_license',
+                stack: type,
             },
             {
                 label: '전체 사용 가능 인원',
-                data: [40],
+                data: [0],
                 backgroundColor: 'rgb(53, 162, 235)',
-                stack: 'Volume_license',
+                stack: type,
             },
-            // {
-            //     label: '사용 인원',
-            //     data: [80],
-            //     backgroundColor: 'rgb(255, 99, 132)',
-            //     stack: 'Windows Office 2013',
-            // },
-            // {
-            //     label: '전체 사용 가능 인원',
-            //     data: [109],
-            //     backgroundColor: 'rgb(53, 162, 235)',
-            //     stack: 'Windows Office 2013',
-            // },
         ],
     });
     useEffect(() => {
         getada();
-    }, []);
+    }, [SelectCompany, type]);
 
     const getada = async () => {
-        const dad = await axios.get('http://192.168.2.155:3001/license_app_server/LicenseGraphData');
-        console.log(dad);
+        const dad = await axios.get('http://192.168.2.155:3001/license_app_server/LicenseGraphData', {
+            params: {
+                type,
+                SelectCompany,
+            },
+        });
         setdata({
             labels: dad.data.labels,
             datasets: dad.data.datasets,
@@ -101,9 +73,9 @@ const LicenseGoogleGraphMainPage = () => {
     };
 
     return (
-        <div style={{ width: '100%' }}>
+        <GraphContainer>
             <Bar options={options} data={datas} />
-        </div>
+        </GraphContainer>
     );
 };
 

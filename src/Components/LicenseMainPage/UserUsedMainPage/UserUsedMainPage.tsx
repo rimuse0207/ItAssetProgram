@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { LicensMainTableIncludeBox } from '../VolumeLicenseMainPage/VolumeLicenseMainPage';
 import moment from 'moment';
 import { LicenseUserInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
@@ -32,7 +32,10 @@ type GetUserDataType = {
     registerDate: string;
     team: string;
 };
-
+interface RefObject<T> {
+    // immutable
+    readonly current: T | null;
+}
 const TableIncludeInput = styled.div`
     input {
         border: none;
@@ -61,6 +64,7 @@ const UserUsedMainPage = ({ SelectCode, SelectCompany, license, SortTable }: Use
         name: '',
         team: '',
     });
+    const foucsOn = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
     useEffect(() => {
         GetInfoLicensData();
@@ -77,6 +81,11 @@ const UserUsedMainPage = ({ SelectCode, SelectCompany, license, SortTable }: Use
 
             if (getInfoLicenseData.data.dataSuccess) {
                 setGetUserData(getInfoLicenseData.data.data);
+
+                if (foucsOn.current) {
+                    foucsOn.current.focus();
+                    foucsOn.current.scrollIntoView({ behavior: 'smooth' });
+                }
             }
         } catch (error) {
             console.log(error);
@@ -179,6 +188,7 @@ const UserUsedMainPage = ({ SelectCode, SelectCompany, license, SortTable }: Use
                             </tbody>
                         </table>
                     </LicensMainTableIncludeBox>
+                    <div ref={foucsOn}></div>
                 </div>
             ) : (
                 <div></div>

@@ -13,6 +13,5 @@ export const ObjectNameSortData = (data: any) => {
         }
         return 0;
     });
-    console.log(NameResult);
     return NameResult;
 };

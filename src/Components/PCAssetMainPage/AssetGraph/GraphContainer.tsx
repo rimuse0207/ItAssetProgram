@@ -66,13 +66,13 @@ const GraphContainer = () => {
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
-                        <h2>Moniter</h2>
+                        <h2>Monitor</h2>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {MonitorInfo.data.length - NothingAssetCheckFunc(MonitorInfo.data)}/{NothingAssetCheckFunc(MonitorInfo.data)}/
                             {MonitorInfo.data.length}
                         </h4>
                         <AssetGraphMainPage
-                            assetType="moniter"
+                            assetType="monitor"
                             usedData={[
                                 MonitorInfo.data.length - NothingAssetCheckFunc(MonitorInfo.data),
                                 NothingAssetCheckFunc(MonitorInfo.data),
