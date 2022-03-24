@@ -58,3 +58,7 @@ a {
     flex-direction: column;
     width: 500px;
 }
+
+.react-datepicker__portal {
+    width: 100% !important;
+}
