@@ -1,12 +1,13 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { LicensMainTableIncludeBox } from '../../LicenseMainPage/VolumeLicenseMainPage/VolumeLicenseMainPage';
-import { AssetDesktopInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
+// import { LicensMainTableIncludeBox } from '../../LicenseMainPage/VolumeLicenseMainPage/VolumeLicenseMainPage';
+// import { AssetDesktopInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
 import { NothingAssetCheckFunc } from '../../../PublicFunc/NothingAssetData';
 import { DeskTopInfoDataType, DeskTopMainPageProps } from '../PCAssetDataType';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { CgDesktop } from 'react-icons/cg';
 import { ImUserMinus, ImUserPlus } from 'react-icons/im';
+import { BiHistory } from 'react-icons/bi';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
@@ -15,6 +16,8 @@ import { AssetDelete } from '../../../Apis/core/api/AuthUnNeedApi/DeleteAssetUse
 import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../../Configs/ToastTimerConfig';
 import NewPcAssetUserData from '../PcAssetMenuIcons/PcAssetModals/NewPcAssetUserDataModal';
+import UpdatePcAssetUserDataModal from '../PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
+import axios from 'axios';
 
 export const AssetTableMainDivBox = styled.div`
     max-height: 60vh;
@@ -74,7 +77,7 @@ export const AssetTableMainDivBox = styled.div`
     table.type09 td {
         width: 350px;
         padding: 10px;
-        vertical-align: top;
+        vertical-align: center;
         border-bottom: 1px solid #ccc;
     }
     .UserMinusIcons,
@@ -98,7 +101,14 @@ export const AssetTableMainDivBox = styled.div`
 
 const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
     const [UserAddModalOpen, setUserAddModalOpen] = useState(false);
+    const [UserUpdateModalOpen, setUserUpdateModalOpen] = useState(false);
     const [SelectAssetData, setSelectAssetData] = useState<DeskTopInfoDataType | null>(null);
+    const [historyCheck, setHistoryCheck] = useState(false);
+    const [historySelected, sethistorySelected] = useState({
+        selected: '',
+        datas: [],
+    });
+
     const DeskTopInfo = useSelector((state: RootState) => state.DeskTopAssetData.DeskTopAssetData);
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
     const dispatch = useDispatch();
@@ -106,10 +116,28 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
         getDataAssetDeskTop();
     }, [SelectCompany, FilteringData]);
 
+    useEffect(() => {
+        gethistoryData();
+    }, [historySelected.selected]);
+
+    const gethistoryData = async () => {
+        try {
+            const gethistoryDataFromServer = await axios.get('http://192.168.2.155:3001/Asset_app_server/historyData', {
+                params: { historySelected: historySelected.selected },
+            });
+            console.log(gethistoryDataFromServer);
+            if (gethistoryDataFromServer.data.dataSuccess) {
+                sethistorySelected({ ...historySelected, datas: gethistoryDataFromServer.data.data });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const getDataAssetDeskTop = async () => {
         try {
             const ParamasData = {
-                types: 'desktop',
+                types: '데스크탑',
                 SelectCompany,
                 FilteringData,
             };
@@ -122,6 +150,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
 
     const handlePlusUsered = async (data: DeskTopInfoDataType) => {
         try {
+            console.log(data);
             setSelectAssetData(data);
             setUserAddModalOpen(true);
         } catch (error) {
@@ -131,11 +160,17 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
 
     const handleMinusUsered = async (data: DeskTopInfoDataType) => {
         try {
-            const deleteData = await AssetDelete('/Asset_app_server/AssetDeleteData', data);
-            if (deleteData.data.dataSuccess) {
-                getDataAssetDeskTop();
-                toast.show({ title: `자산(${data.type})에 유저 등록 해제 하였습니다.`, successCheck: true, duration: ToastTime });
-            }
+            setSelectAssetData(data);
+            setUserUpdateModalOpen(true);
+            // const deleteData = await AssetDelete('/Asset_app_server/AssetDeleteData', data);
+            // if (deleteData.data.dataSuccess) {
+            //     getDataAssetDeskTop();
+            //     toast.show({
+            //         title: `관리 번호(${data.asset_management_number})에 유저 등록 해제 하였습니다.`,
+            //         successCheck: true,
+            //         duration: ToastTime,
+            //     });
+            // }
         } catch (error) {
             console.log(error);
         }
@@ -159,44 +194,122 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                             {NothingAssetCheckFunc(DeskTopInfo.data)}/{DeskTopInfo.data.length} )
                                         </div>
                                     </th>
-                                    <th scope="cols">코드</th>
-                                    <th scope="cols">유형</th>
-                                    <th scope="cols">구매 날짜</th>
-                                    <th scope="cols">유효 날짜</th>
+                                    <th scope="cols">관리번호</th>
+                                    <th scope="cols">제조사</th>
+                                    <th scope="cols">모델명</th>
+                                    <th scope="cols">구입일</th>
+                                    <th scope="cols">유효일</th>
+                                    <th scope="cols">취득가</th>
+                                    <th scope="cols">CPU</th>
+                                    <th scope="cols">RAM</th>
+                                    <th scope="cols">DISK</th>
+                                    <th scope="cols">자산코드</th>
+                                    <th scope="cols">사용장소</th>
                                     <th scope="cols">사용자</th>
-                                    <th scope="cols">팀명</th>
-                                    <th scope="cols">사용처</th>
-                                    <th scope="cols">등록 확인</th>
+                                    <th scope="cols">
+                                        사용자
+                                        <br />
+                                        추가 및 해제
+                                    </th>
+                                    <th scope="cols">이력 조회</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {DeskTopInfo.data.length > 0 ? (
                                     DeskTopInfo.data.map((list: DeskTopInfoDataType, i: number) => {
                                         return (
-                                            <tr key={list.code}>
-                                                <td>{i + 1}</td>
-                                                <td>{list.code}</td>
-                                                <td>{list.asset_explain}</td>
-                                                <td>{moment(list.asset_purchasedate).format('YYYY-MM-DD')}</td>
-                                                <td>{moment(list.asset_purchasedate).clone().add(5, 'years').format('YYYY-MM-DD')}</td>
-                                                <td>{list.name ? list.name : '-'}</td>
-                                                <td>{list.team ? list.team : '-'}</td>
-                                                <td>
-                                                    {list.companyname}_{list.companylocation}
-                                                </td>
-
-                                                <td>
-                                                    {list.name ? (
-                                                        <div className="UserMinusIcons" onClick={() => handleMinusUsered(list)}>
-                                                            <ImUserMinus></ImUserMinus>
+                                            <>
+                                                <tr key={list.asset_management_number}>
+                                                    <td>{i + 1}</td>
+                                                    <td>{list.asset_management_number}</td>
+                                                    <td>{list.asset_maker}</td>
+                                                    <td>{list.asset_model}</td>
+                                                    <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
+                                                    <td>{moment(list.asset_purchase_date).clone().add(5, 'years').format('YYYY-MM-DD')}</td>
+                                                    <td>{list.asset_pride ? Number(list.asset_pride).toLocaleString('ko-KR') : '-'}</td>
+                                                    <td>{list.asset_cpu}</td>
+                                                    <td>{list.asset_ram}</td>
+                                                    <td>{list.asset_disk}</td>
+                                                    <td>{list.asset_newcode ? list.asset_newcode : '-'}</td>
+                                                    <td>
+                                                        {list.companyInfo_companycode ? (
+                                                            <div>
+                                                                <div>{list.company_location}</div>
+                                                                <div>{list.company_building}</div>
+                                                                <div>{list.company_floor}</div>
+                                                            </div>
+                                                        ) : (
+                                                            '-'
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {list.name ? (
+                                                            <div>
+                                                                <div>{list.team}</div>
+                                                                <div>{list.name}</div>
+                                                            </div>
+                                                        ) : (
+                                                            '-'
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {list.name ? (
+                                                            <div className="UserMinusIcons" onClick={() => handleMinusUsered(list)}>
+                                                                <ImUserMinus></ImUserMinus>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="UserPlusIcons" onClick={() => handlePlusUsered(list)}>
+                                                                <ImUserPlus></ImUserPlus>
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        <div
+                                                            className="UserPlusIcons"
+                                                            onClick={() => {
+                                                                setHistoryCheck(!historyCheck);
+                                                                sethistorySelected({
+                                                                    ...historySelected,
+                                                                    selected: list.asset_management_number,
+                                                                });
+                                                            }}
+                                                        >
+                                                            <BiHistory></BiHistory>
                                                         </div>
-                                                    ) : (
-                                                        <div className="UserPlusIcons" onClick={() => handlePlusUsered(list)}>
-                                                            <ImUserPlus></ImUserPlus>
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                    {/* <td>{list.asset_destroy_check ? 'O' : '-'}</td> */}
+                                                </tr>
+                                                {historyCheck && historySelected.selected === list.asset_management_number ? (
+                                                    <tr>
+                                                        <td colSpan={15}>
+                                                            <table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>날짜</th>
+                                                                        <th>사유</th>
+                                                                        <th>이전 장소</th>
+                                                                        <th>이전 사용자</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {historySelected.datas.map((item, j) => {
+                                                                        return (
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                        );
+                                                                    })}
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </>
                                         );
                                     })
                                 ) : (
@@ -217,6 +330,15 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                     setUserAddModalOpen={() => setUserAddModalOpen(false)}
                     SelectAssetData={SelectAssetData}
                 ></NewPcAssetUserData>
+            ) : (
+                ''
+            )}
+            {UserUpdateModalOpen ? (
+                <UpdatePcAssetUserDataModal
+                    UserAddModalOpen={UserUpdateModalOpen}
+                    setUserAddModalOpen={() => setUserUpdateModalOpen(false)}
+                    SelectAssetData={SelectAssetData}
+                ></UpdatePcAssetUserDataModal>
             ) : (
                 ''
             )}

@@ -36,13 +36,13 @@ const GraphContainer = () => {
             {DeskTopInfo.data || NotBookInfo.data || MonitorInfo.data ? (
                 <div className="Asset_GraphContainer">
                     <div className="Asset_GraphContent">
-                        <h2>DeskTop</h2>
+                        <h2>데스크탑</h2>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {DeskTopInfo.data.length - NothingAssetCheckFunc(DeskTopInfo.data)}/{NothingAssetCheckFunc(DeskTopInfo.data)}/
                             {DeskTopInfo.data.length}
                         </h4>
                         <AssetGraphMainPage
-                            assetType="desktop"
+                            assetType="데스크탑"
                             usedData={[
                                 DeskTopInfo.data.length - NothingAssetCheckFunc(DeskTopInfo.data),
                                 NothingAssetCheckFunc(DeskTopInfo.data),
@@ -51,13 +51,13 @@ const GraphContainer = () => {
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
-                        <h2>Notebook</h2>
+                        <h2>노트북</h2>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {NotBookInfo.data.length - NothingAssetCheckFunc(NotBookInfo.data)}/{NothingAssetCheckFunc(NotBookInfo.data)}/
                             {NotBookInfo.data.length}
                         </h4>
                         <AssetGraphMainPage
-                            assetType="notebook"
+                            assetType="노트북"
                             usedData={[
                                 NotBookInfo.data.length - NothingAssetCheckFunc(NotBookInfo.data),
                                 NothingAssetCheckFunc(NotBookInfo.data),
@@ -66,13 +66,13 @@ const GraphContainer = () => {
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
-                        <h2>Monitor</h2>
+                        <h2>모니터</h2>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {MonitorInfo.data.length - NothingAssetCheckFunc(MonitorInfo.data)}/{NothingAssetCheckFunc(MonitorInfo.data)}/
                             {MonitorInfo.data.length}
                         </h4>
                         <AssetGraphMainPage
-                            assetType="monitor"
+                            assetType="모니터"
                             usedData={[
                                 MonitorInfo.data.length - NothingAssetCheckFunc(MonitorInfo.data),
                                 NothingAssetCheckFunc(MonitorInfo.data),

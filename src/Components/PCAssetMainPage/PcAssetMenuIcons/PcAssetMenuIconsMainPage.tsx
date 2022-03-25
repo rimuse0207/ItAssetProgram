@@ -56,7 +56,7 @@ const PcAssetMenuIconsMainPageDivBox = styled.div`
 `;
 
 const FilterSearchMainPageDivBox = styled.div`
-    height: 300px;
+    height: 400px;
     padding: 10px;
     margin-right: 30px;
     padding-right: 40px;
@@ -72,13 +72,13 @@ const FilterSearchMainPageDivBox = styled.div`
         }
 
         to {
-            height: 300px;
+            height: 400px;
             opacity: 1;
         }
     }
     .FilteringContainer {
         margin-top: 10px;
-        max-height: 20vh;
+        max-height: 30vh;
         display: flex;
         flex-flow: wrap;
         justify-content: space-between;
@@ -159,7 +159,7 @@ const FilterSearchMainPageDivBoxDownSlide = styled.div`
     animation-duration: 0.5s;
     @keyframes SlideUp {
         from {
-            height: 300px;
+            height: 400px;
         }
 
         to {
@@ -173,13 +173,15 @@ type PcAssetMenuIconsMainPageProps = {
 };
 
 type FilteringDataTypes = {
-    code: '' | string;
-    start_asset_purchasedate: '' | string;
-    finish_asset_purchasedate: '' | string;
-    asset_explain: '' | string;
-    companylocation: '' | string;
-    team: '' | string;
-    name: '' | string;
+    asset_management_number: string;
+    asset_maker: string;
+    start_asset_purchasedate: string;
+    finish_asset_purchasedate: string;
+    companyInfo: string;
+    userInfo: string;
+    asset_cpu: string;
+    asset_ram: string;
+    asset_disk: string;
 };
 
 const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPageProps) => {
@@ -189,13 +191,15 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
         ExcelDownloadModal: false,
     });
     const [FilteringData, setFilteringData] = useState<FilteringDataTypes>({
-        code: '',
+        asset_management_number: '',
+        asset_maker: '',
         start_asset_purchasedate: '',
         finish_asset_purchasedate: '',
-        asset_explain: '',
-        companylocation: '',
-        team: '',
-        name: '',
+        companyInfo: '',
+        userInfo: '',
+        asset_cpu: '',
+        asset_ram: '',
+        asset_disk: '',
     });
 
     const dispatch = useDispatch();
@@ -204,13 +208,15 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
         try {
             await dispatch(AssetFilteringReset());
             setFilteringData({
-                code: '',
+                asset_management_number: '',
+                asset_maker: '',
                 start_asset_purchasedate: '',
                 finish_asset_purchasedate: '',
-                asset_explain: '',
-                companylocation: '',
-                team: '',
-                name: '',
+                companyInfo: '',
+                userInfo: '',
+                asset_cpu: '',
+                asset_ram: '',
+                asset_disk: '',
             });
         } catch (error) {
             console.log(error);
@@ -298,7 +304,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                             <div className="FilteringContainer">
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
-                                        <h4>코드.</h4>
+                                        <h4>관리번호.</h4>
                                     </div>
                                     <div className="SearchInputContainerSubTitle">
                                         <div className="SearchInputContainerSubTitleFlexDivBox">
@@ -310,9 +316,11 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                             <div className="InputDivBox">
                                                 <input
                                                     type="text"
-                                                    value={FilteringData.code}
-                                                    placeholder="Ex) DHKS_20220303_D01"
-                                                    onChange={e => setFilteringData({ ...FilteringData, code: e.target.value })}
+                                                    value={FilteringData.asset_management_number}
+                                                    placeholder="Ex) DHKS-22001"
+                                                    onChange={e =>
+                                                        setFilteringData({ ...FilteringData, asset_management_number: e.target.value })
+                                                    }
                                                 ></input>
                                             </div>
                                         </div>
@@ -320,7 +328,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                 </div>
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
-                                        <h4>유형.</h4>
+                                        <h4>제조사.</h4>
                                     </div>
                                     <div className="SearchInputContainerSubTitle">
                                         <div className="SearchInputContainerSubTitleFlexDivBox">
@@ -331,10 +339,10 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                             </div>
                                             <div className="InputDivBox">
                                                 <input
-                                                    value={FilteringData.asset_explain}
+                                                    value={FilteringData.asset_maker}
                                                     type="text"
                                                     placeholder="Ex) 삼성.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_explain: e.target.value })}
+                                                    onChange={e => setFilteringData({ ...FilteringData, asset_maker: e.target.value })}
                                                 ></input>
                                             </div>
                                         </div>
@@ -342,7 +350,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                 </div>
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
-                                        <h4>구매날짜.</h4>
+                                        <h4>구입일</h4>
                                     </div>
                                     <div className="SearchInputContainerSubTitle">
                                         <div className="SearchInputContainerSubTitleFlexDivBox">
@@ -377,7 +385,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                 </div>
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
-                                        <h4>사용처.</h4>
+                                        <h4>사용장소.</h4>
                                     </div>
                                     <div className="SearchInputContainerSubTitle">
                                         <div className="SearchInputContainerSubTitleFlexDivBox">
@@ -389,9 +397,9 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                             <div className="InputDivBox">
                                                 <input
                                                     type="text"
-                                                    value={FilteringData.companylocation}
+                                                    value={FilteringData.companyInfo}
                                                     placeholder="Ex) 판교, 아산.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, companylocation: e.target.value })}
+                                                    onChange={e => setFilteringData({ ...FilteringData, companyInfo: e.target.value })}
                                                 ></input>
                                             </div>
                                         </div>
@@ -410,10 +418,10 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                             </div>
                                             <div className="InputDivBox">
                                                 <input
-                                                    value={FilteringData.name}
+                                                    value={FilteringData.userInfo}
                                                     type="text"
                                                     placeholder="Ex) 유성재.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, name: e.target.value })}
+                                                    onChange={e => setFilteringData({ ...FilteringData, userInfo: e.target.value })}
                                                 ></input>
                                             </div>
                                         </div>
@@ -421,7 +429,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                 </div>
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
-                                        <h4>팀명.</h4>
+                                        <h4>CPU.</h4>
                                     </div>
                                     <div className="SearchInputContainerSubTitle">
                                         <div className="SearchInputContainerSubTitleFlexDivBox">
@@ -432,10 +440,54 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                             </div>
                                             <div className="InputDivBox">
                                                 <input
-                                                    value={FilteringData.team}
+                                                    value={FilteringData.asset_cpu}
                                                     type="text"
-                                                    placeholder="Ex) 경영지원.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, team: e.target.value })}
+                                                    placeholder="Ex) i7.."
+                                                    onChange={e => setFilteringData({ ...FilteringData, asset_cpu: e.target.value })}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="SearchInputContainer">
+                                    <div className="SearchInputContainerTitle">
+                                        <h4>RAM.</h4>
+                                    </div>
+                                    <div className="SearchInputContainerSubTitle">
+                                        <div className="SearchInputContainerSubTitleFlexDivBox">
+                                            <div className="IconsDivBox">
+                                                <label>
+                                                    <BsFillPencilFill></BsFillPencilFill>
+                                                </label>
+                                            </div>
+                                            <div className="InputDivBox">
+                                                <input
+                                                    value={FilteringData.asset_ram}
+                                                    type="text"
+                                                    placeholder="Ex) 32G.."
+                                                    onChange={e => setFilteringData({ ...FilteringData, asset_ram: e.target.value })}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="SearchInputContainer">
+                                    <div className="SearchInputContainerTitle">
+                                        <h4>DISK.</h4>
+                                    </div>
+                                    <div className="SearchInputContainerSubTitle">
+                                        <div className="SearchInputContainerSubTitleFlexDivBox">
+                                            <div className="IconsDivBox">
+                                                <label>
+                                                    <BsFillPencilFill></BsFillPencilFill>
+                                                </label>
+                                            </div>
+                                            <div className="InputDivBox">
+                                                <input
+                                                    value={FilteringData.asset_disk}
+                                                    type="text"
+                                                    placeholder="Ex) S_256G.."
+                                                    onChange={e => setFilteringData({ ...FilteringData, asset_disk: e.target.value })}
                                                 ></input>
                                             </div>
                                         </div>

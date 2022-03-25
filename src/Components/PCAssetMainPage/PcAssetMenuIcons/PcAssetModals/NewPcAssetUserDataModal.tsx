@@ -134,7 +134,7 @@ const NewPcAssetUserData = ({ UserAddModalOpen, setUserAddModalOpen, SelectAsset
     }, [SelectAssetData]);
     const getUserInfo = async () => {
         const ParamasData = {
-            SelectCompany: SelectAssetData?.companyname,
+            SelectCompany: SelectAssetData?.asset_management_number.split('-')[0],
         };
         try {
             const personOptionsData = await UserInfoGet('/Asset_app_server/UserSelect', ParamasData);
@@ -162,13 +162,13 @@ const NewPcAssetUserData = ({ UserAddModalOpen, setUserAddModalOpen, SelectAsset
                 const UserAssetAdd = await AssetUserAdd('/Asset_app_server/AssetUserAdd', ParamasData);
                 if (UserAssetAdd.data.dataSuccess) {
                     const ParamasDatas = {
-                        types: SelectAssetData?.type,
-                        SelectCompany: SelectAssetData?.companyname,
+                        types: SelectAssetData?.asset_division,
+                        SelectCompany: SelectAssetData?.asset_management_number.split('-')[0],
                         FilteringData,
                     };
-                    if (SelectAssetData?.type === 'desktop') {
+                    if (SelectAssetData?.asset_division === '데스크탑') {
                         await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                    } else if (SelectAssetData?.type === 'notebook') {
+                    } else if (SelectAssetData?.asset_division === '노트북') {
                         await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
                     } else {
                         await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
@@ -211,24 +211,38 @@ const NewPcAssetUserData = ({ UserAddModalOpen, setUserAddModalOpen, SelectAsset
                                 <table className="type03">
                                     <tr>
                                         <th scope="row">코드</th>
-                                        <td>{SelectAssetData?.code}</td>
+                                        <td>{SelectAssetData?.asset_management_number}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">종류</th>
-                                        <td>{SelectAssetData?.type}</td>
+                                        <td>{SelectAssetData?.asset_division}</td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">유형</th>
-                                        <td>{SelectAssetData?.asset_explain}</td>
+                                        <th scope="row">CPU</th>
+                                        <td>{SelectAssetData?.asset_cpu}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">RAM</th>
+                                        <td>{SelectAssetData?.asset_ram}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">DISK</th>
+                                        <td>{SelectAssetData?.asset_disk}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">구매날짜</th>
-                                        <td>{moment(SelectAssetData?.asset_purchasedate).format('YYYY-MM-DD')}</td>
+                                        <td>{moment(SelectAssetData?.asset_purchase_date).format('YYYY-MM-DD')}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">사용처</th>
                                         <td>
-                                            {SelectAssetData?.companyname}_{SelectAssetData?.companylocation}
+                                            {SelectAssetData?.company_name}_{SelectAssetData?.company_location}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">사용자</th>
+                                        <td>
+                                            {SelectAssetData?.team}_{SelectAssetData?.name}
                                         </td>
                                     </tr>
                                 </table>

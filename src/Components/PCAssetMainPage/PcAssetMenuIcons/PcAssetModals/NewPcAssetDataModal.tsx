@@ -282,7 +282,7 @@ type NewAssetDataModalProps = {
 
 const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCompany }: NewAssetDataModalProps) => {
     const [SearchSomething, setSearchSomething] = useState<string | null>('');
-    const [ChooseAssetData, setChooseAssetData] = useState('desktop');
+    const [ChooseAssetData, setChooseAssetData] = useState('데스크탑');
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
     const [CompanyInfoData, setCompanyInfoData] = useState<CompanyOption[]>([]);
     const [UserWriteData, setUserWriteData] = useState({
@@ -291,7 +291,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         asset_maker: '삼성',
         asset_model: '',
         asset_purchase_date: new Date(),
-        asset_pride: 0,
+        asset_pride: '',
         asset_cpu: '',
         asset_ram: '16G',
         asset_disk: 'S_256G',
@@ -299,10 +299,18 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         usercheck: false,
         userinfo_email: '',
         asset_distribute_date: new Date(),
-        companycode: '',
+        company_code: '',
     });
 
     const [licenseSettingData, setLicenseSettingData] = useState([]);
+    const [SelectedLicenseData, setSelectedLicenseData] = useState<any>([]);
+    const [textText, setTextTest] = useState('');
+    const [Q1, setQ1] = useState('');
+
+    const handleTextData = () => {
+        console.log(textText);
+        console.log('adada', textText.split('\t'));
+    };
 
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
 
@@ -366,12 +374,23 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     id: 'sjyoo@dhk.co.kr',
                 },
             });
-
+            setLicenseSettingData(getSettingDatas.data.data);
             console.log(getSettingDatas);
         } catch (error) {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        console.log(Q1);
+        const selectedLicensedatas: any = [];
+        licenseSettingData.map((list: any, i) => {
+            if (list.setting_title === Q1) {
+                selectedLicensedatas.push({ key: list.license_code, label: list.name });
+            }
+        });
+        setSelectedLicenseData(selectedLicensedatas);
+    }, [Q1]);
 
     const hadldeRandomCodeData = async () => {
         try {
@@ -392,7 +411,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     };
 
     const saveData = async () => {
-        if (UserWriteData.asset_management_number === '' || UserWriteData.companycode === '') {
+        if (UserWriteData.asset_management_number === '' || UserWriteData.company_code === '') {
             alert('공란을 작성해주세요.');
             return;
         }
@@ -404,35 +423,30 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             };
             const SaveAssetData = await AssetAdd('/Asset_app_server/AssetAdd', ParamasData);
             if (SaveAssetData.data.dataSuccess) {
-                if (ChooseAssetData === 'desktop') {
+                if (UserWriteData.asset_division === '데스크탑') {
                     const ParamasDatas = {
-                        types: 'desktop',
+                        types: '데스크탑',
                         SelectCompany,
                         FilteringData,
+                        UserWriteData,
                     };
                     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                } else if (ChooseAssetData === 'notebook') {
+                } else if (UserWriteData.asset_division === '노트북') {
                     const ParamasDatas = {
-                        types: 'notebook',
+                        types: '노트북',
                         SelectCompany,
                         FilteringData,
                     };
                     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
                 } else {
                     const ParamasDatas = {
-                        types: 'monitor',
+                        types: '모니터',
                         SelectCompany,
                         FilteringData,
                     };
                     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 }
-                // setUserWriteData({
-                //     code: '',
-                //     explain: UserWriteData.explain,
-                //     purchase_date: UserWriteData.purchase_date,
-                //     place: UserWriteData.place,
-                //     user_used: null,
-                // });
+
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             }
             console.log(UserWriteData);
@@ -455,6 +469,8 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                         <div id="wrap" className="input">
                             <section className="input-content">
                                 <h2>PC 자산 추가</h2>
+                                <input type="text" onChange={e => setTextTest(e.target.value)}></input>
+                                <button onClick={handleTextData}>테스트</button>
                                 <div className="PCAssetFloatContainer">
                                     <div className="PCAssetFloatLeft">
                                         <div className="input-content-wrap">
@@ -470,11 +486,10 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         onChange={e =>
                                                             setUserWriteData({ ...UserWriteData, asset_management_number: e.target.value })
                                                         }
+                                                        placeholder="YIKC-22001"
                                                         required
                                                     />
-                                                    <label htmlFor="input0">
-                                                        {SelectCompany}_{moment(UserWriteData.asset_purchase_date).format('YY')}001
-                                                    </label>
+
                                                     <span className="underline"></span>
                                                     <div className="RandomButtonIcons" onClick={hadldeRandomCodeData}>
                                                         <GiPerspectiveDiceSixFacesRandom></GiPerspectiveDiceSixFacesRandom>
@@ -487,15 +502,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     구매날짜<span style={{ color: 'red' }}>*</span>
                                                 </dt>
                                                 <dd className="inputbox-content">
-                                                    {/* <input
-                                                        id="input2"
-                                                        type="date"
-                                                        value={UserWriteData.asset_purchase_date}
-                                                        onChange={e =>
-                                                            setUserWriteData({ ...UserWriteData, asset_purchase_date: e.target.value })
-                                                        }
-                                                        required
-                                                    /> */}
                                                     <DatePicker
                                                         selected={UserWriteData.asset_purchase_date}
                                                         onChange={(date: any) =>
@@ -517,7 +523,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         <select
                                                             className="select"
                                                             onChange={e =>
-                                                                setUserWriteData({ ...UserWriteData, companycode: e.target.value })
+                                                                setUserWriteData({ ...UserWriteData, company_code: e.target.value })
                                                             }
                                                         >
                                                             <option disabled selected>
@@ -571,6 +577,19 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         value={UserWriteData.asset_model}
                                                         onChange={e => setUserWriteData({ ...UserWriteData, asset_model: e.target.value })}
                                                         placeholder="DM500S3B/B71"
+                                                    />
+
+                                                    <span className="underline"></span>
+                                                </dd>
+                                            </dl>
+                                            <dl className="inputbox">
+                                                <dt className="inputbox-title">가격</dt>
+                                                <dd className="inputbox-content">
+                                                    <input
+                                                        id="input4"
+                                                        value={UserWriteData.asset_pride}
+                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_pride: e.target.value })}
+                                                        placeholder="1,700,000 ..."
                                                     />
 
                                                     <span className="underline"></span>
@@ -652,18 +671,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                 <dl className="inputbox">
                                                     <dt className="inputbox-title">지급일</dt>
                                                     <dd className="inputbox-content">
-                                                        {/* <input
-                                                            id="input2"
-                                                            type="date"
-                                                            value={UserWriteData.asset_distribute_date}
-                                                            onChange={e =>
-                                                                setUserWriteData({
-                                                                    ...UserWriteData,
-                                                                    asset_distribute_date: e.target.value,
-                                                                })
-                                                            }
-                                                            required
-                                                        /> */}
                                                         <DatePicker
                                                             selected={UserWriteData.asset_distribute_date}
                                                             onChange={(date: any) =>
@@ -679,9 +686,23 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                 </dl>
                                                 <h4>라이선스 등록</h4>
                                                 <div>
-                                                    <input type="radio" id="경영지원" name="setting" value="경영지원"></input>
+                                                    <input
+                                                        type="radio"
+                                                        id="경영지원"
+                                                        name="setting"
+                                                        value="경영지원"
+                                                        checked={Q1 === '경영지원' ? true : false}
+                                                        onChange={e => setQ1(e.target.value)}
+                                                    ></input>
                                                     <label htmlFor="경영지원">경영지원</label>
-                                                    <input type="radio" id="영업" name="setting" value="영업"></input>
+                                                    <input
+                                                        type="radio"
+                                                        id="영업"
+                                                        name="setting"
+                                                        value="영업"
+                                                        checked={Q1 === '영업' ? true : false}
+                                                        onChange={e => setQ1(e.target.value)}
+                                                    ></input>
                                                     <label htmlFor="영업">영업</label>
                                                 </div>
 
@@ -692,6 +713,11 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         </div>
                                                         <div className="BigBoxContentRight">
                                                             <h4>선택 후</h4>
+                                                            <div>
+                                                                {SelectedLicenseData.map((list: any) => {
+                                                                    return <div>{list.label}</div>;
+                                                                })}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

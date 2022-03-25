@@ -12,25 +12,29 @@ type FilteringAction = ReturnType<typeof AssetFilteringAdd> | ReturnType<typeof 
 
 export type FilteringState = {
     FilteringData: {
-        code: '' | string;
-        start_asset_purchasedate: '' | string;
-        finish_asset_purchasedate: '' | string;
-        asset_explain: '' | string;
-        companylocation: '' | string;
-        team: '' | string;
-        name: '' | string;
+        asset_management_number: string;
+        asset_maker: string;
+        start_asset_purchasedate: string;
+        finish_asset_purchasedate: string;
+        companyInfo: string;
+        userInfo: string;
+        asset_cpu: string;
+        asset_ram: string;
+        asset_disk: string;
     };
 };
 
 const initialState: FilteringState = {
     FilteringData: {
-        code: '',
+        asset_management_number: '',
+        asset_maker: '',
         start_asset_purchasedate: '',
         finish_asset_purchasedate: '',
-        asset_explain: '',
-        companylocation: '',
-        team: '',
-        name: '',
+        companyInfo: '',
+        userInfo: '',
+        asset_cpu: '',
+        asset_ram: '',
+        asset_disk: '',
     },
 };
 

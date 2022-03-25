@@ -28,7 +28,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
     const getDataAssetDeskTop = async () => {
         try {
             const ParamasData = {
-                types: 'notebook',
+                types: '노트북',
                 SelectCompany,
                 FilteringData,
             };
@@ -53,7 +53,11 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
             const deleteData = await AssetDelete('/Asset_app_server/AssetDeleteData', data);
             if (deleteData.data.dataSuccess) {
                 getDataAssetDeskTop();
-                toast.show({ title: `자산(${data.type})에 유저 등록 해제 하였습니다.`, successCheck: true, duration: ToastTime });
+                toast.show({
+                    title: `관리 번호(${data.asset_management_number})에 유저 등록 해제 하였습니다.`,
+                    successCheck: true,
+                    duration: ToastTime,
+                });
             }
         } catch (error) {
             console.log(error);
@@ -77,42 +81,43 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                             {NothingAssetCheckFunc(NoteBookInfo.data)}/{NoteBookInfo.data.length} )
                                         </div>
                                     </th>
-                                    <th scope="cols">코드</th>
-                                    <th scope="cols">유형</th>
-                                    <th scope="cols">구매 날짜</th>
-                                    <th scope="cols">유효 날짜</th>
+
+                                    <th scope="cols">관리번호</th>
+                                    <th scope="cols">제조사</th>
+                                    <th scope="cols">모델명</th>
+                                    <th scope="cols">구입일</th>
+                                    <th scope="cols">유효일</th>
+                                    <th scope="cols">취득가</th>
+                                    <th scope="cols">CPU</th>
+                                    <th scope="cols">RAM</th>
+                                    <th scope="cols">DISK</th>
+                                    <th scope="cols">자산코드</th>
+                                    <th scope="cols">사용장소</th>
                                     <th scope="cols">사용자</th>
-                                    <th scope="cols">팀명</th>
-                                    <th scope="cols">사용처</th>
-                                    <th scope="cols">등록 확인</th>
+                                    <th scope="cols">폐기여부</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {NoteBookInfo.data.length > 0 ? (
                                     NoteBookInfo.data.map((list: DeskTopInfoDataType, i: number) => {
                                         return (
-                                            <tr key={list.code}>
+                                            <tr key={list.asset_management_number}>
                                                 <td>{i + 1}</td>
-                                                <td>{list.code}</td>
-                                                <td>{list.asset_explain}</td>
-                                                <td>{moment(list.asset_purchasedate).format('YYYY-MM-DD')}</td>
-                                                <td>{moment(list.asset_purchasedate).clone().add(5, 'years').format('YYYY-MM-DD')}</td>
+                                                <td>{list.asset_management_number}</td>
+                                                <td>{list.asset_maker}</td>
+                                                <td>{list.asset_model}</td>
+                                                <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
+                                                <td>{moment(list.asset_purchase_date).clone().add(4, 'years').format('YYYY-MM-DD')}</td>
+                                                <td>{list.asset_pride ? Number(list.asset_pride).toLocaleString('ko-KR') : '-'}</td>
+                                                <td>{list.asset_cpu}</td>
+                                                <td>{list.asset_ram}</td>
+                                                <td>{list.asset_disk}</td>
+                                                <td>{list.asset_newcode ? list.asset_newcode : '-'}</td>
+                                                <td>
+                                                    {list.company_location}_{list.company_building}_{list.company_floor}
+                                                </td>
                                                 <td>{list.name ? list.name : '-'}</td>
-                                                <td>{list.team ? list.team : '-'}</td>
-                                                <td>
-                                                    {list.companyname}_{list.companylocation}
-                                                </td>
-                                                <td>
-                                                    {list.name ? (
-                                                        <div className="UserMinusIcons" onClick={() => handleMinusUsered(list)}>
-                                                            <ImUserMinus></ImUserMinus>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="UserPlusIcons" onClick={() => handlePlusUsered(list)}>
-                                                            <ImUserPlus></ImUserPlus>
-                                                        </div>
-                                                    )}
-                                                </td>
+                                                <td>{list.asset_destroy_check ? 'O' : '-'}</td>
                                             </tr>
                                         );
                                     })
