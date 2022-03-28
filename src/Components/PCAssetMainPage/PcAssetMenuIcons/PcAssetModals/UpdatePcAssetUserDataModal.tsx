@@ -19,6 +19,8 @@ import { RootState } from '../../../../Models';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
+import HistoryMainPage from './HistoryMainPage/HistoryMainPage';
+import PcInfoDataUpdate from './PcInfoDataUpdate/PcInfoDataUpdate';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -32,7 +34,8 @@ const customStyles = {
         zIndex: '105',
         width: '90%',
         padding: '20px',
-        minHeight: '90vh',
+        height: '90vh',
+        overflow: 'auto',
     },
 };
 
@@ -308,13 +311,20 @@ type NewPcAssetUserDataModalProps = {
     UserAddModalOpen: boolean;
     setUserAddModalOpen: (data: boolean) => void;
     SelectAssetData: DeskTopInfoDataType | null;
+    SelectCompany: string;
 };
 
-const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, SelectAssetData }: NewPcAssetUserDataModalProps) => {
+const UpdatePcAssetUserDataModal = ({
+    UserAddModalOpen,
+    setUserAddModalOpen,
+    SelectAssetData,
+    SelectCompany,
+}: NewPcAssetUserDataModalProps) => {
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
     const [SelectUsered, setSelectUsered] = useState<null | string>(null);
     const [CompanySelectAccessKey, setCompanySelectAccessKey] = useState([
-        { name: '반납', AccessKey: true },
+        { name: '사용자 등록', AccessKey: true },
+        { name: '반납', AccessKey: false },
         { name: '이관', AccessKey: false },
         { name: '폐기', AccessKey: false },
     ]);
@@ -333,9 +343,25 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
     useEffect(() => {
         getUserInfo();
     }, [SelectAssetData]);
+
+    useEffect(() => {
+        if (SelectAssetData?.userinfo_email) {
+            setCompanySelectAccessKey([
+                { name: '반납', AccessKey: true },
+                { name: '이관', AccessKey: false },
+                { name: '폐기', AccessKey: false },
+            ]);
+        } else {
+            setCompanySelectAccessKey([
+                { name: '사용자 등록', AccessKey: true },
+                { name: '폐기', AccessKey: false },
+            ]);
+        }
+    }, [SelectAssetData?.asset_management_number]);
+
     const getUserInfo = async () => {
         const ParamasData = {
-            SelectCompany: SelectAssetData?.company_name,
+            SelectCompany,
         };
         try {
             const personOptionsData = await UserInfoGet('/Asset_app_server/UserSelect', ParamasData);
@@ -355,12 +381,21 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
         for (var i = 0; i < CompanySelectAccessKey.length; i++) {
             if (CompanySelectAccessKey[i].AccessKey && CompanySelectAccessKey[i].name === '이관' && SelectedData.selected_user === '') {
                 return alert('사용자를 입력 해 주세요.');
+            } else if (
+                CompanySelectAccessKey[i].AccessKey &&
+                CompanySelectAccessKey[i].name === '사용자 등록' &&
+                SelectedData.selected_user === ''
+            ) {
+                return alert('사용자를 입력 해 주세요.');
+            } else if (
+                SelectedData.selected_reason === '' &&
+                CompanySelectAccessKey[i].AccessKey &&
+                CompanySelectAccessKey[i].name !== '사용자 등록'
+            ) {
+                return alert('사유를 작성 해주세요.');
             }
         }
         try {
-            if (SelectedData.selected_reason === '') {
-                return alert('사유를 작성 해주세요.');
-            }
             let selectedpickers = '';
             for (var i = 0; i < CompanySelectAccessKey.length; i++) {
                 if (CompanySelectAccessKey[i].AccessKey) {
@@ -377,7 +412,7 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
             if (UserAssetAdd.data.dataSuccess) {
                 const ParamasDatas = {
                     types: SelectAssetData?.asset_division,
-                    SelectCompany: SelectAssetData?.company_name,
+                    SelectCompany,
                     FilteringData,
                 };
                 if (SelectAssetData?.asset_division === '데스크탑') {
@@ -402,9 +437,6 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
         }
     };
 
-    const handleChange = (data: PersonOption) => {
-        setSelectUsered(data.value);
-    };
     const handleCompanyClicks = (data: { name: string }) => {
         const ChangeCompany = CompanySelectAccessKey.map((list, i) => {
             if (list.name === data.name) {
@@ -428,49 +460,7 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
                     </div>
                     <div className="ModalFloat">
                         <div className="ModalFloatLeft">
-                            <div>
-                                <h2>PC 자산 유저 추가</h2>
-                            </div>
-                            <div>
-                                <table className="type03">
-                                    <tr>
-                                        <th scope="row">코드</th>
-                                        <td>{SelectAssetData?.asset_management_number}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">종류</th>
-                                        <td>{SelectAssetData?.asset_division}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">CPU</th>
-                                        <td>{SelectAssetData?.asset_cpu}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">RAM</th>
-                                        <td>{SelectAssetData?.asset_ram}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">DISK</th>
-                                        <td>{SelectAssetData?.asset_disk}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">구매날짜</th>
-                                        <td>{moment(SelectAssetData?.asset_purchase_date).format('YYYY-MM-DD')}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">사용처</th>
-                                        <td>
-                                            {SelectAssetData?.company_name}_{SelectAssetData?.company_location}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">사용자</th>
-                                        <td>
-                                            {SelectAssetData?.team}_{SelectAssetData?.name}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                            <PcInfoDataUpdate SelectAssetData={SelectAssetData}></PcInfoDataUpdate>
                         </div>
 
                         <div className="ModalFloatRight">
@@ -508,41 +498,71 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
                                                         })}
                                                         날짜
                                                     </dt>
-                                                    <dd className="inputbox-content">
-                                                        <DatePicker
-                                                            selected={SelectedData.selected_date}
-                                                            onChange={(date: any) =>
-                                                                setSelectedData({ ...SelectedData, selected_date: date })
-                                                            }
-                                                            withPortal
-                                                            locale={ko}
-                                                            dateFormat="yyy-MM-dd"
-                                                            maxDate={new Date()}
-                                                        />
-                                                        <span className="underline"></span>
-                                                    </dd>
-                                                </dl>
-                                                <dl className="inputbox">
-                                                    <dt className="inputbox-title">
-                                                        {CompanySelectAccessKey.map((list, i) => {
-                                                            return list.AccessKey ? list.name : '';
-                                                        })}
-                                                        사유
-                                                    </dt>
-                                                    <dd className="inputbox-content">
-                                                        <textarea
-                                                            value={SelectedData.selected_reason}
-                                                            onChange={e =>
-                                                                setSelectedData({ ...SelectedData, selected_reason: e.target.value })
-                                                            }
-                                                        ></textarea>
-                                                        <span className="underline"></span>
-                                                    </dd>
+                                                    <dl>
+                                                        <dd className="inputbox-content">
+                                                            <DatePicker
+                                                                selected={SelectedData.selected_date}
+                                                                onChange={(date: any) =>
+                                                                    setSelectedData({ ...SelectedData, selected_date: date })
+                                                                }
+                                                                withPortal
+                                                                locale={ko}
+                                                                dateFormat="yyy-MM-dd"
+                                                                maxDate={new Date()}
+                                                            />
+                                                            <span className="underline"></span>
+                                                        </dd>
+                                                    </dl>
                                                 </dl>
                                                 {CompanySelectAccessKey.map((list, i) => {
+                                                    return list.AccessKey && list.name === '사용자 등록' ? (
+                                                        <dl className="inputbox" key={'사용자 목록' + list.name}>
+                                                            <dt className="inputbox-title">사용자</dt>
+                                                            <dd className="inputbox-content">
+                                                                <Select
+                                                                    options={InfoUserData}
+                                                                    onChange={(value: any) =>
+                                                                        setSelectedData({ ...SelectedData, selected_user: value })
+                                                                    }
+                                                                ></Select>
+                                                                <span className="underline"></span>
+                                                            </dd>
+                                                        </dl>
+                                                    ) : (
+                                                        ''
+                                                    );
+                                                })}
+                                                {CompanySelectAccessKey.map((list, i) => {
+                                                    return list.AccessKey && list.name !== '사용자 등록' ? (
+                                                        <dl className="inputbox" key={'사용자 등록' + list.name}>
+                                                            <dt className="inputbox-title">
+                                                                {CompanySelectAccessKey.map((list, i) => {
+                                                                    return list.AccessKey ? list.name : '';
+                                                                })}
+                                                                사유
+                                                            </dt>
+                                                            <dd className="inputbox-content">
+                                                                <textarea
+                                                                    value={SelectedData.selected_reason}
+                                                                    onChange={e =>
+                                                                        setSelectedData({
+                                                                            ...SelectedData,
+                                                                            selected_reason: e.target.value,
+                                                                        })
+                                                                    }
+                                                                ></textarea>
+                                                                <span className="underline"></span>
+                                                            </dd>
+                                                        </dl>
+                                                    ) : (
+                                                        ''
+                                                    );
+                                                })}
+
+                                                {CompanySelectAccessKey.map((list, i) => {
                                                     return list.AccessKey && list.name === '이관' ? (
-                                                        <dl className="inputbox">
-                                                            <dt className="inputbox-title">이관 사용자</dt>
+                                                        <dl className="inputbox" key={'이관' + list.name}>
+                                                            <dt className="inputbox-title">{list.name} 사용자</dt>
                                                             <dd className="inputbox-content">
                                                                 <Select
                                                                     options={InfoUserData}
@@ -570,22 +590,13 @@ const UpdatePcAssetUserDataModal = ({ UserAddModalOpen, setUserAddModalOpen, Sel
                                     취소
                                 </button>
                             </div>
-                            {/* <label>사용자 검색 *</label>
-                            <Select options={InfoUserData} onChange={(value: any) => handleChange(value)}></Select>
-                            <div className="btns">
-                                <button className="btn btn-confirm" onClick={() => saveData()}>
-                                    저장
-                                </button>
-                                <button className="btn btn-cancel" onClick={() => closeModal()}>
-                                    취소
-                                </button>
-                            </div> */}
                         </div>
                     </div>
+                    <HistoryMainPage asset_management_number={SelectAssetData?.asset_management_number}></HistoryMainPage>
                 </NewPcAssetUserDataMainModalContent>
             </Modal>
         </div>
     );
 };
 
-export default UpdatePcAssetUserDataModal;
+export default React.memo(UpdatePcAssetUserDataModal);

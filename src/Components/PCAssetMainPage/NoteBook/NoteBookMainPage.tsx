@@ -1,10 +1,9 @@
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import { DeskTopInfoDataType, DeskTopMainPageProps } from '../PCAssetDataType';
-import { AssetDesktopInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
 import { NothingAssetCheckFunc } from '../../../PublicFunc/NothingAssetData';
 import { GiLaptop } from 'react-icons/gi';
-import { ImUserMinus, ImUserPlus } from 'react-icons/im';
+import { BsInfoCircleFill } from 'react-icons/bs';
 import { AssetTableMainDivBox } from '../DeskTop/DeskTopMainPage';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { NoteBookAsset_getNoteBookAssetDataThunk } from '../../../Models/AssetDataReduxThunk/AssetNotBookDataThunks';
@@ -14,9 +13,10 @@ import { AssetDelete } from '../../../Apis/core/api/AuthUnNeedApi/DeleteAssetUse
 import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../../Configs/ToastTimerConfig';
 import NewPcAssetUserData from '../PcAssetMenuIcons/PcAssetModals/NewPcAssetUserDataModal';
+import UpdatePcAssetUserDataModal from '../PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
 
 const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
-    const [UserAddModalOpen, setUserAddModalOpen] = useState(false);
+    const [UserUpdateModalOpen, setUserUpdateModalOpen] = useState(false);
     const [SelectAssetData, setSelectAssetData] = useState<DeskTopInfoDataType | null>(null);
     const NoteBookInfo = useSelector((state: RootState) => state.NoteBookAssetData.NoteBookAssetData);
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
@@ -39,26 +39,10 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
         }
     };
 
-    const handlePlusUsered = async (data: DeskTopInfoDataType) => {
-        try {
-            setSelectAssetData(data);
-            setUserAddModalOpen(true);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     const handleMinusUsered = async (data: DeskTopInfoDataType) => {
         try {
-            const deleteData = await AssetDelete('/Asset_app_server/AssetDeleteData', data);
-            if (deleteData.data.dataSuccess) {
-                getDataAssetDeskTop();
-                toast.show({
-                    title: `관리 번호(${data.asset_management_number})에 유저 등록 해제 하였습니다.`,
-                    successCheck: true,
-                    duration: ToastTime,
-                });
-            }
+            setSelectAssetData(data);
+            setUserUpdateModalOpen(true);
         } catch (error) {
             console.log(error);
         }
@@ -94,7 +78,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                     <th scope="cols">자산코드</th>
                                     <th scope="cols">사용장소</th>
                                     <th scope="cols">사용자</th>
-                                    <th scope="cols">폐기여부</th>
+                                    <th scope="cols">정보 조회</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,7 +101,11 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                                     {list.company_location}_{list.company_building}_{list.company_floor}
                                                 </td>
                                                 <td>{list.name ? list.name : '-'}</td>
-                                                <td>{list.asset_destroy_check ? 'O' : '-'}</td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    <div className="UserPlusIcons" onClick={() => handleMinusUsered(list)}>
+                                                        <BsInfoCircleFill></BsInfoCircleFill>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         );
                                     })
@@ -133,12 +121,13 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                     )}
                 </AssetTableMainDivBox>
             </div>
-            {UserAddModalOpen ? (
-                <NewPcAssetUserData
-                    UserAddModalOpen={UserAddModalOpen}
-                    setUserAddModalOpen={() => setUserAddModalOpen(false)}
+            {UserUpdateModalOpen ? (
+                <UpdatePcAssetUserDataModal
+                    UserAddModalOpen={UserUpdateModalOpen}
+                    setUserAddModalOpen={() => setUserUpdateModalOpen(false)}
                     SelectAssetData={SelectAssetData}
-                ></NewPcAssetUserData>
+                    SelectCompany={SelectCompany}
+                ></UpdatePcAssetUserDataModal>
             ) : (
                 ''
             )}

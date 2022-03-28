@@ -6,18 +6,12 @@ import { NothingAssetCheckFunc } from '../../../PublicFunc/NothingAssetData';
 import { DeskTopInfoDataType, DeskTopMainPageProps } from '../PCAssetDataType';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { CgDesktop } from 'react-icons/cg';
-import { ImUserMinus, ImUserPlus } from 'react-icons/im';
-import { BiHistory } from 'react-icons/bi';
+import { BsInfoCircleFill } from 'react-icons/bs';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
 import { RootState } from '../../../Models';
-import { AssetDelete } from '../../../Apis/core/api/AuthUnNeedApi/DeleteAssetUser/AssetDelete';
-import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
-import { ToastTime } from '../../../Configs/ToastTimerConfig';
-import NewPcAssetUserData from '../PcAssetMenuIcons/PcAssetModals/NewPcAssetUserDataModal';
 import UpdatePcAssetUserDataModal from '../PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
-import axios from 'axios';
 
 export const AssetTableMainDivBox = styled.div`
     max-height: 60vh;
@@ -100,14 +94,8 @@ export const AssetTableMainDivBox = styled.div`
 `;
 
 const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
-    const [UserAddModalOpen, setUserAddModalOpen] = useState(false);
     const [UserUpdateModalOpen, setUserUpdateModalOpen] = useState(false);
     const [SelectAssetData, setSelectAssetData] = useState<DeskTopInfoDataType | null>(null);
-    const [historyCheck, setHistoryCheck] = useState(false);
-    const [historySelected, sethistorySelected] = useState({
-        selected: '',
-        datas: [],
-    });
 
     const DeskTopInfo = useSelector((state: RootState) => state.DeskTopAssetData.DeskTopAssetData);
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
@@ -115,24 +103,6 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
     useEffect(() => {
         getDataAssetDeskTop();
     }, [SelectCompany, FilteringData]);
-
-    useEffect(() => {
-        gethistoryData();
-    }, [historySelected.selected]);
-
-    const gethistoryData = async () => {
-        try {
-            const gethistoryDataFromServer = await axios.get('http://192.168.2.155:3001/Asset_app_server/historyData', {
-                params: { historySelected: historySelected.selected },
-            });
-            console.log(gethistoryDataFromServer);
-            if (gethistoryDataFromServer.data.dataSuccess) {
-                sethistorySelected({ ...historySelected, datas: gethistoryDataFromServer.data.data });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const getDataAssetDeskTop = async () => {
         try {
@@ -148,29 +118,10 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
         }
     };
 
-    const handlePlusUsered = async (data: DeskTopInfoDataType) => {
-        try {
-            console.log(data);
-            setSelectAssetData(data);
-            setUserAddModalOpen(true);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     const handleMinusUsered = async (data: DeskTopInfoDataType) => {
         try {
             setSelectAssetData(data);
             setUserUpdateModalOpen(true);
-            // const deleteData = await AssetDelete('/Asset_app_server/AssetDeleteData', data);
-            // if (deleteData.data.dataSuccess) {
-            //     getDataAssetDeskTop();
-            //     toast.show({
-            //         title: `관리 번호(${data.asset_management_number})에 유저 등록 해제 하였습니다.`,
-            //         successCheck: true,
-            //         duration: ToastTime,
-            //     });
-            // }
         } catch (error) {
             console.log(error);
         }
@@ -206,12 +157,8 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                     <th scope="cols">자산코드</th>
                                     <th scope="cols">사용장소</th>
                                     <th scope="cols">사용자</th>
-                                    <th scope="cols">
-                                        사용자
-                                        <br />
-                                        추가 및 해제
-                                    </th>
-                                    <th scope="cols">이력 조회</th>
+                                    <th scope="cols">정보 조회</th>
+                                    {/* <th scope="cols">이력 조회</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -252,63 +199,12 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                                             '-'
                                                         )}
                                                     </td>
-                                                    <td>
-                                                        {list.name ? (
-                                                            <div className="UserMinusIcons" onClick={() => handleMinusUsered(list)}>
-                                                                <ImUserMinus></ImUserMinus>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="UserPlusIcons" onClick={() => handlePlusUsered(list)}>
-                                                                <ImUserPlus></ImUserPlus>
-                                                            </div>
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        <div
-                                                            className="UserPlusIcons"
-                                                            onClick={() => {
-                                                                setHistoryCheck(!historyCheck);
-                                                                sethistorySelected({
-                                                                    ...historySelected,
-                                                                    selected: list.asset_management_number,
-                                                                });
-                                                            }}
-                                                        >
-                                                            <BiHistory></BiHistory>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <div className="UserPlusIcons" onClick={() => handleMinusUsered(list)}>
+                                                            <BsInfoCircleFill></BsInfoCircleFill>
                                                         </div>
                                                     </td>
-                                                    {/* <td>{list.asset_destroy_check ? 'O' : '-'}</td> */}
                                                 </tr>
-                                                {historyCheck && historySelected.selected === list.asset_management_number ? (
-                                                    <tr>
-                                                        <td colSpan={15}>
-                                                            <table>
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>날짜</th>
-                                                                        <th>사유</th>
-                                                                        <th>이전 장소</th>
-                                                                        <th>이전 사용자</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {historySelected.datas.map((item, j) => {
-                                                                        return (
-                                                                            <tr>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                            </tr>
-                                                                        );
-                                                                    })}
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                ) : (
-                                                    ''
-                                                )}
                                             </>
                                         );
                                     })
@@ -324,20 +220,13 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                     )}
                 </AssetTableMainDivBox>
             </div>
-            {UserAddModalOpen ? (
-                <NewPcAssetUserData
-                    UserAddModalOpen={UserAddModalOpen}
-                    setUserAddModalOpen={() => setUserAddModalOpen(false)}
-                    SelectAssetData={SelectAssetData}
-                ></NewPcAssetUserData>
-            ) : (
-                ''
-            )}
+
             {UserUpdateModalOpen ? (
                 <UpdatePcAssetUserDataModal
                     UserAddModalOpen={UserUpdateModalOpen}
                     setUserAddModalOpen={() => setUserUpdateModalOpen(false)}
                     SelectAssetData={SelectAssetData}
+                    SelectCompany={SelectCompany}
                 ></UpdatePcAssetUserDataModal>
             ) : (
                 ''
