@@ -291,10 +291,10 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         asset_maker: '삼성',
         asset_model: '',
         asset_purchase_date: new Date(),
-        asset_pride: '',
+        asset_pride: 0,
         asset_cpu: '',
-        asset_ram: '16G',
-        asset_disk: 'S_256G',
+        asset_ram: '16GB',
+        asset_disk: 'SSD_512GB',
         asset_newcode: '',
         usercheck: false,
         userinfo_email: '',
@@ -302,15 +302,14 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         company_code: '',
     });
 
+    useEffect(() => {
+        hadldeRandomCodeData();
+    }, []);
+
     const [licenseSettingData, setLicenseSettingData] = useState([]);
     const [SelectedLicenseData, setSelectedLicenseData] = useState<any>([]);
     const [textText, setTextTest] = useState('');
     const [Q1, setQ1] = useState('');
-
-    const handleTextData = () => {
-        console.log(textText);
-        console.log('adada', textText.split('\t'));
-    };
 
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
 
@@ -369,7 +368,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
 
     const getSettingData = async () => {
         try {
-            const getSettingDatas = await axios.get('http://192.168.2.155:3001/Asset_app_server/license_settingData', {
+            const getSettingDatas = await axios.get(`${process.env.REACT_APP_API_URL}/Asset_app_server/license_settingData`, {
                 params: {
                     id: 'sjyoo@dhk.co.kr',
                 },
@@ -382,7 +381,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     };
 
     useEffect(() => {
-        console.log(Q1);
         const selectedLicensedatas: any = [];
         licenseSettingData.map((list: any, i) => {
             if (list.setting_title === Q1) {
@@ -392,6 +390,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         setSelectedLicenseData(selectedLicensedatas);
     }, [Q1]);
 
+    //관리번호 다시 받기 클릭 시
     const hadldeRandomCodeData = async () => {
         try {
             const ParamasData = {
@@ -409,10 +408,13 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             console.log(error);
         }
     };
-
+    //저장시
     const saveData = async () => {
         if (UserWriteData.asset_management_number === '' || UserWriteData.company_code === '') {
             alert('공란을 작성해주세요.');
+            return;
+        } else if (UserWriteData.usercheck && UserWriteData.userinfo_email === '') {
+            alert('사용자를 등록 해주세요.');
             return;
         }
         try {
@@ -447,6 +449,23 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 }
 
+                setUserWriteData({
+                    asset_management_number: '',
+                    asset_division: UserWriteData.asset_division,
+                    asset_maker: UserWriteData.asset_maker,
+                    asset_model: UserWriteData.asset_model,
+                    asset_purchase_date: UserWriteData.asset_purchase_date,
+                    asset_pride: UserWriteData.asset_pride,
+                    asset_cpu: UserWriteData.asset_cpu,
+                    asset_ram: UserWriteData.asset_ram,
+                    asset_disk: UserWriteData.asset_disk,
+                    asset_newcode: UserWriteData.asset_newcode,
+                    usercheck: false,
+                    userinfo_email: '',
+                    asset_distribute_date: new Date(),
+                    company_code: '',
+                });
+
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             }
             console.log(UserWriteData);
@@ -469,8 +488,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                         <div id="wrap" className="input">
                             <section className="input-content">
                                 <h2>PC 자산 추가</h2>
-                                <input type="text" onChange={e => setTextTest(e.target.value)}></input>
-                                <button onClick={handleTextData}>테스트</button>
+
                                 <div className="PCAssetFloatContainer">
                                     <div className="PCAssetFloatLeft">
                                         <div className="input-content-wrap">
@@ -486,7 +504,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         onChange={e =>
                                                             setUserWriteData({ ...UserWriteData, asset_management_number: e.target.value })
                                                         }
-                                                        placeholder="YIKC-22001"
+                                                        placeholder={`${SelectCompany}-22001`}
                                                         required
                                                     />
 
@@ -525,12 +543,15 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             onChange={e =>
                                                                 setUserWriteData({ ...UserWriteData, company_code: e.target.value })
                                                             }
+                                                            value={UserWriteData.company_code}
                                                         >
-                                                            <option disabled selected>
-                                                                사용처 선택
-                                                            </option>
+                                                            <option disabled>사용처 선택</option>
                                                             {CompanyInfoData.map((list, i) => {
-                                                                return <option value={list.value}>{list.label}</option>;
+                                                                return (
+                                                                    <option key={list.value} defaultValue={list.value} value={list.value}>
+                                                                        {list.label}
+                                                                    </option>
+                                                                );
                                                             })}
                                                         </select>
                                                         <span className="icoArrow"></span>
@@ -546,11 +567,14 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             onChange={e =>
                                                                 setUserWriteData({ ...UserWriteData, asset_division: e.target.value })
                                                             }
+                                                            value={UserWriteData.asset_division}
                                                         >
-                                                            <option selected value="데스크탑">
+                                                            <option selected defaultValue="데스크탑" value={'데스크탑'}>
                                                                 데스크탑
                                                             </option>
-                                                            <option value="노트북">노트북</option>
+                                                            <option defaultValue="노트북" value={'노트북'}>
+                                                                노트북
+                                                            </option>
                                                         </select>
                                                         <span className="icoArrow"></span>
                                                     </div>
@@ -586,10 +610,13 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                 <dt className="inputbox-title">가격</dt>
                                                 <dd className="inputbox-content">
                                                     <input
+                                                        type="number"
                                                         id="input4"
                                                         value={UserWriteData.asset_pride}
-                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_pride: e.target.value })}
-                                                        placeholder="1,700,000 ..."
+                                                        onChange={e =>
+                                                            setUserWriteData({ ...UserWriteData, asset_pride: Number(e.target.value) })
+                                                        }
+                                                        placeholder="1700000 ..."
                                                     />
 
                                                     <span className="underline"></span>
@@ -611,27 +638,68 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">RAM</dt>
                                                 <dd className="inputbox-content">
-                                                    <input
+                                                    {/* <input
                                                         id="input5"
                                                         value={UserWriteData.asset_ram}
                                                         onChange={e => setUserWriteData({ ...UserWriteData, asset_ram: e.target.value })}
                                                         placeholder="8G,16G ..."
-                                                    />
-
+                                                    /> 
                                                     <span className="underline"></span>
+                                                    */}
+                                                    <select
+                                                        className="select"
+                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_ram: e.target.value })}
+                                                        value={UserWriteData.asset_ram}
+                                                    >
+                                                        <option defaultValue="4GB" value={'4GB'}>
+                                                            4GB
+                                                        </option>
+                                                        <option defaultValue="8GB" value={'8GB'}>
+                                                            8GB
+                                                        </option>
+                                                        <option defaultValue="16GB" value={'16GB'}>
+                                                            16GB
+                                                        </option>
+                                                        <option defaultValue="32GB" value={'32GB'}>
+                                                            32GB
+                                                        </option>
+                                                        <option defaultValue="64GB" value={'64GB'}>
+                                                            64GB
+                                                        </option>
+                                                    </select>
                                                 </dd>
                                             </dl>
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">디스크</dt>
                                                 <dd className="inputbox-content">
-                                                    <input
+                                                    {/* <input
                                                         id="input6"
                                                         value={UserWriteData.asset_disk}
                                                         onChange={e => setUserWriteData({ ...UserWriteData, asset_disk: e.target.value })}
                                                         placeholder="S_256G ..."
                                                     />
-
-                                                    <span className="underline"></span>
+                                                    <span className="underline"></span> */}
+                                                    <select
+                                                        className="select"
+                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_disk: e.target.value })}
+                                                        value={UserWriteData.asset_disk}
+                                                    >
+                                                        <option defaultValue="SSD_256GB" value={'SSD_256GB'}>
+                                                            SSD_256GB
+                                                        </option>
+                                                        <option defaultValue="SSD_512GB" value={'SSD_512GB'}>
+                                                            SSD_512GB
+                                                        </option>
+                                                        <option defaultValue="SSD_1TB" value={'SSD_1TB'}>
+                                                            SSD_1TB
+                                                        </option>
+                                                        <option defaultValue="HDD_512GB" value={'HDD_512GB'}>
+                                                            HDD_512GB
+                                                        </option>
+                                                        <option defaultValue="HDD_1TB" value={'HDD_1TB'}>
+                                                            HDD_1TB
+                                                        </option>
+                                                    </select>
                                                 </dd>
                                             </dl>
 

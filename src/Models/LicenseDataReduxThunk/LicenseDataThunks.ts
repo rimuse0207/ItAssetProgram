@@ -20,6 +20,7 @@ const License_getLicenseDataAsync = createAsyncAction(
 const TeamLeader_getDataFoodApply = async (ParamsData: {}) => {
     try {
         const getInfoLicenseData = await LicenseInfoGet('/license_app_server/LicenseSelect', ParamsData);
+        console.log(getInfoLicenseData);
         return getInfoLicenseData.data.data;
     } catch (error) {
         console.log(error);

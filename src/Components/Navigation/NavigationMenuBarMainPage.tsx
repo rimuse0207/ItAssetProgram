@@ -236,7 +236,7 @@ const NavigationMenuBarMainPage = () => {
                                         <div>
                                             <BsFillPersonFill></BsFillPersonFill>
                                         </div>
-                                        <div className="listStyleSubLists">Personal</div>
+                                        <div className="listStyleSubLists">내PC정보</div>
                                     </div>
                                 </Link>
                             </li>
@@ -245,7 +245,7 @@ const NavigationMenuBarMainPage = () => {
                                     <div>
                                         <BsPieChartFill></BsPieChartFill>
                                     </div>
-                                    <div className="listStyleSubLists">Company</div>
+                                    <div className="listStyleSubLists">통합사용현황</div>
                                 </div>
                             </li>
                             <li>
@@ -260,7 +260,7 @@ const NavigationMenuBarMainPage = () => {
                                                 setMenuCheckedSubLists({ ...MenuCheckedSubLists, license: !MenuCheckedSubLists.license })
                                             }
                                         >
-                                            <div>License</div>
+                                            <div>라이선스</div>
                                             {MenuCheckedSubLists.license ? (
                                                 <div className="HiddenOff">
                                                     <MdKeyboardArrowDown></MdKeyboardArrowDown>
@@ -326,7 +326,7 @@ const NavigationMenuBarMainPage = () => {
                                                 setMenuCheckedSubLists({ ...MenuCheckedSubLists, setting: !MenuCheckedSubLists.setting })
                                             }
                                         >
-                                            <div>Setting</div>
+                                            <div>설정</div>
                                             {MenuCheckedSubLists.setting ? (
                                                 <div className="HiddenOff">
                                                     <MdKeyboardArrowDown></MdKeyboardArrowDown>
@@ -344,9 +344,8 @@ const NavigationMenuBarMainPage = () => {
                             <div className="SubHiddenListsMenu">
                                 {MenuCheckedSubLists.setting ? (
                                     <ul className="settingClassNamesOn">
-                                        <li>Change Password</li>
-                                        <li>Request Board</li>
-                                        <li>Logout</li>
+                                        <li>비밀번호 변경</li>
+                                        <li>로그아웃</li>
                                     </ul>
                                 ) : (
                                     ''

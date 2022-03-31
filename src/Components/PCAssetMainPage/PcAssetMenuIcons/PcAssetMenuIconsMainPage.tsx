@@ -354,11 +354,6 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                                     </div>
                                     <div className="SearchInputContainerSubTitle">
                                         <div className="SearchInputContainerSubTitleFlexDivBox">
-                                            {/* <div className="IconsDivBox">
-                                                <label>
-                                                    <BsFillPencilFill></BsFillPencilFill>
-                                                </label>
-                                            </div> */}
                                             <div className="InputDivBox">
                                                 <input
                                                     type="date"

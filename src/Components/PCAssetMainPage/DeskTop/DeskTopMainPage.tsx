@@ -158,54 +158,57 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                     <th scope="cols">사용장소</th>
                                     <th scope="cols">사용자</th>
                                     <th scope="cols">정보 조회</th>
-                                    {/* <th scope="cols">이력 조회</th> */}
+                                    <th scope="cols">폐기 여부</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {DeskTopInfo.data.length > 0 ? (
                                     DeskTopInfo.data.map((list: DeskTopInfoDataType, i: number) => {
                                         return (
-                                            <>
-                                                <tr key={list.asset_management_number}>
-                                                    <td>{i + 1}</td>
-                                                    <td>{list.asset_management_number}</td>
-                                                    <td>{list.asset_maker}</td>
-                                                    <td>{list.asset_model}</td>
-                                                    <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
-                                                    <td>{moment(list.asset_purchase_date).clone().add(5, 'years').format('YYYY-MM-DD')}</td>
-                                                    <td>{list.asset_pride ? Number(list.asset_pride).toLocaleString('ko-KR') : '-'}</td>
-                                                    <td>{list.asset_cpu}</td>
-                                                    <td>{list.asset_ram}</td>
-                                                    <td>{list.asset_disk}</td>
-                                                    <td>{list.asset_newcode ? list.asset_newcode : '-'}</td>
-                                                    <td>
-                                                        {list.companyInfo_companycode ? (
-                                                            <div>
-                                                                <div>{list.company_location}</div>
-                                                                <div>{list.company_building}</div>
-                                                                <div>{list.company_floor}</div>
-                                                            </div>
-                                                        ) : (
-                                                            '-'
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        {list.name ? (
-                                                            <div>
-                                                                <div>{list.team}</div>
-                                                                <div>{list.name}</div>
-                                                            </div>
-                                                        ) : (
-                                                            '-'
-                                                        )}
-                                                    </td>
-                                                    <td style={{ textAlign: 'center' }}>
+                                            <tr key={list.asset_management_number}>
+                                                <td>{i + 1}</td>
+                                                <td>{list.asset_management_number}</td>
+                                                <td>{list.asset_maker}</td>
+                                                <td>{list.asset_model}</td>
+                                                <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
+                                                <td>{moment(list.asset_purchase_date).clone().add(5, 'years').format('YYYY-MM-DD')}</td>
+                                                <td>{list.asset_pride ? Number(list.asset_pride).toLocaleString('ko-KR') : '-'}</td>
+                                                <td>{list.asset_cpu}</td>
+                                                <td>{list.asset_ram}</td>
+                                                <td>{list.asset_disk}</td>
+                                                <td>{list.asset_newcode ? list.asset_newcode : '-'}</td>
+                                                <td>
+                                                    {list.companyInfo_companycode ? (
+                                                        <div>
+                                                            <div>{list.company_location}</div>
+                                                            <div>{list.company_building}</div>
+                                                            <div>{list.company_floor}</div>
+                                                        </div>
+                                                    ) : (
+                                                        '-'
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    {list.name ? (
+                                                        <div>
+                                                            <div>{list.team}</div>
+                                                            <div>{list.name}</div>
+                                                        </div>
+                                                    ) : (
+                                                        '-'
+                                                    )}
+                                                </td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    {list.asset_destroy_check === 0 ? (
                                                         <div className="UserPlusIcons" onClick={() => handleMinusUsered(list)}>
                                                             <BsInfoCircleFill></BsInfoCircleFill>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            </>
+                                                    ) : (
+                                                        <div>불가</div>
+                                                    )}
+                                                </td>
+                                                <td>{list.asset_destroy_check === 0 ? 'X' : 'O'}</td>
+                                            </tr>
                                         );
                                     })
                                 ) : (

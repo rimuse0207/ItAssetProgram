@@ -1,18 +1,22 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import UserUsedMainPage from '../UserUsedMainPage/UserUsedMainPage';
+// import UserUsedMainPage from '../UserUsedMainPage/UserUsedMainPage';
 import { LicenseInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
-import DownLoadMainPage from './DownloadMainPage/DownLoadMainPage';
+// import DownLoadMainPage from './DownloadMainPage/DownLoadMainPage';
 import { VolumeLicenseMainPageProps, LicenseDataType } from './VolumeLicenseDataTypes';
 import { License_getLicenseDataThunk } from '../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Models';
-import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
+// import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
 export const LicensMainTableIncludeBox = styled.div`
+    td,
+    th {
+        vertical-align: middle !important;
+    }
     table.type09 {
         border-collapse: collapse;
         text-align: left;
@@ -128,7 +132,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
 
     return (
         <div style={{ marginBottom: '100px' }}>
-            <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
+            {/* <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
             <DownLoadMainPage
                 SelectCompany={SelectCompany}
                 UserAddModals={UserAddModals}
@@ -137,7 +141,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                 UserClickLicenseData={UserClickLicenseData}
                 type={type}
                 SortTable={SortTable}
-            ></DownLoadMainPage>
+            ></DownLoadMainPage> */}
             <div>
                 <div>
                     <h2>{type}</h2>
@@ -147,50 +151,9 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                         <table className="type09">
                             <thead>
                                 <tr>
-                                    <th scope="cols"></th>
-                                    <th scope="cols" style={{ width: '150px' }}>
-                                        <div>코드</div>
-                                        <div className="SortIcons">
-                                            {SortTable.Name === 'code' && SortTable.ASC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'code',
-                                                            ASC: false,
-                                                            DESC: true,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortUp></FaSortUp>
-                                                </div>
-                                            ) : SortTable.Name === 'code' && SortTable.DESC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'code',
-                                                            ASC: false,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortDown></FaSortDown>
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'code',
-                                                            ASC: true,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSort></FaSort>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </th>
-                                    <th scope="cols" style={{ width: '150px' }}>
+                                    <th scope="cols">인덱스</th>
+                                    <th scope="cols">관리번호</th>
+                                    {/* <th scope="cols" style={{ width: '150px' }}>
                                         <div>이름</div>
                                         <div className="SortIcons">
                                             {SortTable.Name === 'name' && SortTable.ASC ? (
@@ -231,9 +194,9 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                 </div>
                                             )}
                                         </div>
-                                    </th>
+                                    </th> */}
                                     <th scope="cols">설명</th>
-                                    <th scope="cols" style={{ width: '150px' }}>
+                                    {/* <th scope="cols" style={{ width: '150px' }}>
                                         <div>구매 날짜</div>
                                         <div className="SortIcons">
                                             {SortTable.Name === 'ContractDate' && SortTable.ASC ? (
@@ -317,46 +280,69 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                             )}
                                         </div>
                                     </th>
-                                    <th scope="cols">키 확인</th>
+                                    <th scope="cols">키 확인</th> */}
+                                    <th scope="cols">전체 사용 가능 인원</th>
+                                    <th scope="cols">전체 사용 중인 인원</th>
+                                    <th scope="cols">인덱스</th>
+                                    <th scope="cols">관리번호</th>
+                                    <th scope="cols">구입날짜</th>
+                                    <th scope="cols">만료날짜</th>
+                                    <th scope="cols">구입가격</th>
+                                    <th scope="cols">구입업체</th>
+                                    <th scope="cols">라이선스 키</th>
+                                    <th scope="cols">자산코드</th>
+                                    <th scope="cols">허용 인원</th>
+                                    <th scope="cols">사용 중인 인원</th>
                                     <th scope="cols">사용 가능 인원</th>
-                                    <th scope="cols">사용 인원</th>
-                                    <th scope="cols">
-                                        사용 허용 <br />
-                                        (여유) 인원
-                                    </th>
-                                    <th scope="cols">
-                                        사용자 <br />
-                                        추가
-                                    </th>
-                                    <th scope="cols">
-                                        사용자 <br />
-                                        정보
-                                    </th>
+                                    <th scope="cols">정보 보기</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {LicenseData.data.map((list: LicenseDataType, i: number) => {
                                     return (
-                                        <tr key={list.code}>
-                                            <th scope="row">{i + 1}</th>
-                                            <td>{list.code}</td>
-                                            <td>{list.name}</td>
-                                            <td>{list.explaindesc}</td>
-                                            <td>{moment(list.contractdate).format('YYYY-MM-DD')}</td>
-                                            <td>{moment(list.terminateddate).format('YYYY-MM-DD')}</td>
-                                            <td className="HoverCheck" onClick={() => window.open(`${list.prove_file_location}`, '_blank')}>
-                                                클릭
-                                            </td>
-                                            <td>{list.max_access}</td>
-                                            <td>{list.counts}</td>
-                                            <td>{(list.max_access ? list.max_access : 0) - (list.counts ? list.counts : 0)}</td>
-                                            <td onClick={() => handleClicksUserAdd(list)}>
-                                                <BsFillPersonPlusFill></BsFillPersonPlusFill>
-                                            </td>
-                                            <td className="HoverCheck" onClick={() => setSelectCode(list.code)}>
-                                                클릭
-                                            </td>
-                                        </tr>
+                                        <>
+                                            <tr key={list.license_product_code}>
+                                                <th scope="row" rowSpan={list.datas.length + 1}>
+                                                    {i + 1}
+                                                </th>
+
+                                                <td rowSpan={list.datas.length + 1}>{list.license_product_code}</td>
+                                                <td rowSpan={list.datas.length + 1}>{list.license_product_name}</td>
+                                                <td rowSpan={list.datas.length + 1}>{list.sumpermit} 명</td>
+                                                <td rowSpan={list.datas.length + 1}>{list.all_user_used_count}명</td>
+
+                                                {/* <td onClick={() => handleClicksUserAdd(list)}>
+                                                    <BsFillPersonPlusFill></BsFillPersonPlusFill>
+                                                </td>
+                                                <td className="HoverCheck" onClick={() => setSelectCode(list.license_manage_code)}>
+                                                    클릭
+                                                </td> */}
+                                            </tr>
+                                            {list.datas.map((item: LicenseDataType, j: number) => {
+                                                return (
+                                                    <tr
+                                                        style={
+                                                            item.license_permit_count - item.userData[0].useUserCount < 0
+                                                                ? { backgroundColor: '#edafaf' }
+                                                                : {}
+                                                        }
+                                                    >
+                                                        <td>{j + 1}</td>
+                                                        <td>{item.license_manage_code}</td>
+                                                        <td>{moment(item.license_purchase_date).format('YYYY-MM-DD')}</td>
+                                                        <td>{moment(item.license_purchase_finish_date).format('YYYY-MM-DD')}</td>
+                                                        <td>{item.license_purchase_pride.toLocaleString('ko-KR')}</td>
+                                                        <td>{item.license_purchase_company ? item.license_purchase_company : '-'}</td>
+                                                        <td>{item.license_prove_code ? '클릭' : '-'}</td>
+                                                        <td>{item.license_newcode ? item.license_newcode : '-'}</td>
+                                                        <td>{item.license_permit_count} 명</td>
+                                                        <td>{item.userData[0].useUserCount} 명</td>
+                                                        <td>{item.license_permit_count - item.userData[0].useUserCount} 명</td>
+                                                        <td>클릭</td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </>
                                     );
                                 })}
                             </tbody>
@@ -366,14 +352,14 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                     )}
                 </LicensMainTableIncludeBox>
             </div>
-            <div>
+            {/* <div>
                 <UserUsedMainPage
                     SelectCompany={SelectCompany}
                     license={type}
                     SelectCode={SelectCode}
                     SortTable={SortTable}
                 ></UserUsedMainPage>
-            </div>
+            </div> */}
         </div>
     );
 };

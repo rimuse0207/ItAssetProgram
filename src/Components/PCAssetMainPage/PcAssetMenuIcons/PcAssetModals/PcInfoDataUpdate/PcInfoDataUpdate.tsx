@@ -5,6 +5,7 @@ import { BsPencilSquare } from 'react-icons/bs';
 import styled from 'styled-components';
 type PcInfoDataUpdateProps = {
     SelectAssetData: DeskTopInfoDataType | null;
+    setAssetDataChangeCheck: () => void;
 };
 
 const PcInfoDataUpdateMainDivBox = styled.div`
@@ -18,7 +19,7 @@ const PcInfoDataUpdateMainDivBox = styled.div`
     }
 `;
 
-const PcInfoDataUpdate = ({ SelectAssetData }: PcInfoDataUpdateProps) => {
+const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDataUpdateProps) => {
     return (
         <PcInfoDataUpdateMainDivBox>
             <div>
@@ -27,7 +28,7 @@ const PcInfoDataUpdate = ({ SelectAssetData }: PcInfoDataUpdateProps) => {
             <div>
                 <table className="type03">
                     <div className="UpdateButton">
-                        <button>
+                        <button onClick={() => setAssetDataChangeCheck()}>
                             <BsPencilSquare></BsPencilSquare>자산 정보 수정 하기
                         </button>
                     </div>

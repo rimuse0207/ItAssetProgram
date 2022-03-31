@@ -21,6 +21,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import HistoryMainPage from './HistoryMainPage/HistoryMainPage';
 import PcInfoDataUpdate from './PcInfoDataUpdate/PcInfoDataUpdate';
+import PcInfoChangeData from './PcInfoDataUpdate/PcInfoChangeData';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -328,6 +329,7 @@ const UpdatePcAssetUserDataModal = ({
         { name: '이관', AccessKey: false },
         { name: '폐기', AccessKey: false },
     ]);
+    const [AssetDataChangeCheck, setAssetDataChangeCheck] = useState(false);
 
     const [SelectedData, setSelectedData] = useState({
         selected_date: new Date(),
@@ -460,7 +462,17 @@ const UpdatePcAssetUserDataModal = ({
                     </div>
                     <div className="ModalFloat">
                         <div className="ModalFloatLeft">
-                            <PcInfoDataUpdate SelectAssetData={SelectAssetData}></PcInfoDataUpdate>
+                            {AssetDataChangeCheck ? (
+                                <PcInfoChangeData
+                                    SelectAssetData={SelectAssetData}
+                                    setAssetDataChangeCheck={() => setAssetDataChangeCheck(false)}
+                                ></PcInfoChangeData>
+                            ) : (
+                                <PcInfoDataUpdate
+                                    SelectAssetData={SelectAssetData}
+                                    setAssetDataChangeCheck={() => setAssetDataChangeCheck(true)}
+                                ></PcInfoDataUpdate>
+                            )}
                         </div>
 
                         <div className="ModalFloatRight">
