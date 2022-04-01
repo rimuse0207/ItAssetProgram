@@ -6,12 +6,12 @@ import { LicenseInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
-// import DownLoadMainPage from './DownloadMainPage/DownLoadMainPage';
+import DownLoadMainPage from './DownloadMainPage/DownLoadMainPage';
 import { VolumeLicenseMainPageProps, LicenseDataType } from './VolumeLicenseDataTypes';
 import { License_getLicenseDataThunk } from '../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Models';
-// import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
+import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
 export const LicensMainTableIncludeBox = styled.div`
     td,
     th {
@@ -132,7 +132,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
 
     return (
         <div style={{ marginBottom: '100px' }}>
-            {/* <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
+            <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
             <DownLoadMainPage
                 SelectCompany={SelectCompany}
                 UserAddModals={UserAddModals}
@@ -141,7 +141,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                 UserClickLicenseData={UserClickLicenseData}
                 type={type}
                 SortTable={SortTable}
-            ></DownLoadMainPage> */}
+            ></DownLoadMainPage>
             <div>
                 <div>
                     <h2>{type}</h2>
@@ -338,7 +338,9 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                         <td>{item.license_permit_count} 명</td>
                                                         <td>{item.userData[0].useUserCount} 명</td>
                                                         <td>{item.license_permit_count - item.userData[0].useUserCount} 명</td>
-                                                        <td>클릭</td>
+                                                        <td onClick={() => handleClicksUserAdd(item)}>
+                                                            <BsFillPersonPlusFill></BsFillPersonPlusFill>
+                                                        </td>
                                                     </tr>
                                                 );
                                             })}

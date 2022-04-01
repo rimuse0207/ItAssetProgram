@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import axios from 'axios';
 import styled from 'styled-components';
 import { VolumeLicenseMainPageProps, LicenseDataType } from '../VolumeLicenseMainPage/VolumeLicenseDataTypes';
+import { RootState } from '../../../Models';
+import { useSelector } from 'react-redux';
 const GraphContainer = styled.div`
     width: 97%;
     height: 40vh;
@@ -38,6 +39,7 @@ export const options = {
 };
 
 const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPageProps) => {
+    const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
     const [datas, setdata] = useState({
         labels: ['nothing'],
         datasets: [
@@ -57,18 +59,34 @@ const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPa
     });
     useEffect(() => {
         getada();
-    }, [SelectCompany, type]);
-
+    }, [SelectCompany, type, LicenseData.data]);
+    console.log(type);
     const getada = async () => {
-        const dad = await axios.get('http://192.168.2.155:3001/license_app_server/LicenseGraphData', {
-            params: {
-                type,
-                SelectCompany,
+        const labels = [];
+        const usedNumber = [];
+        const notUsedNumber = [];
+        for (var i = 0; i < LicenseData.data.length; i++) {
+            labels.push(LicenseData.data[i].license_product_name);
+            usedNumber.push(LicenseData.data[i].all_user_used_count);
+            notUsedNumber.push(LicenseData.data[i].sumpermit - LicenseData.data[i].all_user_used_count);
+        }
+        const datasets = [
+            {
+                label: '사용 인원',
+                data: usedNumber,
+                backgroundColor: 'rgb(255, 99, 132)',
+                stack: type,
             },
-        });
+            {
+                label: '미사용 인원',
+                data: notUsedNumber,
+                backgroundColor: 'rgb(53, 162, 235)',
+                stack: type,
+            },
+        ];
         setdata({
-            labels: dad.data.labels,
-            datasets: dad.data.datasets,
+            labels,
+            datasets,
         });
     };
 

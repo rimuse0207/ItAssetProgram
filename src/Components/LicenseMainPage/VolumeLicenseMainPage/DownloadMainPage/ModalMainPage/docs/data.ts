@@ -4,6 +4,8 @@ export type PersonOption = {
     email: string;
     name: string;
     team: string;
+    asset_management_number: string;
+    asset_division: string;
 };
 export type CompanyOption = {
     value: string;

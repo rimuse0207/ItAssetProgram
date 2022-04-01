@@ -16,3 +16,9 @@ export const AssetDesktopInfoGet = (RequestURL: string, ParamasData: {}) => {
         params: ParamasData,
     });
 };
+
+export const AssetDeleteLicense = (RequestURL: string, ParamasData: {}) => {
+    return request.post(RequestURL, {
+        params: ParamasData,
+    });
+};
