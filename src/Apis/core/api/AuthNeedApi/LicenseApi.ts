@@ -22,3 +22,9 @@ export const AssetDeleteLicense = (RequestURL: string, ParamasData: {}) => {
         params: ParamasData,
     });
 };
+
+export const GetDataFromServerLicenseInfos = (RequestURL: string, ParamasData: {}) => {
+    return request.get(RequestURL, {
+        params: ParamasData,
+    });
+};

@@ -16,7 +16,7 @@ import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager
 import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
 import axios from 'axios';
 import moment from 'moment';
-import { AssetDeleteLicense } from '../../../../../Apis/core/api/AuthNeedApi/LicenseApi';
+import { AssetDeleteLicense, GetDataFromServerLicenseInfos } from '../../../../../Apis/core/api/AuthNeedApi/LicenseApi';
 
 const ModalMainDivBox = styled.div`
     padding: 10px;
@@ -363,14 +363,13 @@ const AddUserModalMainPage = ({
         }
     }, [UserClickLicenseData?.license_manage_code]);
     const getInfoDataLicenseInfo = async () => {
+        const ParamasData = {
+            license_manage_code: UserClickLicenseData?.license_manage_code,
+        };
         try {
-            const getDataFromServerLicenseInfo = await axios.get(
-                `http://192.168.2.155:3001/license_app_server/getDataFromServerLicenseInfo`,
-                {
-                    params: {
-                        license_manage_code: UserClickLicenseData?.license_manage_code,
-                    },
-                }
+            const getDataFromServerLicenseInfo = await GetDataFromServerLicenseInfos(
+                `license_app_server/getDataFromServerLicenseInfo`,
+                ParamasData
             );
             setSelectedLicenseData(getDataFromServerLicenseInfo.data.data);
             console.log(getDataFromServerLicenseInfo);
@@ -421,6 +420,16 @@ const AddUserModalMainPage = ({
     };
 
     const handleSelectClickIconsUserAadd = (userData: PersonOption) => {
+        const assetCount =
+            SelectedLicenseData[0].license_permit_count -
+            (SelectedLicenseData[0].license_license_manage_code ? SelectedLicenseData.length : 0);
+
+        if (SelectedInfoUserData.length >= assetCount) {
+            const permissionCheck = window.confirm('라이선스 사용자가 많습니다. 그래도 추가 하시 겠습니까?');
+            if (!permissionCheck) {
+                return;
+            }
+        }
         const getChoiceData = {
             name: userData.name,
             team: userData.team,

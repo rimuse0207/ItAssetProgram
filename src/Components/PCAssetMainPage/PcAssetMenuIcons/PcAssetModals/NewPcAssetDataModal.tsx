@@ -37,7 +37,7 @@ const customStyles = {
     },
 };
 
-const MainModalContent = styled.div`
+export const MainModalContent = styled.div`
     padding: 10px;
     .ModalCloseButton {
         border: none;

@@ -45,6 +45,7 @@ type DownLoadMainPageProps = {
     UserClickLicenseData: LicenseDataType | null;
     type: string;
     SortTable: any;
+    ModalType: string;
 };
 const DownLoadMainPage = ({
     UserAddModals,
@@ -54,6 +55,7 @@ const DownLoadMainPage = ({
     SelectCompany,
     type,
     SortTable,
+    ModalType,
 }: DownLoadMainPageProps) => {
     const [SelectClicksModals, setSelectClicksModals] = useState({
         NewDataModal: false,
@@ -126,7 +128,7 @@ const DownLoadMainPage = ({
                 )}
             </div>
             <div>
-                {UserAddModals ? (
+                {UserAddModals && ModalType === 'Show_info' ? (
                     <AddUserModalMainPage
                         SelectCompany={SelectCompany}
                         SelectClicksModals={UserAddModals}

@@ -12,6 +12,8 @@ import { License_getLicenseDataThunk } from '../../../Models/LicenseDataReduxThu
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Models';
 import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
+import { BiMessageAdd } from 'react-icons/bi';
+import AddLicenseDetailMainPage from './DownloadMainPage/ModalMainPage/AddLicenseDetailMainPage';
 export const LicensMainTableIncludeBox = styled.div`
     td,
     th {
@@ -91,6 +93,9 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
         DESC: false,
     });
     const [UserAddModals, setUserAddModals] = useState(false);
+    const [DetailLicenseAdd, setDetailLicenseAdd] = useState(false);
+    const [ModalType, setModalType] = useState('');
+    const [DetailLicenseClicksData, setDetailLicenseClicksData] = useState({});
     const [UserClickLicenseData, setUserClickLicenseData] = useState<LicenseDataType | null>(null);
     const dispatch = useDispatch();
     const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
@@ -103,6 +108,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     }, [type]);
 
     const handleClicksUserAdd = (data: LicenseDataType) => {
+        setModalType('Show_info');
         setUserClickLicenseData(data);
         setUserAddModals(true);
     };
@@ -117,14 +123,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
             };
             dispatch(License_getLicenseDataThunk(ParamasData));
             setLoadingState(true);
-            // const getInfoLicenseData = await LicenseInfoGet('/license_app_server/LicenseSelect', ParamasData);
-
-            // if (getInfoLicenseData.data.dataSuccess) {
-            //     setGetData(getInfoLicenseData.data.data);
-            //     setLoadingState(true);
-            // } else {
-            //     alert('에러발생');
-            // }
         } catch (error) {
             console.log(error);
         }
@@ -141,6 +139,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                 UserClickLicenseData={UserClickLicenseData}
                 type={type}
                 SortTable={SortTable}
+                ModalType={ModalType}
             ></DownLoadMainPage>
             <div>
                 <div>
@@ -283,6 +282,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                     <th scope="cols">키 확인</th> */}
                                     <th scope="cols">전체 사용 가능 인원</th>
                                     <th scope="cols">전체 사용 중인 인원</th>
+                                    <th scope="cols">라이선스 추가</th>
                                     <th scope="cols">인덱스</th>
                                     <th scope="cols">관리번호</th>
                                     <th scope="cols">구입날짜</th>
@@ -310,7 +310,16 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                 <td rowSpan={list.datas.length + 1}>{list.license_product_name}</td>
                                                 <td rowSpan={list.datas.length + 1}>{list.sumpermit} 명</td>
                                                 <td rowSpan={list.datas.length + 1}>{list.all_user_used_count}명</td>
-
+                                                <td
+                                                    rowSpan={list.datas.length + 1}
+                                                    onClick={() => {
+                                                        setModalType('Add_license');
+                                                        setDetailLicenseClicksData(list);
+                                                        setDetailLicenseAdd(true);
+                                                    }}
+                                                >
+                                                    <BiMessageAdd></BiMessageAdd>
+                                                </td>
                                                 {/* <td onClick={() => handleClicksUserAdd(list)}>
                                                     <BsFillPersonPlusFill></BsFillPersonPlusFill>
                                                 </td>
@@ -354,14 +363,20 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                     )}
                 </LicensMainTableIncludeBox>
             </div>
-            {/* <div>
-                <UserUsedMainPage
-                    SelectCompany={SelectCompany}
-                    license={type}
-                    SelectCode={SelectCode}
-                    SortTable={SortTable}
-                ></UserUsedMainPage>
-            </div> */}
+            <div>
+                {DetailLicenseAdd && ModalType === 'Add_license' ? (
+                    <AddLicenseDetailMainPage
+                        SelectCompany={SelectCompany}
+                        type={type}
+                        SortTable={SortTable}
+                        setSelectClicksModals={() => setDetailLicenseAdd(false)}
+                        SelectClicksModals={DetailLicenseAdd}
+                        DetailLicenseClicksData={DetailLicenseClicksData}
+                    ></AddLicenseDetailMainPage>
+                ) : (
+                    ''
+                )}
+            </div>
         </div>
     );
 };

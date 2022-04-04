@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
-import { BsPencilSquare, BsFillCalendar2DateFill } from 'react-icons/bs';
+import { LicenseDataType } from '../../VolumeLicenseDataTypes';
+import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
-import 'react-datepicker/dist/react-datepicker.css';
-import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md';
-import { GrDocumentUpload } from 'react-icons/gr';
 import { MainModalContent } from '../../../../PCAssetMainPage/PcAssetMenuIcons/PcAssetModals/NewPcAssetDataModal';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-import axios from 'axios';
-
 registerLocale('ko', ko);
 const ModalMainDivBox = styled.div`
     padding: 10px;
@@ -106,11 +102,6 @@ const ModalMainDivBox = styled.div`
         left: -40px;
         font-size: 1.3em;
     }
-    .lincenseValidityCheck {
-        :hover {
-            cursor: pointer;
-        }
-    }
 `;
 
 const customStyles = {
@@ -129,14 +120,214 @@ const customStyles = {
     },
 };
 
+const SelectUserInfoMainDivBox = styled.div`
+    .FloatMainDivBox {
+        height: 200px;
+        min-width: 500px;
+        .FloatLeftDivBox {
+            border: 0.5px solid gray;
+            width: 43%;
+            height: 100%;
+            min-width: 200px;
+            float: left;
+            overflow: auto;
+            padding: 5px;
+        }
+        .FloatRightDivBox {
+            border: 0.5px solid gray;
+            width: 43%;
+            height: 100%;
+            min-width: 200px;
+            float: right;
+            overflow: auto;
+            padding: 5px;
+        }
+        ul {
+            margin-top: 10px;
+            li {
+                border: 1px dashed black;
+                padding: 5px;
+                width: 90%;
+                font-size: 0.8em;
+                margin-bottom: 5px;
+                display: flex;
+                flex-flow: wrap;
+                justify-content: space-between;
+                .IconsClickPlus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: green;
+                        cursor: pointer;
+                    }
+                }
+                .IconsClickMinus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: red;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        ::after {
+            clear: both;
+            display: block;
+            content: '';
+        }
+    }
+`;
+
+const ModalButtonMainDivBox = styled.div`
+    display: flex;
+    margin-top: 40px;
+    justify-content: end;
+    button {
+        width: 70px;
+        height: 30px;
+        color: #fff;
+        background: #368;
+        font-size: 0.8em;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 4px 16px rgba(0, 79, 255, 0.3);
+        transition: 0.3s;
+        font-weight: bold;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    button:focus {
+        outline: 0;
+    }
+    button:hover {
+        background: rgba(0, 79, 255, 0.9);
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 79, 255, 0.6);
+    }
+`;
+
+const TableMainDivBox = styled.div`
+    table.type03 {
+        border-collapse: collapse;
+        text-align: left;
+        line-height: 1.5;
+        border-top: 1px solid #ccc;
+        border-left: 3px solid #369;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    table.type03 th {
+        width: 20%;
+        padding: 10px;
+        font-weight: bold;
+        vertical-align: top;
+        color: #153d73;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+    table.type03 td {
+        width: 80%;
+        padding: 10px;
+        vertical-align: top;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+    .license_Float_Main_div {
+        ::after {
+            clear: both;
+            display: block;
+            content: '';
+        }
+        .license_Float_left {
+            float: left;
+            width: 50%;
+            border-right: 1px solid lightgray;
+            padding-right: 30px;
+        }
+        .license_Float_right {
+            width: 50%;
+            padding-left: 30px;
+            max-height: 40vh;
+            overflow: auto;
+            float: right;
+            .InputSearchUsers {
+                width: 100%;
+                padding: 5px;
+                height: 40px;
+                border: 1px solid lightgray;
+            }
+            .License_descktop_user_float_container {
+                height: 100%;
+                ::after {
+                    clear: both;
+                    display: block;
+                    content: '';
+                }
+                h4 {
+                    text-align: center;
+                    border-bottom: 1px solid gray;
+                    padding-bottom: 10px;
+                    margin-bottom: 10px;
+                }
+                .license_asset_delete {
+                    display: flex;
+                    justify-content: space-between;
+                    border: 1px dashed lightgray;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                }
+                .License_descktop_user_float_left {
+                    width: 50%;
+                    float: left;
+                    height: 100%;
+                    padding: 10px;
+                }
+                .License_descktop_user_float_right {
+                    width: 50%;
+                    float: right;
+
+                    height: 100%;
+                    padding: 10px;
+                }
+                .IconsClickMinus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: red;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+`;
+
 Modal.setAppElement('#ModalMainDiv');
 
 type NewDataInsertMainPageProps = {
     setSelectClicksModals: (data: boolean) => void;
     SelectClicksModals: boolean;
+    DetailLicenseClicksData: any;
+    SelectCompany: string;
+    type: string;
+    SortTable: any;
 };
 
-const NewDataInsertMainPage = ({ setSelectClicksModals, SelectClicksModals }: NewDataInsertMainPageProps) => {
+type selectUserInfoDataType = {
+    name: string;
+    email: string;
+    team: string;
+    asset_division: string;
+    asset_management_number: string;
+};
+
+const AddLicenseDetailMainPage = ({
+    setSelectClicksModals,
+    SelectClicksModals,
+    DetailLicenseClicksData,
+    SelectCompany,
+    type,
+    SortTable,
+}: NewDataInsertMainPageProps) => {
+    console.log(DetailLicenseClicksData);
     function closeModal() {
         setSelectClicksModals(false);
     }
@@ -152,98 +343,9 @@ const NewDataInsertMainPage = ({ setSelectClicksModals, SelectClicksModals }: Ne
         license_newcode: '',
     });
     const saveData = () => {};
+
     return (
         <div>
-            {/* <Modal isOpen={SelectClicksModals} style={customStyles} contentLabel="데이터 입력 Modal">
-                <ModalMainDivBox>
-                    <div style={{ textAlign: 'end' }}>
-                        <button className="ModalCloseButton" onClick={closeModal}>
-                            <MdCancel></MdCancel>
-                        </button>
-                    </div>
-                    <h2>License 추가</h2>
-                    <div>
-                        <div style={{ padding: '20px' }}>
-                            <div>
-                                <p>
-                                    <input type="text" id="license_Code" autoComplete="off" required />
-                                    <label htmlFor="license_Code">
-                                        <span>라이선스 코드(ex. DHKS_Volume_MS001)</span>
-                                    </label>
-                                    <div className="InputSpanIcons">
-                                        <BsPencilSquare></BsPencilSquare>
-                                    </div>
-                                </p>
-                            </div>
-                            <p>
-                                <input type="text" id="license_Name" autoComplete="off" required />
-                                <label htmlFor="license_Name">
-                                    <span>라이선스 이름(ex. Windows Office 2013)</span>
-                                </label>
-                                <div className="InputSpanIcons">
-                                    <BsPencilSquare></BsPencilSquare>
-                                </div>
-                            </p>
-                            <p>
-                                <input type="text" id="license_explain" autoComplete="off" required />
-                                <label htmlFor="license_explain">
-                                    <span>라이선스 설명(ex. Window Office 제품키)</span>
-                                </label>
-                                <div className="InputSpanIcons">
-                                    <BsPencilSquare></BsPencilSquare>
-                                </div>
-                            </p>
-                            <p className="DateMainDivBox">
-                                <input type="date" id="license_explain" autoComplete="off" value="2018-07-22" />
-                                <label htmlFor="license_explain">
-                                    <span>구매 날짜(ex. YYYY-MM-DD)</span>
-                                </label>
-                                <div className="InputSpanIcons">
-                                    <BsFillCalendar2DateFill></BsFillCalendar2DateFill>
-                                </div>
-                            </p>
-                            <div onClick={() => setlicenseValidity(!licenseValidity)} className="lincenseValidityCheck">
-                                <span>유효날짜 없음 체크</span>
-                                {licenseValidity ? <MdCheckBox></MdCheckBox> : <MdCheckBoxOutlineBlank></MdCheckBoxOutlineBlank>}
-                            </div>
-                            <p className="DateMainDivBox">
-                                <input type="date" id="license_FinishDate" autoComplete="off" value="2018-07-22" />
-                                <label htmlFor="license_FinishDate">
-                                    <span>유효 날짜(ex. YYYY-MM-DD)</span>
-                                </label>
-                                <div className="InputSpanIcons">
-                                    <BsFillCalendar2DateFill></BsFillCalendar2DateFill>
-                                </div>
-                            </p>
-
-                            <p>
-                                <input type="number" id="license_Permit" autoComplete="off" required />
-                                <label htmlFor="license_Permit">
-                                    <span>라이선스 허용인원</span>
-                                </label>
-                                <div className="InputSpanIcons">
-                                    <BsPencilSquare></BsPencilSquare>
-                                </div>
-                            </p>
-
-                            <p>
-                                <input type="text" id="license_KeyUpload" autoComplete="off" required />
-                                <label htmlFor="license_KeyUpload">
-                                    <span>라이선스 증명 자료</span>
-                                </label>
-                                <div className="InputSpanIcons">
-                                    <GrDocumentUpload></GrDocumentUpload>
-                                </div>
-                            </p>
-
-                            <div>
-                                <button>저장</button>
-                                <button>취소</button>
-                            </div>
-                        </div>
-                    </div>
-                </ModalMainDivBox>
-            </Modal> */}
             <Modal isOpen={SelectClicksModals} style={customStyles} contentLabel="데이터 입력 Modal">
                 <MainModalContent>
                     <div style={{ textAlign: 'end' }}>
@@ -547,4 +649,4 @@ const NewDataInsertMainPage = ({ setSelectClicksModals, SelectClicksModals }: Ne
     );
 };
 
-export default NewDataInsertMainPage;
+export default AddLicenseDetailMainPage;
