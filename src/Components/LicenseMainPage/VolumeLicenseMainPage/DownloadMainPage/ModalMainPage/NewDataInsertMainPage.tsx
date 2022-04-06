@@ -10,8 +10,6 @@ import { MainModalContent } from '../../../../PCAssetMainPage/PcAssetMenuIcons/P
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-import axios from 'axios';
-
 registerLocale('ko', ko);
 const ModalMainDivBox = styled.div`
     padding: 10px;

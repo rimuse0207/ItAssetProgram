@@ -8,101 +8,13 @@ import { MainModalContent } from '../../../../PCAssetMainPage/PcAssetMenuIcons/P
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
+import { GrCheckbox, GrCheckboxSelected } from 'react-icons/gr';
+import { AddDetailLicenseData } from '../../../../../Apis/core/api/AuthNeedApi/LicenseApi';
+import { FileDrop } from 'react-file-drop';
+import { TiDelete } from 'react-icons/ti';
+import axios from 'axios';
+import moment from 'moment';
 registerLocale('ko', ko);
-const ModalMainDivBox = styled.div`
-    padding: 10px;
-    .ModalCloseButton {
-        border: none;
-        font-size: 1.1em;
-        background: none;
-        color: red;
-        :hover {
-            cursor: pointer;
-        }
-    }
-    p {
-        position: relative;
-        height: 50px;
-        margin: 10px;
-        width: 50%;
-        margin-left: 50px;
-    } /* 기본세팅 */
-    .InputTypeMainDivBox {
-        position: relative;
-        height: 50px;
-        margin: 10px;
-
-        border-bottom: 1px solid black;
-        .InputTypeIcons {
-            font-size: 1.5em;
-            width: 50px;
-            line-height: 50px;
-            text-align: center;
-        }
-        input {
-            box-sizing: border-box;
-            padding: 20px 0 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            color: #595f63;
-            outline: none;
-        }
-    }
-    p input {
-        box-sizing: border-box;
-        padding: 20px 0 0;
-        width: 100%;
-        height: 100%;
-        border: 0 none;
-        color: #595f63;
-        outline: none;
-    }
-    p label {
-        position: absolute;
-        left: 0%;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        border-bottom: 1px solid #000;
-        text-align: left;
-        pointer-events: none;
-    }
-    p label:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: -1px;
-        width: 0;
-        height: 100%;
-        border-bottom: 3px solid #369;
-        transition: all 0.3s ease;
-    } /* 파란색 가로줄 */
-    p label span {
-        position: absolute;
-        left: 0;
-        bottom: 5px;
-        transition: all 0.3s ease;
-    }
-    p input:focus + label span,
-    p input:valid + label span {
-        transform: translateY(-150%);
-        font-size: 14px;
-        color: #369;
-    }
-    p input:focus + label::after,
-    p input:valid + label::after {
-        width: 100%;
-        transform: translateX(0);
-    }
-
-    .InputSpanIcons {
-        position: absolute;
-        top: 25px;
-        left: -40px;
-        font-size: 1.3em;
-    }
-`;
 
 const customStyles = {
     content: {
@@ -120,179 +32,120 @@ const customStyles = {
     },
 };
 
-const SelectUserInfoMainDivBox = styled.div`
-    .FloatMainDivBox {
-        height: 200px;
-        min-width: 500px;
-        .FloatLeftDivBox {
-            border: 0.5px solid gray;
-            width: 43%;
-            height: 100%;
-            min-width: 200px;
-            float: left;
-            overflow: auto;
-            padding: 5px;
-        }
-        .FloatRightDivBox {
-            border: 0.5px solid gray;
-            width: 43%;
-            height: 100%;
-            min-width: 200px;
-            float: right;
-            overflow: auto;
-            padding: 5px;
-        }
-        ul {
-            margin-top: 10px;
-            li {
-                border: 1px dashed black;
-                padding: 5px;
-                width: 90%;
-                font-size: 0.8em;
-                margin-bottom: 5px;
-                display: flex;
-                flex-flow: wrap;
-                justify-content: space-between;
-                .IconsClickPlus {
-                    font-size: 1.2em;
-                    :hover {
-                        color: green;
-                        cursor: pointer;
-                    }
-                }
-                .IconsClickMinus {
-                    font-size: 1.2em;
-                    :hover {
-                        color: red;
-                        cursor: pointer;
-                    }
-                }
-            }
-        }
-        ::after {
-            clear: both;
-            display: block;
-            content: '';
-        }
-    }
-`;
-
-const ModalButtonMainDivBox = styled.div`
-    display: flex;
-    margin-top: 40px;
-    justify-content: end;
-    button {
-        width: 70px;
-        height: 30px;
-        color: #fff;
-        background: #368;
-        font-size: 0.8em;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 4px 16px rgba(0, 79, 255, 0.3);
-        transition: 0.3s;
-        font-weight: bold;
-        margin-right: 10px;
-        margin-left: 10px;
-    }
-    button:focus {
-        outline: 0;
-    }
-    button:hover {
-        background: rgba(0, 79, 255, 0.9);
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 79, 255, 0.6);
-    }
-`;
-
 const TableMainDivBox = styled.div`
-    table.type03 {
-        border-collapse: collapse;
-        text-align: left;
-        line-height: 1.5;
-        border-top: 1px solid #ccc;
-        border-left: 3px solid #369;
-        margin-top: 20px;
-        margin-bottom: 20px;
+    .upload-file-wrapper {
+        border: 1px dashed rgba(0, 0, 0, 0.2);
+        width: '600px';
+        color: 'black';
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
-    table.type03 th {
-        width: 20%;
-        padding: 10px;
+    .upload-file-wrapper p {
+        font-family: Arial, Helvetica, sans-serif;
+        margin-bottom: 0;
+    }
+    .browse-btn {
+        width: 150px;
+        line-height: 50px;
+        text-align: center;
+        color: rgb(6, 140, 218);
+        background-color: rgb(6, 140, 218, 0.3);
+        border: 0;
+        border-radius: 10px;
+        font-size: 16px;
         font-weight: bold;
-        vertical-align: top;
-        color: #153d73;
-        border-right: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
+        margin-left: auto;
+        display: inline-block;
+        font-family: Arial, Helvetica, sans-serif;
     }
-    table.type03 td {
-        width: 80%;
-        padding: 10px;
-        vertical-align: top;
-        border-right: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
+    .remove-btn {
+        border: 0px;
+        background: none;
     }
-    .license_Float_Main_div {
-        ::after {
-            clear: both;
-            display: block;
-            content: '';
-        }
-        .license_Float_left {
-            float: left;
-            width: 50%;
-            border-right: 1px solid lightgray;
-            padding-right: 30px;
-        }
-        .license_Float_right {
-            width: 50%;
-            padding-left: 30px;
-            max-height: 40vh;
-            overflow: auto;
-            float: right;
-            .InputSearchUsers {
-                width: 100%;
-                padding: 5px;
-                height: 40px;
-                border: 1px solid lightgray;
-            }
-            .License_descktop_user_float_container {
-                height: 100%;
-                ::after {
-                    clear: both;
-                    display: block;
-                    content: '';
-                }
-                h4 {
-                    text-align: center;
-                    border-bottom: 1px solid gray;
-                    padding-bottom: 10px;
-                    margin-bottom: 10px;
-                }
-                .license_asset_delete {
-                    display: flex;
-                    justify-content: space-between;
-                    border: 1px dashed lightgray;
-                    padding: 10px;
-                    margin-bottom: 10px;
-                }
-                .License_descktop_user_float_left {
-                    width: 50%;
-                    float: left;
-                    height: 100%;
-                    padding: 10px;
-                }
-                .License_descktop_user_float_right {
-                    width: 50%;
-                    float: right;
+    .browse-btn input[type='file'] {
+        display: none;
+    }
+    .file-drop {
+        width: 100%;
+    }
+    .file-drop-target {
+        display: flex;
+    }
+    .drop-file-detail {
+        display: flex;
+        justify-content: space-between;
+    }
+    .drop-file-detail p {
+        font-size: 14px;
+        color: #cdcdcd;
+    }
 
-                    height: 100%;
-                    padding: 10px;
-                }
-                .IconsClickMinus {
+    .import-file-wrapper {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        width: '600px';
+        color: 'black';
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(0, 0, 0, 0.05);
+    }
+    .import-file-wrapper p {
+        font-family: Arial, Helvetica, sans-serif;
+        margin-bottom: 0;
+    }
+    .import-btn {
+        font-family: Arial, Helvetica, sans-serif;
+        width: 150px;
+        line-height: 50px;
+        text-align: center;
+        background-color: rgb(6, 140, 218);
+        color: #fff;
+        border: 0;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        margin-left: auto;
+        display: inline-block;
+    }
+    .import-btn input[type='file'] {
+        display: none;
+    }
+    .import-drop {
+        width: 100%;
+    }
+    .filimporte-drop-target {
+        display: flex;
+    }
+    .import-file-detail {
+        display: flex;
+        justify-content: space-between;
+    }
+    .import-file-detail p {
+        font-size: 14px;
+        color: #cdcdcd;
+    }
+`;
+
+const UploadedFileDataUlBox = styled.ul`
+    border: 1px solid black;
+    li {
+        padding: 10px;
+        border: 1px dashed gray;
+        display: inline-block;
+        .UploadedContainerDiv {
+            display: flex;
+            justify-content: center;
+            div {
+                margin-left: 10px;
+                margin-right: 10px;
+                svg {
                     font-size: 1.2em;
                     :hover {
-                        color: red;
                         cursor: pointer;
+                        color: red;
                     }
                 }
             }
@@ -327,22 +180,80 @@ const AddLicenseDetailMainPage = ({
     type,
     SortTable,
 }: NewDataInsertMainPageProps) => {
-    console.log(DetailLicenseClicksData);
     function closeModal() {
         setSelectClicksModals(false);
     }
-    const [startDate, setStartDate] = useState(new Date());
-    const [licenseValidity, setlicenseValidity] = useState(false);
-    const [LicenseInputData, setLicenseInputData] = useState({
+
+    const [DetailLicenseInputData, setDetailLicenseInputData] = useState({
+        license_product_code: DetailLicenseClicksData.license_product_code,
+        license_product_name: DetailLicenseClicksData.license_product_name,
         license_purchase_date: new Date(),
         license_purchase_finish_date: new Date(),
         license_purchase_company: '',
         license_permit_count: 0,
         license_purchase_pride: 0,
-        license_prove_code: '',
+        license_prove_code: {
+            nothing: true,
+            URL: false,
+            URL_Address: '',
+            Files: false,
+        },
         license_newcode: '',
     });
-    const saveData = () => {};
+    const [file, setFile] = useState<any>([]);
+    const saveData = async () => {
+        try {
+            const formData = new FormData();
+            file.map((list: any, i: number) => {
+                formData.append(`file`, list);
+            });
+            formData.append('license_product_code', String(DetailLicenseInputData.license_product_code));
+            formData.append('license_product_name', String(DetailLicenseInputData.license_product_name));
+            formData.append('license_purchase_date', String(moment(DetailLicenseInputData.license_purchase_date).format('YYYY-MM-DD')));
+            formData.append(
+                'license_purchase_finish_date',
+                String(moment(DetailLicenseInputData.license_purchase_finish_date).format('YYYY-MM-DD'))
+            );
+            formData.append('license_purchase_company', String(DetailLicenseInputData.license_purchase_company));
+            formData.append('license_permit_count', String(DetailLicenseInputData.license_permit_count));
+            formData.append('license_purchase_pride', String(DetailLicenseInputData.license_purchase_pride));
+            formData.append('license_newcode', String(DetailLicenseInputData.license_newcode));
+            formData.append('license_prove_code_URL', String(DetailLicenseInputData.license_prove_code.URL));
+            formData.append('license_prove_code_URL_Address', String(DetailLicenseInputData.license_prove_code.URL_Address));
+            formData.append('license_prove_code_Files', String(DetailLicenseInputData.license_prove_code.Files));
+            formData.append('license_prove_code_nothing', String(DetailLicenseInputData.license_prove_code.nothing));
+            formData.append('license_types', String(type));
+            formData.append('SelectCompany', String(SelectCompany));
+
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            };
+            const AddLicenseData = await axios.post(
+                `${process.env.REACT_APP_API_URL}/license_app_server/license_detail_data`,
+
+                formData,
+
+                config
+            );
+            if (AddLicenseData.data.dataSuccess) {
+                alert('성공');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handle = (files: any) => {
+        let arr = Object.values(files);
+        const dd = file.concat(arr);
+        setFile(dd);
+    };
+
+    useEffect(() => {
+        console.log(file);
+    }, [file]);
 
     return (
         <div>
@@ -363,16 +274,16 @@ const AddLicenseDetailMainPage = ({
                                     <div className="PCAssetFloatLeft">
                                         <div className="input-content-wrap">
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">
-                                                    관리번호<span style={{ color: 'red' }}>*</span>
-                                                </dt>
+                                                <dt className="inputbox-title">라이선스 이름</dt>
                                                 <dd className="inputbox-content">
-                                                    <input id="input0" type="text" required />
+                                                    <input
+                                                        id="input0"
+                                                        type="text"
+                                                        value={DetailLicenseInputData.license_product_name}
+                                                        readOnly
+                                                    />
 
                                                     <span className="underline"></span>
-                                                    {/* <div className="RandomButtonIcons">
-                                                        <GiPerspectiveDiceSixFacesRandom></GiPerspectiveDiceSixFacesRandom>
-                                                    </div> */}
                                                 </dd>
                                             </dl>
                                             <dl className="inputbox">
@@ -381,9 +292,12 @@ const AddLicenseDetailMainPage = ({
                                                 </dt>
                                                 <dd className="inputbox-content">
                                                     <DatePicker
-                                                        selected={LicenseInputData.license_purchase_date}
+                                                        selected={DetailLicenseInputData.license_purchase_date}
                                                         onChange={(date: any) =>
-                                                            setLicenseInputData({ ...LicenseInputData, license_purchase_date: date })
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
+                                                                license_purchase_date: date,
+                                                            })
                                                         }
                                                         withPortal
                                                         locale={ko}
@@ -398,94 +312,52 @@ const AddLicenseDetailMainPage = ({
                                                 </dt>
                                                 <dd className="inputbox-content">
                                                     <DatePicker
-                                                        selected={LicenseInputData.license_purchase_finish_date}
+                                                        selected={DetailLicenseInputData.license_purchase_finish_date}
                                                         onChange={(date: any) =>
-                                                            setLicenseInputData({ ...LicenseInputData, license_purchase_finish_date: date })
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
+                                                                license_purchase_finish_date: date,
+                                                            })
                                                         }
                                                         withPortal
                                                         locale={ko}
                                                         dateFormat="yyy-MM-dd"
-                                                        minDate={LicenseInputData.license_purchase_date}
+                                                        minDate={DetailLicenseInputData.license_purchase_date}
                                                     />
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
-                                            <dl className="inputbox">
-                                                <dt className="inputbox-title">
-                                                    사용처<span style={{ color: 'red' }}>*</span>
-                                                </dt>
-                                                <dd className="inputbox-content">
-                                                    <div className="selectBox">
-                                                        {/* <select
-                                                            className="select"
-                                                            onChange={e =>
-                                                                setUserWriteData({ ...UserWriteData, company_code: e.target.value })
-                                                            }
-                                                            value={UserWriteData.company_code}
-                                                        >
-                                                            <option disabled>사용처 선택</option>
-                                                            {CompanyInfoData.map((list, i) => {
-                                                                return (
-                                                                    <option key={list.value} defaultValue={list.value} value={list.value}>
-                                                                        {list.label}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </select> */}
-                                                        <span className="icoArrow"></span>
-                                                    </div>
-                                                </dd>
-                                            </dl>
-                                            <dl className="inputbox">
-                                                <dt className="inputbox-title">구분</dt>
-                                                <dd className="inputbox-content">
-                                                    <div className="selectBox">
-                                                        {/* <select
-                                                            className="select"
-                                                            onChange={e =>
-                                                                setUserWriteData({ ...UserWriteData, asset_division: e.target.value })
-                                                            }
-                                                            value={UserWriteData.asset_division}
-                                                        >
-                                                            <option selected defaultValue="데스크탑" value={'데스크탑'}>
-                                                                데스크탑
-                                                            </option>
-                                                            <option defaultValue="노트북" value={'노트북'}>
-                                                                노트북
-                                                            </option>
-                                                        </select> */}
-                                                        <span className="icoArrow"></span>
-                                                    </div>
-                                                </dd>
-                                            </dl>
+
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">구매 업체</dt>
                                                 <dd className="inputbox-content">
                                                     <input
                                                         id="input7"
-                                                        value={LicenseInputData.license_purchase_company}
+                                                        value={DetailLicenseInputData.license_purchase_company}
                                                         onChange={e =>
-                                                            setLicenseInputData({
-                                                                ...LicenseInputData,
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
                                                                 license_purchase_company: e.target.value,
                                                             })
                                                         }
-                                                        placeholder=""
+                                                        placeholder="라이선스 구매 업체를 작성 부탁드립니다."
                                                     />
 
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">라이선스 허용수</dt>
+                                                <dt className="inputbox-title">
+                                                    라이선스 허용수<span style={{ color: 'red' }}>*</span>
+                                                </dt>
                                                 <dd className="inputbox-content">
                                                     <input
                                                         id="input3"
                                                         type="number"
-                                                        value={LicenseInputData.license_permit_count}
+                                                        value={DetailLicenseInputData.license_permit_count}
                                                         onChange={e =>
-                                                            setLicenseInputData({
-                                                                ...LicenseInputData,
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
                                                                 license_permit_count: Number(e.target.value),
                                                             })
                                                         }
@@ -501,10 +373,10 @@ const AddLicenseDetailMainPage = ({
                                                     <input
                                                         id="input3"
                                                         type="number"
-                                                        value={LicenseInputData.license_purchase_pride}
+                                                        value={DetailLicenseInputData.license_purchase_pride}
                                                         onChange={e =>
-                                                            setLicenseInputData({
-                                                                ...LicenseInputData,
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
                                                                 license_purchase_pride: Number(e.target.value),
                                                             })
                                                         }
@@ -515,122 +387,179 @@ const AddLicenseDetailMainPage = ({
                                                 </dd>
                                             </dl>
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">증빙 등록</dt>
-                                                <dd className="inputbox-content">
-                                                    <input
-                                                        id="input4"
-                                                        value={LicenseInputData.license_prove_code}
-                                                        onChange={e =>
-                                                            setLicenseInputData({ ...LicenseInputData, license_prove_code: e.target.value })
-                                                        }
-                                                        placeholder="i7-1165G7(2.8GHz) ..."
-                                                    />
-
-                                                    <span className="underline"></span>
-                                                </dd>
-                                            </dl>
-
-                                            <dl className="inputbox">
                                                 <dt className="inputbox-title">자산코드</dt>
                                                 <dd className="inputbox-content">
                                                     <input
                                                         id="input10"
-                                                        value={LicenseInputData.license_newcode}
+                                                        value={DetailLicenseInputData.license_newcode}
                                                         onChange={e =>
-                                                            setLicenseInputData({ ...LicenseInputData, license_newcode: e.target.value })
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
+                                                                license_newcode: e.target.value,
+                                                            })
                                                         }
-                                                        placeholder="G10039 등등.."
+                                                        placeholder="ERP상의 자산코드 등등.."
                                                     />
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
-                                        </div>
-                                    </div>
-                                    <div className="PCAssetFloatRight">
-                                        사용자 있을시
-                                        {/* {UserWriteData.usercheck ? (
-                                            <>
-                                                <dl className="inputbox">
-                                                    <dt className="inputbox-title">사용자</dt>
-                                                    <dd className="inputbox-content">
-                                                        <Select
-                                                            // value={UserWriteData.user_used}
-                                                            // cacheOptions
-                                                            isClearable
-                                                            loadOptions={loadOptions}
-                                                            defaultOptions
-                                                            onChange={(e: any) => handleSelectedName(e)}
-                                                        />
-                                                    </dd>
-                                                </dl>
-                                                <dl className="inputbox">
-                                                    <dt className="inputbox-title">지급일</dt>
-                                                    <dd className="inputbox-content">
-                                                        <DatePicker
-                                                            selected={UserWriteData.asset_distribute_date}
-                                                            onChange={(date: any) =>
-                                                                setUserWriteData({ ...UserWriteData, asset_distribute_date: date })
-                                                            }
-                                                            withPortal
-                                                            locale={ko}
-                                                            dateFormat="yyy-MM-dd"
-                                                            minDate={UserWriteData.asset_purchase_date}
-                                                        />
-                                                        <span className="underline"></span>
-                                                    </dd>
-                                                </dl>
-                                                <h4>라이선스 등록</h4>
-                                                <div>
-                                                    <input
-                                                        type="radio"
-                                                        id="경영지원"
-                                                        name="setting"
-                                                        value="경영지원"
-                                                        checked={Q1 === '경영지원' ? true : false}
-                                                        onChange={e => setQ1(e.target.value)}
-                                                    ></input>
-                                                    <label htmlFor="경영지원">경영지원</label>
-                                                    <input
-                                                        type="radio"
-                                                        id="영업"
-                                                        name="setting"
-                                                        value="영업"
-                                                        checked={Q1 === '영업' ? true : false}
-                                                        onChange={e => setQ1(e.target.value)}
-                                                    ></input>
-                                                    <label htmlFor="영업">영업</label>
-                                                </div>
-
-                                                <div>
-                                                    <div className="BigBoxContent">
-                                                        <div className="BigBoxContentLeft">
-                                                            <h4>선택 전</h4>
-                                                        </div>
-                                                        <div className="BigBoxContentRight">
-                                                            <h4>선택 후</h4>
-                                                            <div>
-                                                                {SelectedLicenseData.map((list: any) => {
-                                                                    return <div>{list.label}</div>;
-                                                                })}
-                                                            </div>
-                                                        </div>
+                                            <dl className="inputbox">
+                                                <dt className="inputbox-title">증빙 등록</dt>
+                                                <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                    <div
+                                                        style={{ marginRight: '30px' }}
+                                                        onClick={e => {
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
+                                                                license_prove_code: {
+                                                                    ...DetailLicenseInputData.license_prove_code,
+                                                                    URL: false,
+                                                                    Files: false,
+                                                                    nothing: true,
+                                                                },
+                                                            });
+                                                        }}
+                                                    >
+                                                        <span>
+                                                            {DetailLicenseInputData.license_prove_code.nothing ? (
+                                                                <GrCheckboxSelected></GrCheckboxSelected>
+                                                            ) : (
+                                                                <GrCheckbox></GrCheckbox>
+                                                            )}
+                                                        </span>
+                                                        <span>없음</span>
                                                     </div>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div>
-                                                    <button
-                                                        onClick={() =>
-                                                            setUserWriteData({ ...UserWriteData, usercheck: !UserWriteData.usercheck })
+                                                    <div
+                                                        style={{ marginRight: '30px' }}
+                                                        onClick={e => {
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
+                                                                license_prove_code: {
+                                                                    ...DetailLicenseInputData.license_prove_code,
+                                                                    URL: true,
+                                                                    Files: false,
+                                                                    nothing: false,
+                                                                },
+                                                            });
+                                                        }}
+                                                    >
+                                                        <span>
+                                                            {DetailLicenseInputData.license_prove_code.URL ? (
+                                                                <GrCheckboxSelected></GrCheckboxSelected>
+                                                            ) : (
+                                                                <GrCheckbox></GrCheckbox>
+                                                            )}
+                                                        </span>
+                                                        <span>URL</span>
+                                                    </div>
+                                                    <div
+                                                        onClick={e =>
+                                                            setDetailLicenseInputData({
+                                                                ...DetailLicenseInputData,
+                                                                license_prove_code: {
+                                                                    ...DetailLicenseInputData.license_prove_code,
+                                                                    URL: false,
+                                                                    Files: true,
+                                                                    nothing: false,
+                                                                },
+                                                            })
                                                         }
                                                     >
-                                                        유저추가
-                                                    </button>
+                                                        <span>
+                                                            {DetailLicenseInputData.license_prove_code.Files ? (
+                                                                <GrCheckboxSelected></GrCheckboxSelected>
+                                                            ) : (
+                                                                <GrCheckbox></GrCheckbox>
+                                                            )}
+                                                        </span>
+                                                        <span>File</span>
+                                                    </div>
                                                 </div>
-                                            </>
-                                        )} */}
+                                                {DetailLicenseInputData.license_prove_code.URL ? (
+                                                    <dd className="inputbox-content">
+                                                        <input
+                                                            id="input4"
+                                                            value={DetailLicenseInputData.license_prove_code.URL_Address}
+                                                            onChange={e =>
+                                                                setDetailLicenseInputData({
+                                                                    ...DetailLicenseInputData,
+                                                                    license_prove_code: {
+                                                                        ...DetailLicenseInputData.license_prove_code,
+                                                                        URL_Address: e.target.value,
+                                                                    },
+                                                                })
+                                                            }
+                                                            placeholder="URL 주소 입력 ..."
+                                                        />
+
+                                                        <span className="underline"></span>
+                                                    </dd>
+                                                ) : (
+                                                    ''
+                                                )}
+                                                {DetailLicenseInputData.license_prove_code.Files ? (
+                                                    <TableMainDivBox>
+                                                        {/* <input
+                                                            id="input4"
+                                                            type="file"
+                                                            // value={DetailLicenseInputData.license_prove_code.Files_lists}
+                                                            // onChange={e =>
+                                                            //     setDetailLicenseInputData({
+                                                            //         ...DetailLicenseInputData,
+                                                            //         license_prove_code: {
+                                                            //             ...DetailLicenseInputData.license_prove_code,
+                                                            //             Files_lists: Files_lists.concat(e.target.value),
+                                                            //         },
+                                                            //     })
+                                                            // }
+                                                            placeholder="file 등록 ..."
+                                                        /> */}
+
+                                                        <h3>업로드 파일</h3>
+                                                        <div className="upload-file-wrapper">
+                                                            <FileDrop onDrop={(files, event) => handle(files)}>
+                                                                <p>업로드 하실 파일을 드래그 또는 클릭 하여 추가 </p>
+                                                                <label htmlFor="same" className="browse-btn">
+                                                                    클릭
+                                                                    <input
+                                                                        id="same"
+                                                                        type="file"
+                                                                        multiple
+                                                                        onChange={e => handle(e.target.files)}
+                                                                    ></input>
+                                                                </label>
+                                                            </FileDrop>
+                                                        </div>
+                                                    </TableMainDivBox>
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </dl>
+                                        </div>
+                                        {DetailLicenseInputData.license_prove_code.Files &&
+                                        !DetailLicenseInputData.license_prove_code.nothing ? (
+                                            <div style={{ marginTop: '20px' }}>
+                                                <h4>등록된 파일</h4>
+                                                <UploadedFileDataUlBox>
+                                                    {file.map((x: any) => {
+                                                        return (
+                                                            <li>
+                                                                <div className="UploadedContainerDiv">
+                                                                    <div>{x.name}</div>
+                                                                    <div>
+                                                                        <TiDelete></TiDelete>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </UploadedFileDataUlBox>
+                                            </div>
+                                        ) : (
+                                            ''
+                                        )}
                                     </div>
+                                    <div className="PCAssetFloatRight">사용자 있을시</div>
                                 </div>
                                 <div className="btns">
                                     <button className="btn btn-confirm" onClick={() => saveData()}>

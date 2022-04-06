@@ -28,3 +28,9 @@ export const GetDataFromServerLicenseInfos = (RequestURL: string, ParamasData: {
         params: ParamasData,
     });
 };
+
+export const AddDetailLicenseData = (RequestURL: string, ParamasData: {}) => {
+    return request.post(RequestURL, {
+        params: ParamasData,
+    });
+};
