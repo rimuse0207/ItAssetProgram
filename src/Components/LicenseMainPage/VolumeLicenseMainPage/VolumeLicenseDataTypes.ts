@@ -49,4 +49,5 @@ export type LicenseDataType = {
     datas: any;
     userData: any;
     all_user_used_count: number;
+    proveData: [] | null;
 };

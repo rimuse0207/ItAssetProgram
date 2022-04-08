@@ -128,6 +128,22 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
         }
     };
 
+    const handleClicksProveData = (proveData: any) => {
+        try {
+            console.log(proveData);
+
+            for (var i = 0; i < proveData.length; i++) {
+                if (proveData[i].prove_type === 'URLS') {
+                    window.open(proveData[i].prove_origin_name);
+                } else {
+                    window.open(`${process.env.REACT_APP_API_URL}/license/${proveData[i].prove_change_name}`);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div style={{ marginBottom: '100px' }}>
             <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
@@ -330,6 +346,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                             {list.datas.map((item: LicenseDataType, j: number) => {
                                                 return (
                                                     <tr
+                                                        key={item.license_manage_code}
                                                         style={
                                                             item.license_permit_count - item.userData[0].useUserCount < 0
                                                                 ? { backgroundColor: '#edafaf' }
@@ -342,7 +359,23 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                         <td>{moment(item.license_purchase_finish_date).format('YYYY-MM-DD')}</td>
                                                         <td>{item.license_purchase_pride.toLocaleString('ko-KR')}</td>
                                                         <td>{item.license_purchase_company ? item.license_purchase_company : '-'}</td>
-                                                        <td>{item.license_prove_code ? '클릭' : '-'}</td>
+                                                        <td>
+                                                            {item.license_prove_code ? (
+                                                                item.proveData?.length === 0 ? (
+                                                                    '-'
+                                                                ) : (
+                                                                    <div
+                                                                        onClick={() =>
+                                                                            handleClicksProveData(item.proveData ? item.proveData : [])
+                                                                        }
+                                                                    >
+                                                                        클릭
+                                                                    </div>
+                                                                )
+                                                            ) : (
+                                                                '-'
+                                                            )}
+                                                        </td>
                                                         <td>{item.license_newcode ? item.license_newcode : '-'}</td>
                                                         <td>{item.license_permit_count} 명</td>
                                                         <td>{item.userData[0].useUserCount} 명</td>

@@ -14,6 +14,12 @@ import { FileDrop } from 'react-file-drop';
 import { TiDelete } from 'react-icons/ti';
 import axios from 'axios';
 import moment from 'moment';
+import { PersonOption } from './docs/data';
+import AsyncSelect from 'react-select/async';
+import { IoMdAddCircle } from 'react-icons/io';
+import { ObjectNameSortData } from '../../../../../PublicFunc/ObjectNameSort';
+import { UserInfoGet } from '../../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
+
 registerLocale('ko', ko);
 
 const customStyles = {
@@ -153,6 +159,63 @@ const UploadedFileDataUlBox = styled.ul`
     }
 `;
 
+const DetailLicneseSelectUserInfoMainDivBox = styled.div`
+    .FloatMainDivBox {
+        height: 500px;
+        min-width: 500px;
+        .FloatLeftDivBox {
+            border: 0.5px solid gray;
+            width: 43%;
+            height: 100%;
+            min-width: 200px;
+            float: left;
+            overflow: auto;
+            padding: 5px;
+        }
+        .FloatRightDivBox {
+            border: 0.5px solid gray;
+            width: 43%;
+            height: 100%;
+            min-width: 200px;
+            float: right;
+            overflow: auto;
+            padding: 5px;
+        }
+        ul {
+            margin-top: 10px;
+            li {
+                border: 1px dashed black;
+                padding: 5px;
+                width: 90%;
+                font-size: 0.8em;
+                margin-bottom: 5px;
+                display: flex;
+                flex-flow: wrap;
+                justify-content: space-between;
+                .IconsClickPlus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: green;
+                        cursor: pointer;
+                    }
+                }
+                .IconsClickMinus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: red;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        ::after {
+            clear: both;
+            display: block;
+            content: '';
+        }
+    }
+`;
+
 Modal.setAppElement('#ModalMainDiv');
 
 type NewDataInsertMainPageProps = {
@@ -163,7 +226,6 @@ type NewDataInsertMainPageProps = {
     type: string;
     SortTable: any;
 };
-
 type selectUserInfoDataType = {
     name: string;
     email: string;
@@ -183,7 +245,10 @@ const AddLicenseDetailMainPage = ({
     function closeModal() {
         setSelectClicksModals(false);
     }
-
+    const [SearchNames, setSearchNames] = useState('');
+    const [SearchSomething, setSearchSomething] = useState<string | null>('');
+    const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
+    const [SelectedInfoUserData, setSelectedInfoUserData] = useState<selectUserInfoDataType[]>([]);
     const [DetailLicenseInputData, setDetailLicenseInputData] = useState({
         license_product_code: DetailLicenseClicksData.license_product_code,
         license_product_name: DetailLicenseClicksData.license_product_name,
@@ -202,6 +267,9 @@ const AddLicenseDetailMainPage = ({
     });
     const [file, setFile] = useState<any>([]);
     const saveData = async () => {
+        if (DetailLicenseInputData.license_permit_count === 0) {
+            alert('허용 가능한 인원을 작성 부탁드립니다.');
+        }
         try {
             const formData = new FormData();
             file.map((list: any, i: number) => {
@@ -225,6 +293,10 @@ const AddLicenseDetailMainPage = ({
             formData.append('license_types', String(type));
             formData.append('SelectCompany', String(SelectCompany));
 
+            SelectedInfoUserData.map((list, i) => {
+                formData.append('SelectUsers', list.asset_management_number);
+            });
+
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data',
@@ -232,9 +304,7 @@ const AddLicenseDetailMainPage = ({
             };
             const AddLicenseData = await axios.post(
                 `${process.env.REACT_APP_API_URL}/license_app_server/license_detail_data`,
-
                 formData,
-
                 config
             );
             if (AddLicenseData.data.dataSuccess) {
@@ -251,9 +321,93 @@ const AddLicenseDetailMainPage = ({
         setFile(dd);
     };
 
+    const handleDeleteFromFiles = (xData: any) => {
+        const deleteFileData = file.filter((item: { name: string }) => {
+            return item.name === xData.name ? '' : item;
+        });
+        setFile(deleteFileData);
+    };
+
     useEffect(() => {
-        console.log(file);
-    }, [file]);
+        UserInfoGetApi();
+    }, []);
+
+    const UserInfoGetApi = async () => {
+        const ParamasData = {
+            type,
+            SelectCompany,
+        };
+        try {
+            const personOptionsData = await UserInfoGet('/UserInfo_app_server/Asset_User_Data', ParamasData);
+            if (personOptionsData.data.dataSuccess) {
+                setInfoUserData(personOptionsData.data.data);
+            } else {
+                alert('error');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const handleSelectedName = (e: any) => {
+        setSearchSomething(e.value);
+        const getChoiceData = {
+            name: e.name,
+            team: e.team,
+            email: e.email,
+            asset_division: e.asset_division,
+            asset_management_number: e.asset_management_number,
+        };
+        for (var i = 0; i < SelectedInfoUserData.length; i++) {
+            if (SelectedInfoUserData[i].email === e.email) {
+                alert('중복되어 추가가 불가합니다.');
+                return;
+            }
+        }
+
+        const DeleteUserData = InfoUserData.filter((item, j) => (item.email === e.email ? '' : item));
+        setInfoUserData(DeleteUserData);
+        const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
+        setSelectedInfoUserData(SortData);
+    };
+
+    const handleSelectClickIconsUserAadd = (userData: PersonOption) => {
+        const getChoiceData = {
+            name: userData.name,
+            team: userData.team,
+            email: userData.email,
+            asset_division: userData.asset_division,
+            asset_management_number: userData.asset_management_number,
+        };
+        const DeleteUserData = InfoUserData.filter((item, j) => (item.email === userData.email ? '' : item));
+        setInfoUserData(DeleteUserData);
+
+        const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
+        setSelectedInfoUserData(SortData);
+    };
+
+    const filterSearchedSomething = (inputValue: string) => {
+        return InfoUserData.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
+    };
+    const loadOptions = (inputValue: string, callback: (options: PersonOption[]) => void) => {
+        setTimeout(() => {
+            callback(filterSearchedSomething(inputValue));
+        }, 100);
+    };
+    const handleSelectClickIconsUserDelete = (userData: selectUserInfoDataType) => {
+        const getChoiceData = {
+            name: userData.name,
+            team: userData.team,
+            email: userData.email,
+            value: userData.email,
+            asset_division: userData.asset_division,
+            asset_management_number: userData.asset_management_number,
+            label: `${userData.asset_management_number} || ${userData.asset_division} || ${userData.email} || ${userData.name} || ${userData.team} `,
+        };
+        const DeleteUserData = SelectedInfoUserData.filter((item, j) => (item.email === userData.email ? '' : item));
+        setSelectedInfoUserData(DeleteUserData);
+        const SortData = ObjectNameSortData(InfoUserData.concat(getChoiceData));
+        setInfoUserData(SortData);
+    };
 
     return (
         <div>
@@ -310,6 +464,7 @@ const AddLicenseDetailMainPage = ({
                                                 <dt className="inputbox-title">
                                                     만료 날짜<span style={{ color: 'red' }}>*</span>
                                                 </dt>
+
                                                 <dd className="inputbox-content">
                                                     <DatePicker
                                                         selected={DetailLicenseInputData.license_purchase_finish_date}
@@ -340,7 +495,7 @@ const AddLicenseDetailMainPage = ({
                                                                 license_purchase_company: e.target.value,
                                                             })
                                                         }
-                                                        placeholder="라이선스 구매 업체를 작성 부탁드립니다."
+                                                        placeholder="라이선스 구매 업체"
                                                     />
 
                                                     <span className="underline"></span>
@@ -409,6 +564,7 @@ const AddLicenseDetailMainPage = ({
                                                     <div
                                                         style={{ marginRight: '30px' }}
                                                         onClick={e => {
+                                                            setFile([]);
                                                             setDetailLicenseInputData({
                                                                 ...DetailLicenseInputData,
                                                                 license_prove_code: {
@@ -432,6 +588,7 @@ const AddLicenseDetailMainPage = ({
                                                     <div
                                                         style={{ marginRight: '30px' }}
                                                         onClick={e => {
+                                                            setFile([]);
                                                             setDetailLicenseInputData({
                                                                 ...DetailLicenseInputData,
                                                                 license_prove_code: {
@@ -499,22 +656,6 @@ const AddLicenseDetailMainPage = ({
                                                 )}
                                                 {DetailLicenseInputData.license_prove_code.Files ? (
                                                     <TableMainDivBox>
-                                                        {/* <input
-                                                            id="input4"
-                                                            type="file"
-                                                            // value={DetailLicenseInputData.license_prove_code.Files_lists}
-                                                            // onChange={e =>
-                                                            //     setDetailLicenseInputData({
-                                                            //         ...DetailLicenseInputData,
-                                                            //         license_prove_code: {
-                                                            //             ...DetailLicenseInputData.license_prove_code,
-                                                            //             Files_lists: Files_lists.concat(e.target.value),
-                                                            //         },
-                                                            //     })
-                                                            // }
-                                                            placeholder="file 등록 ..."
-                                                        /> */}
-
                                                         <h3>업로드 파일</h3>
                                                         <div className="upload-file-wrapper">
                                                             <FileDrop onDrop={(files, event) => handle(files)}>
@@ -543,10 +684,10 @@ const AddLicenseDetailMainPage = ({
                                                 <UploadedFileDataUlBox>
                                                     {file.map((x: any) => {
                                                         return (
-                                                            <li>
+                                                            <li key={x.name}>
                                                                 <div className="UploadedContainerDiv">
                                                                     <div>{x.name}</div>
-                                                                    <div>
+                                                                    <div onClick={() => handleDeleteFromFiles(x)}>
                                                                         <TiDelete></TiDelete>
                                                                     </div>
                                                                 </div>
@@ -559,7 +700,65 @@ const AddLicenseDetailMainPage = ({
                                             ''
                                         )}
                                     </div>
-                                    <div className="PCAssetFloatRight">사용자 있을시</div>
+                                    <div className="PCAssetFloatRight">
+                                        <DetailLicneseSelectUserInfoMainDivBox>
+                                            <h3 style={{ marginBottom: '30px' }}>사용자 인원 추가</h3>
+                                            <div style={{ marginBottom: '10px' }}>
+                                                <div>
+                                                    <div>
+                                                        <AsyncSelect
+                                                            cacheOptions
+                                                            loadOptions={loadOptions}
+                                                            defaultOptions
+                                                            onChange={(e: any) => handleSelectedName(e)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="FloatMainDivBox">
+                                                <div className="FloatLeftDivBox">
+                                                    <h4>선택 가능 인원</h4>
+                                                    <ul>
+                                                        {InfoUserData.map((list, i) => {
+                                                            return (
+                                                                <li key={list.email}>
+                                                                    <div>
+                                                                        {list.name} || {list.team}
+                                                                    </div>
+                                                                    <div
+                                                                        className="IconsClickPlus"
+                                                                        onClick={() => handleSelectClickIconsUserAadd(list)}
+                                                                    >
+                                                                        <IoMdAddCircle></IoMdAddCircle>
+                                                                    </div>
+                                                                </li>
+                                                            );
+                                                        })}
+                                                    </ul>
+                                                </div>
+                                                <div className="FloatRightDivBox">
+                                                    <h4>선택 인원</h4>
+                                                    <ul>
+                                                        {SelectedInfoUserData.map((list, i) => {
+                                                            return (
+                                                                <li key={list.email}>
+                                                                    <div>
+                                                                        {list.asset_division} || {list.name} || {list.team}
+                                                                    </div>
+                                                                    <div
+                                                                        className="IconsClickMinus"
+                                                                        onClick={() => handleSelectClickIconsUserDelete(list)}
+                                                                    >
+                                                                        <AiOutlineMinusCircle></AiOutlineMinusCircle>
+                                                                    </div>
+                                                                </li>
+                                                            );
+                                                        })}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </DetailLicneseSelectUserInfoMainDivBox>
+                                    </div>
                                 </div>
                                 <div className="btns">
                                     <button className="btn btn-confirm" onClick={() => saveData()}>
