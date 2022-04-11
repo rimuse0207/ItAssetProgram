@@ -100,6 +100,7 @@ const DownLoadMainPage = ({
             <div>
                 {SelectClicksModals.NewDataModal ? (
                     <NewDataInsertMainPage
+                        SelectCompany={SelectCompany}
                         SelectClicksModals={SelectClicksModals.NewDataModal}
                         setSelectClicksModals={() =>
                             setSelectClicksModals({
@@ -107,6 +108,8 @@ const DownLoadMainPage = ({
                                 ExcelDownloadModal: false,
                             })
                         }
+                        type={type}
+                        SortTable={SortTable}
                     ></NewDataInsertMainPage>
                 ) : (
                     ''

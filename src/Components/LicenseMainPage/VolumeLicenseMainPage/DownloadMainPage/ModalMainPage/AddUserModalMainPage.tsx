@@ -505,11 +505,39 @@ const AddUserModalMainPage = ({
                 ParamasData,
             });
             if (deleteData.data.dataSuccess) {
-                console.log('삭제 성공');
                 dispatch(License_getLicenseDataThunk(ParamasData));
                 getInfoDataLicenseInfo();
                 toast.show({
                     title: `${type}에 라이선스 해제 성공`,
+                    successCheck: true,
+                    duration: ToastTime,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const DeleteData = async () => {
+        const checkDelete = window.confirm('해당 라이선스를 정말 삭제할까요? \n삭제하시면 등록된 모든 사용자가 삭제 됩니다.');
+        if (!checkDelete) {
+            return;
+        }
+        try {
+            const ParamasData = {
+                company: SelectCompany,
+                license: type,
+                UserClickLicenseData,
+                SortTable,
+            };
+            const DeleteDataFromLicense = await AssetDeleteLicense('/license_app_server/DeleteLicenseDetails', {
+                ParamasData,
+            });
+            if (DeleteDataFromLicense.data.dataSuccess) {
+                dispatch(License_getLicenseDataThunk(ParamasData));
+                closeModal();
+                toast.show({
+                    title: ` 라이선스 삭제 성공`,
                     successCheck: true,
                     duration: ToastTime,
                 });
@@ -610,7 +638,7 @@ const AddUserModalMainPage = ({
                                                                 {list.asset_management_number ? list.asset_management_number : ''}_
                                                                 {list.team ? list.team : '사용자'}_{list.name ? list.name : '없음'}
                                                             </div>
-                                                            <div className="IconsClickMinus">
+                                                            <div className="IconsClickMinus" onClick={() => handleDeleteDataLicense(list)}>
                                                                 <AiOutlineMinusCircle></AiOutlineMinusCircle>
                                                             </div>
                                                         </div>
@@ -679,6 +707,7 @@ const AddUserModalMainPage = ({
                     </div>
                 </SelectUserInfoMainDivBox>
                 <ModalButtonMainDivBox>
+                    <button onClick={() => DeleteData()}>삭제</button>
                     <div>
                         <button onClick={() => handleSaveUser()}>저장</button>
                     </div>
