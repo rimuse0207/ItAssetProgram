@@ -1,11 +1,8 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import UserUsedMainPage from '../UserUsedMainPage/UserUsedMainPage';
-import { LicenseInfoGet } from '../../../Apis/core/api/AuthNeedApi/LicenseApi';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
-import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 import DownLoadMainPage from './DownloadMainPage/DownLoadMainPage';
 import { VolumeLicenseMainPageProps, LicenseDataType } from './VolumeLicenseDataTypes';
 import { License_getLicenseDataThunk } from '../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
@@ -14,6 +11,8 @@ import { RootState } from '../../../Models';
 import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoogleGraphMainPage';
 import { BiMessageAdd } from 'react-icons/bi';
 import AddLicenseDetailMainPage from './DownloadMainPage/ModalMainPage/AddLicenseDetailMainPage';
+
+
 export const LicensMainTableIncludeBox = styled.div`
     td,
     th {
@@ -84,8 +83,8 @@ export const LicensMainTableIncludeBox = styled.div`
 `;
 
 const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPageProps) => {
-    const [getData, setGetData] = useState<LicenseDataType[]>([]);
-    const [SelectCode, setSelectCode] = useState('');
+    // const [getData, setGetData] = useState<LicenseDataType[]>([]);
+    // const [SelectCode, setSelectCode] = useState('');
     const [LoadingState, setLoadingState] = useState(false);
     const [SortTable, setSortTable] = useState({
         Name: 'code',
@@ -103,9 +102,9 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
         GetInfoLicensData();
     }, [SortTable, type]);
 
-    useEffect(() => {
-        setSelectCode('');
-    }, [type]);
+    // useEffect(() => {
+    //     setSelectCode('');
+    // }, [type]);
 
     const handleClicksUserAdd = (data: LicenseDataType) => {
         setModalType('Show_info');
@@ -162,140 +161,13 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                     <h2>{type}</h2>
                 </div>
                 <LicensMainTableIncludeBox>
-                    {LicenseData.loading ? (
+                    {LoadingState ? (
                         <table className="type09">
                             <thead>
                                 <tr>
                                     <th scope="cols">인덱스</th>
                                     <th scope="cols">관리번호</th>
-                                    {/* <th scope="cols" style={{ width: '150px' }}>
-                                        <div>이름</div>
-                                        <div className="SortIcons">
-                                            {SortTable.Name === 'name' && SortTable.ASC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'name',
-                                                            ASC: false,
-                                                            DESC: true,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortUp></FaSortUp>
-                                                </div>
-                                            ) : SortTable.Name === 'name' && SortTable.DESC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'name',
-                                                            ASC: false,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortDown></FaSortDown>
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'name',
-                                                            ASC: true,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSort></FaSort>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </th> */}
                                     <th scope="cols">설명</th>
-                                    {/* <th scope="cols" style={{ width: '150px' }}>
-                                        <div>구매 날짜</div>
-                                        <div className="SortIcons">
-                                            {SortTable.Name === 'ContractDate' && SortTable.ASC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'ContractDate',
-                                                            ASC: false,
-                                                            DESC: true,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortUp></FaSortUp>
-                                                </div>
-                                            ) : SortTable.Name === 'ContractDate' && SortTable.DESC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'ContractDate',
-                                                            ASC: false,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortDown></FaSortDown>
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'ContractDate',
-                                                            ASC: true,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSort></FaSort>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </th>
-                                    <th scope="cols" style={{ width: '150px' }}>
-                                        <div>종료 날짜</div>
-                                        <div className="SortIcons">
-                                            {SortTable.Name === 'TerminatedDate' && SortTable.ASC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'TerminatedDate',
-                                                            ASC: false,
-                                                            DESC: true,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortUp></FaSortUp>
-                                                </div>
-                                            ) : SortTable.Name === 'TerminatedDate' && SortTable.DESC ? (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'TerminatedDate',
-                                                            ASC: false,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSortDown></FaSortDown>
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    onClick={() =>
-                                                        setSortTable({
-                                                            Name: 'TerminatedDate',
-                                                            ASC: true,
-                                                            DESC: false,
-                                                        })
-                                                    }
-                                                >
-                                                    <FaSort></FaSort>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </th>
-                                    <th scope="cols">키 확인</th> */}
                                     <th scope="cols">전체 사용 가능 인원</th>
                                     <th scope="cols">전체 사용 중인 인원</th>
                                     <th scope="cols">라이선스 추가</th>
@@ -335,13 +207,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                     }}
                                                 >
                                                     <BiMessageAdd></BiMessageAdd>
-                                                </td>
-                                                {/* <td onClick={() => handleClicksUserAdd(list)}>
-                                                    <BsFillPersonPlusFill></BsFillPersonPlusFill>
-                                                </td>
-                                                <td className="HoverCheck" onClick={() => setSelectCode(list.license_manage_code)}>
-                                                    클릭
-                                                </td> */}
+                                                </td>                                        
                                             </tr>
                                             {list.datas.map((item: LicenseDataType, j: number) => {
                                                 return (

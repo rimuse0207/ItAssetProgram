@@ -8,6 +8,9 @@ import MonitorMainPage from './Monitor/MonitorMainPage';
 import AssetGraphMainPage from './AssetGraph/AssetGraphMainPage';
 import GraphContainer from './AssetGraph/GraphContainer';
 import PcAssetMenuIconsMainPage from './PcAssetMenuIcons/PcAssetMenuIconsMainPage';
+import CompanySelectMenuBar from "../Navigation/CompanySelectMenuBar/CompanySelectMenuBar"
+import {CompanySelectTypes} from "../Navigation/CompanySelectMenuBar/CompanySelectTypes"
+
 
 type URLParamsType = {
     type: string;
@@ -79,10 +82,6 @@ const LicenseMainPageContentMainPageDiv = styled.div`
     }
 `;
 
-type CompanySelectTypes = {
-    name: string;
-    AccessKey: boolean;
-};
 const PcAssetMainPage = () => {
     let { type } = useParams<URLParamsType>();
 
@@ -111,34 +110,13 @@ const PcAssetMainPage = () => {
     };
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
-                <div>
-                    <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
-                </div>
+        // <div>
+        //     <div style={{ display: 'flex' }}>
+        //         <div>
+        //             <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
+        //         </div>
                 <LicenseMainPageContentMainPageDiv>
-                    <LicenseMainPageMainDivBox>
-                        <div>
-                            <ul>
-                                {CompanySelectAccessKey.map((list, i) => {
-                                    return (
-                                        <li key={list.name} onClick={() => handleCompanyClicks(list)}>
-                                            {list.AccessKey ? (
-                                                <>
-                                                    <div className="LineText" style={{ color: '#050404', fontWeight: 'bold' }}>
-                                                        {list.name}
-                                                    </div>
-                                                    <div className="LineActions"></div>
-                                                </>
-                                            ) : (
-                                                <div className="LineText">{list.name}</div>
-                                            )}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </LicenseMainPageMainDivBox>
+                   <CompanySelectMenuBar CompanySelectAccessKey={CompanySelectAccessKey} handleCompanyClicks={handleCompanyClicks}></CompanySelectMenuBar>
 
                     <GraphContainer></GraphContainer>
 
@@ -155,8 +133,8 @@ const PcAssetMainPage = () => {
                         )
                     )}
                 </LicenseMainPageContentMainPageDiv>
-            </div>
-        </div>
+        //     </div>
+        // </div>
     );
 };
 

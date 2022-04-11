@@ -4,11 +4,7 @@ import MainPageComponents from './Components/MainPageComponents';
 
 function App() {
     return (
-        <div className="App">
-            <div>
-                <MainPageComponents></MainPageComponents>
-            </div>
-        </div>
+            <MainPageComponents></MainPageComponents>
     );
 }
 

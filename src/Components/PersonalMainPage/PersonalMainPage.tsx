@@ -195,11 +195,11 @@ const PersonalMainPage = () => {
     };
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
-                <div>
-                    <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
-                </div>
+        // <div>
+        //     <div style={{ display: 'flex' }}>
+        //         <div>
+        //             <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
+        //         </div>
                 <PersonalMainPageDivBox>
                     <div className="PersonInfo">
                         <div>
@@ -308,8 +308,8 @@ const PersonalMainPage = () => {
                         </div>
                     </div>
                 </PersonalMainPageDivBox>
-            </div>
-        </div>
+        //     </div>
+        // </div>
     );
 };
 
