@@ -9,6 +9,9 @@ import { AiFillFolderOpen, AiFillSetting } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { RouteComponentProps } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import {LogoutRedux} from "../../Models/LoginCheckRedux/LoginCheckRedux"
+
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
     MenuCheckedSubLists: {};
@@ -171,13 +174,17 @@ const NavigationMenuBarMainPageMainDivBox = styled.nav<NavigationMenuBarMainPage
 `;
 
 const NavigationMenuBarMainPage = () => {
+    const dispatch = useDispatch();
     const [MenuHiddenCheck, setMenuHiddenCheck] = useState(false);
     const [MenuCheckedSubLists, setMenuCheckedSubLists] = useState({
         setting: false,
         license: true,
     });
     let { type } = useParams<URLParams>();
-    console.log();
+    
+    const handleLogout =  async() =>{
+        await dispatch(LogoutRedux());
+    }
     return (
         <NavigationMenuBarMainPageMainDivBox menuStatus={MenuHiddenCheck} MenuCheckedSubLists={MenuCheckedSubLists}>
             {MenuHiddenCheck ? (
@@ -345,7 +352,7 @@ const NavigationMenuBarMainPage = () => {
                                 {MenuCheckedSubLists.setting ? (
                                     <ul className="settingClassNamesOn">
                                         <li>비밀번호 변경</li>
-                                        <li>로그아웃</li>
+                                        <li onClick={handleLogout}>로그아웃</li>
                                     </ul>
                                 ) : (
                                     ''

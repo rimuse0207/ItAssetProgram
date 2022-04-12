@@ -5,6 +5,8 @@ import NoteBookAssetData from './AssetDataReduxThunk/AssetNotBookDataThunks';
 import MonitorAssetData from './AssetDataReduxThunk/AssetMonitorDataThunks';
 import FilteringData from './AssetFilteringRedux/AssetFilteringRedux';
 import LicenseFilteringData from './LicenseFilteringRedux/LicenseFilteringRedux';
+import LoginCheck from "./LoginCheckRedux/LoginCheckRedux";
+
 const rootReducer = combineReducers({
     LicenseData,
     DeskTopAssetData,
@@ -12,7 +14,10 @@ const rootReducer = combineReducers({
     MonitorAssetData,
     FilteringData,
     LicenseFilteringData,
+    LoginCheck
 });
+
+
 
 export default rootReducer;
 
