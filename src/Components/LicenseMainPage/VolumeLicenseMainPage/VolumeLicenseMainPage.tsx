@@ -12,7 +12,6 @@ import LicenseGoogleGraphMainPage from '../LicenseGoogleGraphMainPage/LicenseGoo
 import { BiMessageAdd } from 'react-icons/bi';
 import AddLicenseDetailMainPage from './DownloadMainPage/ModalMainPage/AddLicenseDetailMainPage';
 
-
 export const LicensMainTableIncludeBox = styled.div`
     td,
     th {
@@ -86,11 +85,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     // const [getData, setGetData] = useState<LicenseDataType[]>([]);
     // const [SelectCode, setSelectCode] = useState('');
     const [LoadingState, setLoadingState] = useState(false);
-    const [SortTable, setSortTable] = useState({
-        Name: 'code',
-        ASC: false,
-        DESC: false,
-    });
+
     const [UserAddModals, setUserAddModals] = useState(false);
     const [DetailLicenseAdd, setDetailLicenseAdd] = useState(false);
     const [ModalType, setModalType] = useState('');
@@ -98,9 +93,10 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     const [UserClickLicenseData, setUserClickLicenseData] = useState<LicenseDataType | null>(null);
     const dispatch = useDispatch();
     const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
+    const LicenseFilteringData = useSelector((state: RootState) => state.LicenseFilteringData);
     useEffect(() => {
         GetInfoLicensData();
-    }, [SortTable, type]);
+    }, [type]);
 
     // useEffect(() => {
     //     setSelectCode('');
@@ -118,7 +114,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
             const ParamasData = {
                 company: SelectCompany,
                 license: type,
-                SortTable,
+                SortTable: LicenseFilteringData,
             };
             dispatch(License_getLicenseDataThunk(ParamasData));
             setLoadingState(true);
@@ -129,8 +125,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
 
     const handleClicksProveData = (proveData: any) => {
         try {
-            console.log(proveData);
-
             for (var i = 0; i < proveData.length; i++) {
                 if (proveData[i].prove_type === 'URLS') {
                     window.open(proveData[i].prove_origin_name);
@@ -153,7 +147,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                 setUserClickLicenseData={setUserClickLicenseData}
                 UserClickLicenseData={UserClickLicenseData}
                 type={type}
-                SortTable={SortTable}
+                SortTable={LicenseFilteringData}
                 ModalType={ModalType}
             ></DownLoadMainPage>
             <div>
@@ -166,7 +160,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                             <thead>
                                 <tr>
                                     <th scope="cols">인덱스</th>
-                                    <th scope="cols">관리번호</th>
+                                    <th scope="cols">코드</th>
                                     <th scope="cols">설명</th>
                                     <th scope="cols">전체 사용 가능 인원</th>
                                     <th scope="cols">전체 사용 중인 인원</th>
@@ -188,7 +182,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                             <tbody>
                                 {LicenseData.data.map((list: LicenseDataType, i: number) => {
                                     return (
-                                        <>
+                                        <React.Fragment key={list.license_product_code + list.asset_info_asset_management_number}>
                                             <tr key={list.license_product_code}>
                                                 <th scope="row" rowSpan={list.datas.length + 1}>
                                                     {i + 1}
@@ -207,7 +201,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                     }}
                                                 >
                                                     <BiMessageAdd></BiMessageAdd>
-                                                </td>                                        
+                                                </td>
                                             </tr>
                                             {list.datas.map((item: LicenseDataType, j: number) => {
                                                 return (
@@ -252,7 +246,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                     </tr>
                                                 );
                                             })}
-                                        </>
+                                        </React.Fragment>
                                     );
                                 })}
                             </tbody>
@@ -267,7 +261,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                     <AddLicenseDetailMainPage
                         SelectCompany={SelectCompany}
                         type={type}
-                        SortTable={SortTable}
+                        SortTable={LicenseFilteringData}
                         setSelectClicksModals={() => setDetailLicenseAdd(false)}
                         SelectClicksModals={DetailLicenseAdd}
                         DetailLicenseClicksData={DetailLicenseClicksData}

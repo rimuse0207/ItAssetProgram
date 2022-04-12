@@ -55,7 +55,7 @@ const PcAssetMenuIconsMainPageDivBox = styled.div`
     }
 `;
 
-const FilterSearchMainPageDivBox = styled.div`
+export const FilterSearchMainPageDivBox = styled.div`
     height: 400px;
     padding: 10px;
     margin-right: 30px;
@@ -154,7 +154,7 @@ const FilterSearchMainPageDivBox = styled.div`
     }
 `;
 
-const FilterSearchMainPageDivBoxDownSlide = styled.div`
+export const FilterSearchMainPageDivBoxDownSlide = styled.div`
     animation-name: SlideUp;
     animation-duration: 0.5s;
     @keyframes SlideUp {

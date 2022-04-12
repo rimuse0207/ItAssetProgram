@@ -60,7 +60,7 @@ const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPa
     useEffect(() => {
         getada();
     }, [SelectCompany, type, LicenseData.data]);
-    console.log(type);
+
     const getada = async () => {
         const labels = [];
         const usedNumber = [];
