@@ -159,13 +159,13 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                         <table className="type09">
                             <thead>
                                 <tr>
-                                    <th scope="cols">인덱스</th>
+                                    <th scope="cols"></th>
                                     <th scope="cols">코드</th>
-                                    <th scope="cols">설명</th>
-                                    <th scope="cols">전체 사용 가능 인원</th>
-                                    <th scope="cols">전체 사용 중인 인원</th>
-                                    <th scope="cols">라이선스 추가</th>
-                                    <th scope="cols">인덱스</th>
+                                    <th scope="cols">라이선스 명</th>
+                                    <th scope="cols">전체 인원</th>
+                                    <th scope="cols">사용 인원</th>
+                                    <th scope="cols">구매 이력 추가</th>
+                                    <th scope="cols"></th>
                                     <th scope="cols">관리번호</th>
                                     <th scope="cols">구입날짜</th>
                                     <th scope="cols">만료날짜</th>
@@ -173,8 +173,8 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                     <th scope="cols">구입업체</th>
                                     <th scope="cols">라이선스 키</th>
                                     <th scope="cols">자산코드</th>
-                                    <th scope="cols">허용 인원</th>
-                                    <th scope="cols">사용 중인 인원</th>
+                                    <th scope="cols">전체 인원</th>
+                                    <th scope="cols">사용 인원</th>
                                     <th scope="cols">사용 가능 인원</th>
                                     <th scope="cols">정보 보기</th>
                                 </tr>

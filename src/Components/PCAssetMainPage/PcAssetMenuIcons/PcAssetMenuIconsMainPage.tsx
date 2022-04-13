@@ -240,8 +240,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                         className="FiterIcons"
                         onClick={() =>
                             setSelectClicksModals({
-                                NewDataModal: false,
-                                ExcelDownloadModal: false,
+                                ...SelectClicksModals,
                                 FilterSearch: !SelectClicksModals.FilterSearch,
                             })
                         }
@@ -255,9 +254,8 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                         className="NewDataIcons"
                         onClick={() =>
                             setSelectClicksModals({
-                                NewDataModal: true,
-                                ExcelDownloadModal: false,
-                                FilterSearch: SelectClicksModals.FilterSearch,
+                                ...SelectClicksModals,
+                                NewDataModal: !SelectClicksModals.NewDataModal,
                             })
                         }
                     >
@@ -271,9 +269,8 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                         className="DownLoadIcons"
                         onClick={() =>
                             setSelectClicksModals({
-                                NewDataModal: false,
-                                ExcelDownloadModal: true,
-                                FilterSearch: SelectClicksModals.FilterSearch,
+                                ...SelectClicksModals,
+                                ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
                             })
                         }
                     >
@@ -282,18 +279,22 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                     <div className="IconText">EXCEL</div>
                 </div>
             </div>
-            <NewPcAssetDataModal
-                key={SelectCompany}
-                SelectClicksModals={SelectClicksModals}
-                setSelectClicksModals={() =>
-                    setSelectClicksModals({
-                        NewDataModal: false,
-                        ExcelDownloadModal: false,
-                        FilterSearch: SelectClicksModals.FilterSearch,
-                    })
-                }
-                SelectCompany={SelectCompany}
-            ></NewPcAssetDataModal>
+            {SelectClicksModals.NewDataModal ? (
+                <NewPcAssetDataModal
+                    key={SelectCompany}
+                    SelectClicksModals={SelectClicksModals}
+                    setSelectClicksModals={() =>
+                        setSelectClicksModals({
+                            ...SelectClicksModals,
+                            NewDataModal: false,
+                        })
+                    }
+                    SelectCompany={SelectCompany}
+                ></NewPcAssetDataModal>
+            ) : (
+                ''
+            )}
+
             {SelectClicksModals.FilterSearch ? (
                 <FilterSearchMainPageDivBox>
                     <div>

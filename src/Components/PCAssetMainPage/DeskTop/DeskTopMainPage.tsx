@@ -158,7 +158,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                     <th scope="cols">사용장소</th>
                                     <th scope="cols">사용자</th>
                                     <th scope="cols">정보 조회</th>
-                                    <th scope="cols">폐기 여부</th>
+                                    {/* <th scope="cols">폐기 여부</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -204,10 +204,10 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                                             <BsInfoCircleFill></BsInfoCircleFill>
                                                         </div>
                                                     ) : (
-                                                        <div>불가</div>
+                                                        <div>폐기 처리</div>
                                                     )}
                                                 </td>
-                                                <td>{list.asset_destroy_check === 0 ? 'X' : 'O'}</td>
+                                                {/* <td>{list.asset_destroy_check === 0 ? 'X' : 'O'}</td> */}
                                             </tr>
                                         );
                                     })

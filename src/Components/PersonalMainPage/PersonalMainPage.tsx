@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import NavigationMenuBarMainPage from '../Navigation/NavigationMenuBarMainPage';
 import styled from 'styled-components';
 import { PersonalInfoGet } from '../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Models';
 
 const PersonalMainPageDivBox = styled.div`
     width: 100%;
@@ -135,11 +136,13 @@ const PersonalMainPageDivBox = styled.div`
 `;
 
 type UserAssetTypes = {
-    asset_explain: string | null;
-    asset_purchasedate: string | null;
-    code: string | null;
-    type: string | null;
-    asset_urgentdate: string | null;
+    asset_management_number: string;
+    asset_division: string;
+    asset_disk: string | null;
+    asset_cpu: string | null;
+    asset_ram: string | null;
+    asset_purchase_date: string | null;
+    asset_maker: string | null;
 };
 type UserInfoTypes = {
     companylocation: string | null;
@@ -150,29 +153,44 @@ type UserInfoTypes = {
 };
 
 type LicenseTypes = {
-    code: string | null;
-    explaindesc: string | null;
-    license_code: string | null;
-    name: string | null;
-    prove_file_location: string | null;
-    registerdate: string | null;
-    terminateddate: string | null;
-    userinfo_email: string | null;
+    asset_info_asset_management_number: string | null;
+    license_company_name: string | null;
+    license_dependence_check: string | null;
+    license_info_indexs: number | null;
+    license_info_license_product_code: string | null;
+    license_license_manage_code: string | null;
+    license_manage_code: string | null;
+    license_newcode: string | null;
+    license_permit_count: string | null;
+    license_product_code: string | null;
+    license_product_name: string | null;
+    license_prove_code: string | null;
+    license_purchase_company: string | null;
+    license_purchase_date: string | null;
+    license_purchase_finish_date: string | null;
+    license_purchase_pride: string | null;
+    license_register_date: string | null;
+    license_user_used_indexs: string | null;
+    asset_division: string | null;
+    asset_cpu: string | null;
+    asset_purchase_date: string | null;
 };
 
 const PersonalMainPage = () => {
     const [userInfoDatas, setUserInfoDatas] = useState<UserInfoTypes[]>([]);
     const [userAssetDatas, setAssetDatas] = useState<UserAssetTypes[]>([]);
     const [userLicenseDatas, setUserLicenseDatas] = useState<LicenseTypes[]>([]);
+    const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     useEffect(() => {
         GetInfoDataPersonal();
     }, []);
 
     const GetInfoDataPersonal = async () => {
         const Paramas = {
-            email: 'sjyoo@dhk.co.kr',
+            email: LoginInfoData.email,
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
+        console.log(PersonalDatas);
         if (PersonalDatas.data.dataSuccess) {
             setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
             setAssetDatas(PersonalDatas.data.datas.Asset);
@@ -200,114 +218,116 @@ const PersonalMainPage = () => {
         //         <div>
         //             <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
         //         </div>
-                <PersonalMainPageDivBox>
-                    <div className="PersonInfo">
-                        <div>
-                            <table className="type09">
-                                <thead>
-                                    <tr>
-                                        <th scope="row">회사</th>
-                                        <th scope="row">이름</th>
-                                        <th scope="row">직급</th>
-                                        <th scope="row">소속</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {userInfoDatas.length > 0 ? (
-                                        userInfoDatas.map((list, i) => {
-                                            return (
-                                                <tr key={list.name}>
-                                                    <td>
-                                                        {list.companyname}_{list.companylocation}
-                                                    </td>
-                                                    <td>{list.name}</td>
-                                                    <td>{list.position}</td>
-                                                    <td>{list.team}</td>
-                                                </tr>
-                                            );
-                                        })
-                                    ) : (
-                                        <tr>
-                                            <td>데이터 없음</td>
+        <PersonalMainPageDivBox>
+            <div className="PersonInfo">
+                <div>
+                    <table className="type09">
+                        <thead>
+                            <tr>
+                                <th scope="row">회사</th>
+                                <th scope="row">이름</th>
+                                <th scope="row">직급</th>
+                                <th scope="row">소속</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userInfoDatas.length > 0 ? (
+                                userInfoDatas.map((list, i) => {
+                                    return (
+                                        <tr key={list.name}>
+                                            <td>
+                                                {list.companyname}_{list.companylocation}
+                                            </td>
+                                            <td>{list.name}</td>
+                                            <td>{list.position}</td>
+                                            <td>{list.team}</td>
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td>데이터 없음</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className="AssetPersonalInfo">
+                <div>
+                    <div>
+                        <h3>지급 물품</h3>
                     </div>
-                    <div className="AssetPersonalInfo">
-                        <div>
-                            <div>
-                                <h3>지급 물품</h3>
-                            </div>
-                        </div>
-                        <div className="AssetTableContainer">
-                            <table className="type09">
-                                <thead>
-                                    <tr>
-                                        <th scope="cols">인덱스</th>
-                                        <th scope="cols">구분</th>
-                                        <th scope="cols">종류</th>
-                                        <th scope="cols">지급 날짜</th>
-                                        <th scope="cols">고유 ID</th>
+                </div>
+                <div className="AssetTableContainer">
+                    <table className="type09">
+                        <thead>
+                            <tr>
+                                <th scope="cols">인덱스</th>
+                                <th scope="cols">구분</th>
+                                <th scope="cols">종류</th>
+                                <th scope="cols">지급 날짜</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userAssetDatas.map((list, i) => {
+                                return (
+                                    <tr key={list.asset_management_number}>
+                                        <td>{i + 1}</td>
+                                        <td>
+                                            {list.asset_division} ({list.asset_maker})
+                                        </td>
+                                        <td>
+                                            {list.asset_cpu}_{list.asset_ram}_{list.asset_disk}
+                                        </td>
+                                        <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {userAssetDatas.map((list, i) => {
-                                        return (
-                                            <tr key={list.code}>
-                                                <td>{i + 1}</td>
-                                                <td scope="row">
-                                                    {list.type === 'desktop' ? '데스크탑' : list.type === 'notebook' ? '노트북' : '모니터'}
-                                                </td>
-                                                <td>
-                                                    {list.type === 'desktop' ? '데스크탑' : list.type === 'notebook' ? '노트북' : '모니터'}
-                                                    __{list.asset_explain}
-                                                </td>
-                                                <td>{moment(list.asset_urgentdate).format('YYYY-MM-DD')}</td>
-                                                <td>{list.code}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className="AssetPersonalInfo">
+                <div>
+                    <div>
+                        <h3>소프트웨어</h3>
                     </div>
-                    <div className="AssetPersonalInfo">
-                        <div>
-                            <div>
-                                <h3>소프트웨어</h3>
-                            </div>
-                        </div>
-                        <div className="AssetTableContainer">
-                            <table className="type09">
-                                <thead>
-                                    <tr>
-                                        <th scope="cols">인덱스</th>
-                                        <th scope="cols">구분</th>
-                                        <th scope="cols">사용 여부</th>
-                                        <th scope="cols">지급 일자</th>
-                                        <th scope="cols">고유 ID</th>
+                </div>
+                <div className="AssetTableContainer">
+                    <table className="type09">
+                        <thead>
+                            <tr>
+                                <th scope="cols">인덱스</th>
+                                <th scope="cols">등록 PC</th>
+                                <th scope="cols">구분</th>
+                                <th scope="cols">사용 여부</th>
+                                <th scope="cols">지급 일자</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userLicenseDatas.map((list, i) => {
+                                return (
+                                    <tr key={i}>
+                                        <td>{i + 1}</td>
+                                        <td>
+                                            {list.asset_info_asset_management_number
+                                                ? `${list?.asset_division}_${moment(list.asset_purchase_date).format('YYYY-MM-DD')}`
+                                                : '-'}
+                                        </td>
+                                        <td>{list.license_product_name}</td>
+                                        <td>{list.asset_info_asset_management_number ? 'O' : 'X'}</td>
+                                        <td>
+                                            {list.license_register_date ? moment(list.license_register_date).format('YYYY-MM-DD') : '-'}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {userLicenseDatas.map((list, i) => {
-                                        return (
-                                            // <tr style={list.userinfo_email ? { background: '#94b290' } : { background: '#edb0ad' }}>
-                                            <tr key={list.code}>
-                                                <td>{i + 1}</td>
-                                                <td>{list.name}</td>
-                                                <td>{list.userinfo_email ? 'O' : 'X'}</td>
-                                                <td>{list.userinfo_email ? moment(list.registerdate).format('YYYY-MM-DD') : '-'}</td>
-                                                <td>{list.code}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </PersonalMainPageDivBox>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </PersonalMainPageDivBox>
         //     </div>
         // </div>
     );

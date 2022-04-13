@@ -335,6 +335,14 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         getSettingData();
     }, [SelectCompany]);
 
+    const settingChange = () => {
+        var url = '/settingChange';
+        var title = 'setting';
+
+        var status = 'toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=900, height=500, top=50%,left=50%';
+        window.open(url, title, status);
+    };
+
     const getCompanyInfo = async () => {
         try {
             const ParamsData = {
@@ -672,13 +680,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">디스크</dt>
                                                 <dd className="inputbox-content">
-                                                    {/* <input
-                                                        id="input6"
-                                                        value={UserWriteData.asset_disk}
-                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_disk: e.target.value })}
-                                                        placeholder="S_256G ..."
-                                                    />
-                                                    <span className="underline"></span> */}
                                                     <select
                                                         className="select"
                                                         onChange={e => setUserWriteData({ ...UserWriteData, asset_disk: e.target.value })}
@@ -753,6 +754,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     </dd>
                                                 </dl>
                                                 <h4>라이선스 등록</h4>
+                                                <button onClick={settingChange}>설정변경</button>
                                                 <div>
                                                     <input
                                                         type="radio"

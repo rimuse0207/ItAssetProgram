@@ -422,7 +422,7 @@ const AddLicenseDetailMainPage = ({
                     <div>
                         <div id="wrap" className="input">
                             <section className="input-content">
-                                <h2>PC 자산 추가</h2>
+                                <h2>구매 이력 추가</h2>
 
                                 <div className="PCAssetFloatContainer">
                                     <div className="PCAssetFloatLeft">

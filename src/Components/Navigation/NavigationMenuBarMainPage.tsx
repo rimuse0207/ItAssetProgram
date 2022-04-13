@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { Link, useParams } from 'react-router-dom';
 import { BiServer } from 'react-icons/bi';
 import { BsCircleSquare, BsFillPersonFill, BsFillCartFill, BsPieChartFill } from 'react-icons/bs';
-import { IoIosChatboxes } from 'react-icons/io';
-import { VscGraphLine } from 'react-icons/vsc';
-import { AiFillFolderOpen, AiFillSetting } from 'react-icons/ai';
+import { AiFillSetting } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import { RouteComponentProps } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import {LogoutRedux} from "../../Models/LoginCheckRedux/LoginCheckRedux"
+import { useDispatch, useSelector } from 'react-redux';
+import { LogoutRedux } from '../../Models/LoginCheckRedux/LoginCheckRedux';
+import { RootState } from '../../Models';
+import { ResetAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
+import { useLocation } from 'react-router-dom';
 
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
@@ -175,18 +175,27 @@ const NavigationMenuBarMainPageMainDivBox = styled.nav<NavigationMenuBarMainPage
 
 const NavigationMenuBarMainPage = () => {
     const dispatch = useDispatch();
+
+    const LoginCheckState = useSelector((state: RootState) => state.LoginCheck);
+
     const [MenuHiddenCheck, setMenuHiddenCheck] = useState(false);
     const [MenuCheckedSubLists, setMenuCheckedSubLists] = useState({
-        setting: false,
+        setting: true,
         license: true,
     });
     let { type } = useParams<URLParams>();
-    
-    const handleLogout =  async() =>{
+    const PathLocation = useLocation();
+
+    const handleLogout = async () => {
         await dispatch(LogoutRedux());
-    }
+        await dispatch(ResetAccessKeyMenuBarRedux());
+    };
     return (
-        <NavigationMenuBarMainPageMainDivBox menuStatus={MenuHiddenCheck} MenuCheckedSubLists={MenuCheckedSubLists}>
+        <NavigationMenuBarMainPageMainDivBox
+            menuStatus={MenuHiddenCheck}
+            MenuCheckedSubLists={MenuCheckedSubLists}
+            style={PathLocation.pathname === '/settingChange' ? { display: 'none' } : {}}
+        >
             {MenuHiddenCheck ? (
                 <div className="HiddenMenuLists">
                     <div>
@@ -198,27 +207,31 @@ const NavigationMenuBarMainPage = () => {
                     <div className="MenuListsCotainerDiv">
                         <ul className="MenuListsCotainerUl">
                             <li>
-                                <BsCircleSquare></BsCircleSquare>
+                                <Link to="/Personal">
+                                    <BsFillPersonFill></BsFillPersonFill>
+                                </Link>
                             </li>
-                            <li>
-                                <BsFillPersonFill></BsFillPersonFill>
-                            </li>
+                            {LoginCheckState.AdminAccess ? (
+                                <>
+                                    <li>
+                                        <BsPieChartFill></BsPieChartFill>
+                                    </li>
+                                    <li>
+                                        <BsFillCartFill></BsFillCartFill>
+                                    </li>
+                                    <li>
+                                        <Link to="/PCAsset">
+                                            <BsCircleSquare></BsCircleSquare>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <BiServer></BiServer>
+                                    </li>
+                                </>
+                            ) : (
+                                ''
+                            )}
 
-                            <li>
-                                <IoIosChatboxes></IoIosChatboxes>
-                            </li>
-                            <li>
-                                <VscGraphLine></VscGraphLine>
-                            </li>
-                            <li>
-                                <BsPieChartFill></BsPieChartFill>
-                            </li>
-                            <li>
-                                <AiFillFolderOpen></AiFillFolderOpen>
-                            </li>
-                            <li>
-                                <BsFillCartFill></BsFillCartFill>
-                            </li>
                             <li>
                                 <AiFillSetting></AiFillSetting>
                             </li>
@@ -235,6 +248,7 @@ const NavigationMenuBarMainPage = () => {
                             </div>
                         </div>
                     </div>
+
                     <div className="MenuListsCotainerDiv">
                         <ul className="MenuListsCotainerUl">
                             <li className={window.location.pathname === '/Personal' ? 'NowPageSelect' : ''}>
@@ -247,79 +261,88 @@ const NavigationMenuBarMainPage = () => {
                                     </div>
                                 </Link>
                             </li>
-                            <li>
-                                <div className="listStyleDivBox">
-                                    <div>
-                                        <BsPieChartFill></BsPieChartFill>
-                                    </div>
-                                    <div className="listStyleSubLists">통합사용현황</div>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="listStyleDivBox">
-                                    <div>
-                                        <BsFillCartFill></BsFillCartFill>
-                                    </div>
-                                    <div className="listStyleSubLists">
-                                        <div
-                                            className="listsSubListsDivBox"
-                                            onClick={e =>
-                                                setMenuCheckedSubLists({ ...MenuCheckedSubLists, license: !MenuCheckedSubLists.license })
-                                            }
-                                        >
-                                            <div>라이선스</div>
-                                            {MenuCheckedSubLists.license ? (
-                                                <div className="HiddenOff">
-                                                    <MdKeyboardArrowDown></MdKeyboardArrowDown>
-                                                </div>
-                                            ) : (
-                                                <div className="HiddenOn">
-                                                    <MdKeyboardArrowDown></MdKeyboardArrowDown>
-                                                </div>
-                                            )}
+                            {LoginCheckState.AdminAccess ? (
+                                <>
+                                    <li>
+                                        <div className="listStyleDivBox">
+                                            <div>
+                                                <BsPieChartFill></BsPieChartFill>
+                                            </div>
+                                            <div className="listStyleSubLists">통합사용현황</div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <div className="SubHiddenListsMenu">
-                                {MenuCheckedSubLists.license ? (
-                                    <ul className="settingClassNamesOn">
-                                        <li className={type === 'volume_license' ? 'NowPageSelect' : ''}>
-                                            <Link to="/license/volume_license">Volume License</Link>
-                                        </li>
-                                        <li className={type === 'package_license' ? 'NowPageSelect' : ''}>
-                                            <Link to="/license/package_license">Package License</Link>
-                                        </li>
-                                        <li className={type === 'usbtype_license' ? 'NowPageSelect' : ''}>
-                                            <Link to="/license/usbtype_license">USBType License</Link>
-                                        </li>
-                                        <li className={type === 'network_license' ? 'NowPageSelect' : ''}>
-                                            <Link to="/license/network_license">Network License</Link>
-                                        </li>
-                                    </ul>
-                                ) : (
-                                    ''
-                                )}
-                            </div>
-                            <li className={window.location.pathname === '/PCAsset' ? 'NowPageSelect' : ''}>
-                                <Link to="/PCAsset">
-                                    <div className="listStyleDivBox">
-                                        <div>
-                                            <BsCircleSquare></BsCircleSquare>
+                                    </li>
+                                    <li>
+                                        <div className="listStyleDivBox">
+                                            <div>
+                                                <BsFillCartFill></BsFillCartFill>
+                                            </div>
+                                            <div className="listStyleSubLists">
+                                                <div
+                                                    className="listsSubListsDivBox"
+                                                    onClick={e =>
+                                                        setMenuCheckedSubLists({
+                                                            ...MenuCheckedSubLists,
+                                                            license: !MenuCheckedSubLists.license,
+                                                        })
+                                                    }
+                                                >
+                                                    <div>라이선스</div>
+                                                    {MenuCheckedSubLists.license ? (
+                                                        <div className="HiddenOff">
+                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="HiddenOn">
+                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="listStyleSubLists">PC</div>
+                                    </li>
+                                    <div className="SubHiddenListsMenu">
+                                        {MenuCheckedSubLists.license ? (
+                                            <ul className="settingClassNamesOn">
+                                                <li className={type === 'volume_license' ? 'NowPageSelect' : ''}>
+                                                    <Link to="/license/volume_license">Volume License</Link>
+                                                </li>
+                                                <li className={type === 'package_license' ? 'NowPageSelect' : ''}>
+                                                    <Link to="/license/package_license">Package License</Link>
+                                                </li>
+                                                <li className={type === 'usbtype_license' ? 'NowPageSelect' : ''}>
+                                                    <Link to="/license/usbtype_license">USBType License</Link>
+                                                </li>
+                                                <li className={type === 'network_license' ? 'NowPageSelect' : ''}>
+                                                    <Link to="/license/network_license">Network License</Link>
+                                                </li>
+                                            </ul>
+                                        ) : (
+                                            ''
+                                        )}
                                     </div>
-                                </Link>
-                            </li>
+                                    <li className={window.location.pathname === '/PCAsset' ? 'NowPageSelect' : ''}>
+                                        <Link to="/PCAsset">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <BsCircleSquare></BsCircleSquare>
+                                                </div>
+                                                <div className="listStyleSubLists">PC</div>
+                                            </div>
+                                        </Link>
+                                    </li>
 
-                            <li>
-                                <div className="listStyleDivBox">
-                                    <div>
-                                        <BiServer></BiServer>
-                                    </div>
-                                    <div className="listStyleSubLists">Server</div>
-                                </div>
-                            </li>
+                                    <li>
+                                        <div className="listStyleDivBox">
+                                            <div>
+                                                <BiServer></BiServer>
+                                            </div>
+                                            <div className="listStyleSubLists">Server</div>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : (
+                                <div></div>
+                            )}
 
                             <li>
                                 <div className="listStyleDivBox">

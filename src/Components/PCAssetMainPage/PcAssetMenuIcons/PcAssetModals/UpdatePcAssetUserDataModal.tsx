@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Modal from 'react-modal';
 import { MdCancel } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import moment from 'moment';
 import Select from 'react-select';
 import { UserInfoGet } from '../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import { DeskTopInfoDataType } from '../../PCAssetDataType';

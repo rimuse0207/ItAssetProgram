@@ -1,60 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import NavigationMenuBarMainPage from '../Navigation/NavigationMenuBarMainPage';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DeskTopMainPage from './DeskTop/DeskTopMainPage';
 import NoteBookMainPage from './NoteBook/NoteBookMainPage';
 import MonitorMainPage from './Monitor/MonitorMainPage';
-import AssetGraphMainPage from './AssetGraph/AssetGraphMainPage';
 import GraphContainer from './AssetGraph/GraphContainer';
 import PcAssetMenuIconsMainPage from './PcAssetMenuIcons/PcAssetMenuIconsMainPage';
-import CompanySelectMenuBar from "../Navigation/CompanySelectMenuBar/CompanySelectMenuBar"
-import {CompanySelectTypes} from "../Navigation/CompanySelectMenuBar/CompanySelectTypes"
-
+import CompanySelectMenuBar from '../Navigation/CompanySelectMenuBar/CompanySelectMenuBar';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../Models';
+import { ChangeAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 
 type URLParamsType = {
     type: string;
 };
 
-const LicenseMainPageMainDivBox = styled.div`
-    width: 100%;
-    border-bottom: 2px solid lightgray;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    ul {
-        display: flex;
-        li {
-            :hover {
-                cursor: pointer;
-            }
-            .LineText {
-                font-size: 1em;
-                color: #999;
-                background-color: transparent;
-                height: 40px;
-                line-height: 38px;
-                padding: 0 40px;
-            }
-            position: relative;
-            .LineActions {
-                position: absolute;
-                animation-name: slidings;
-                animation-duration: 0.8s;
-                @keyframes slidings {
-                    from {
-                        width: 0%;
-                    }
-                    to {
-                        width: 100%;
-                    }
-                }
-                border-bottom: 2px solid #515151;
-                width: 100%;
-            }
-        }
-    }
-`;
+type MenuAccessType = {
+    name: string;
+    AccessKey: boolean;
+};
 
 const LicenseMainPageContentMainPageDiv = styled.div`
     padding-left: 20px;
@@ -85,20 +49,11 @@ const LicenseMainPageContentMainPageDiv = styled.div`
 const PcAssetMainPage = () => {
     let { type } = useParams<URLParamsType>();
 
-    const [CompanySelectAccessKey, setCompanySelectAccessKey] = useState<CompanySelectTypes[]>([
-        { name: 'DHKS', AccessKey: true },
-        { name: 'YIKC', AccessKey: false },
-        { name: 'EXICON', AccessKey: false },
-        { name: 'SEMCNS', AccessKey: false },
-        { name: 'SEMTEK', AccessKey: false },
-        { name: 'DDDIA', AccessKey: false },
-        { name: 'YIKJ', AccessKey: false },
-        { name: 'DAS', AccessKey: false },
-        { name: 'SEMMICRO', AccessKey: false },
-    ]);
+    const dispatch = useDispatch();
+    const CompanySelectAccessKey = useSelector((state: RootState) => state.AccessKeyMenuBarData.CompanySelectAccessKey);
 
-    const handleCompanyClicks = (data: { name: string }) => {
-        const ChangeCompany = CompanySelectAccessKey.map((list, i) => {
+    const handleCompanyClicks = async (data: MenuAccessType) => {
+        const ChangeCompany = CompanySelectAccessKey.map((list: MenuAccessType, i: number) => {
             if (list.name === data.name) {
                 list.AccessKey = true;
             } else {
@@ -106,35 +61,31 @@ const PcAssetMainPage = () => {
             }
             return list;
         });
-        setCompanySelectAccessKey(ChangeCompany);
+        await dispatch(ChangeAccessKeyMenuBarRedux(ChangeCompany));
     };
 
     return (
-        // <div>
-        //     <div style={{ display: 'flex' }}>
-        //         <div>
-        //             <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
-        //         </div>
-                <LicenseMainPageContentMainPageDiv>
-                   <CompanySelectMenuBar CompanySelectAccessKey={CompanySelectAccessKey} handleCompanyClicks={handleCompanyClicks}></CompanySelectMenuBar>
+        <LicenseMainPageContentMainPageDiv>
+            <CompanySelectMenuBar
+                CompanySelectAccessKey={CompanySelectAccessKey}
+                handleCompanyClicks={handleCompanyClicks}
+            ></CompanySelectMenuBar>
 
-                    <GraphContainer></GraphContainer>
+            <GraphContainer></GraphContainer>
 
-                    {CompanySelectAccessKey.map((list, i) =>
-                        list.AccessKey ? (
-                            <div key={list.name}>
-                                <PcAssetMenuIconsMainPage SelectCompany={list.name}></PcAssetMenuIconsMainPage>
-                                <DeskTopMainPage SelectCompany={list.name} type={type}></DeskTopMainPage>
-                                <NoteBookMainPage SelectCompany={list.name} type={type}></NoteBookMainPage>
-                                <MonitorMainPage SelectCompany={list.name} type={type}></MonitorMainPage>
-                            </div>
-                        ) : (
-                            ''
-                        )
-                    )}
-                </LicenseMainPageContentMainPageDiv>
-        //     </div>
-        // </div>
+            {CompanySelectAccessKey.map((list: MenuAccessType) =>
+                list.AccessKey ? (
+                    <div key={list.name}>
+                        <PcAssetMenuIconsMainPage SelectCompany={list.name}></PcAssetMenuIconsMainPage>
+                        <DeskTopMainPage SelectCompany={list.name} type={type}></DeskTopMainPage>
+                        <NoteBookMainPage SelectCompany={list.name} type={type}></NoteBookMainPage>
+                        <MonitorMainPage SelectCompany={list.name} type={type}></MonitorMainPage>
+                    </div>
+                ) : (
+                    ''
+                )
+            )}
+        </LicenseMainPageContentMainPageDiv>
     );
 };
 

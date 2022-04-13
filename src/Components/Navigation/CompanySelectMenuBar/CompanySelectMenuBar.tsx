@@ -1,15 +1,14 @@
-import React from "react";
-import styled from "styled-components";
-import {CompanySelectTypes} from "./CompanySelectTypes"
+import React from 'react';
+import styled from 'styled-components';
+import { CompanySelectTypes } from './CompanySelectTypes';
 
 type CompanySelectMenuBarPropsType = {
-    CompanySelectAccessKey:CompanySelectTypes[];
-    handleCompanyClicks:any;
-}
-
+    CompanySelectAccessKey: CompanySelectTypes[];
+    handleCompanyClicks: any;
+};
 
 const LicenseMainPageMainDivBox = styled.div`
-    width: 100%;
+    min-width: 100%;
     border-bottom: 2px solid lightgray;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -48,32 +47,31 @@ const LicenseMainPageMainDivBox = styled.div`
     }
 `;
 
-
-const CompanySelectMenuBar = ({CompanySelectAccessKey,handleCompanyClicks}:CompanySelectMenuBarPropsType) =>{
-    return(
+const CompanySelectMenuBar = ({ CompanySelectAccessKey, handleCompanyClicks }: CompanySelectMenuBarPropsType) => {
+    return (
         <LicenseMainPageMainDivBox>
-        <div>
-            <ul>
-                {CompanySelectAccessKey.map((list, i) => {
-                    return (
-                        <li key={list.name} onClick={() => handleCompanyClicks(list)}>
-                            {list.AccessKey ? (
-                                <>
-                                    <div className="LineText" style={{ color: '#050404', fontWeight: 'bold' }}>
-                                        {list.name}
-                                    </div>
-                                    <div className="LineActions"></div>
-                                </>
-                            ) : (
-                                <div className="LineText">{list.name}</div>
-                            )}
-                        </li>
-                    );
-                })}
-            </ul>
-        </div>
-    </LicenseMainPageMainDivBox>
-    )
-}
+            <div>
+                <ul>
+                    {CompanySelectAccessKey.map((list, i) => {
+                        return (
+                            <li key={list.name} onClick={() => handleCompanyClicks(list)}>
+                                {list.AccessKey ? (
+                                    <>
+                                        <div className="LineText" style={{ color: '#050404', fontWeight: 'bold' }}>
+                                            {list.name}
+                                        </div>
+                                        <div className="LineActions"></div>
+                                    </>
+                                ) : (
+                                    <div className="LineText">{list.name}</div>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+        </LicenseMainPageMainDivBox>
+    );
+};
 
 export default CompanySelectMenuBar;
