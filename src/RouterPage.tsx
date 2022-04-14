@@ -18,7 +18,7 @@ const RouterPage = () => {
         <BrowserRouter>
             <Switch>
                 <div>
-                    {LoginCheckData.LoginCheck ? (
+                    {!LoginCheckData.LoginCheck ? (
                         <div style={{ display: 'flex' }}>
                             <div>
                                 <NavigationMenuBarMainPage></NavigationMenuBarMainPage>

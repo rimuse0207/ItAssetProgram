@@ -45,6 +45,7 @@ const LicenseMainPageMainDivBox = styled.div`
             }
         }
     }
+    
 `;
 
 const LicenseMainPageContentMainPageDiv = styled.div`
@@ -70,6 +71,20 @@ const LicenseMainPageContentMainPageDiv = styled.div`
         background-clip: content-box;
         background-color: #368;
     }
+
+    .AssetDocs{
+        width: 80%;
+        
+        ul{
+            padding-left:20px;
+            li{
+                padding-left:10px;
+                margin-top: 20px;
+                list-style-type: circle;
+            }
+
+        }
+    }
 `;
 type CompanySelectTypes = {
     name: string;
@@ -87,8 +102,54 @@ const PcAssetMainPage = () => {
             </LicenseMainPageMainDivBox>
 
             <h1>IT 자산 프로그램</h1>
-            <h4>보안 관련 문구가 들어갑니다.</h4>
-            <div></div>
+            
+            <div>
+                <div className="AssetDocs">
+                    <h3>컴퓨터 취급관리</h3>
+                    <ul>
+                        <li>
+                            <p>
+                                회사에서 지급된 컴퓨터(데스크톱,
+                                노트북, 일체형, 태블릿, 그 밖의 형태의 정보처리기기를 포함하여 이하)는
+                                취급자에게 책임이 있다.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                개인용 컴퓨터로 전산망을 사용하고자 하는 직원은 스마트IT팀에
+                                등록요청을 하여야 하며 스마트IT팀의 등록에 의하여 사용한다
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                개인 소유의 개인용 컴퓨터를 주요정보가 처리, 보관되는 연구원 내부에
+                                반입하여 사용할 수 없다. 다만, 부득이한 경우에는 소속 부서의 장의 승인을
+                                받아 반입할 수 있다.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                회사 소유의 개인용 컴퓨터를 수리 또는 교체하는 경우 정보자료를 모두
+                                삭제하거나 하드디스크를 분리 제거를 위해 스마트IT팀에 수리의뢰 하여야 한다.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                개인용 컴퓨터 사용자는 암호 설정 및 백신프로그램을 설치하여 보안에 만전을기한다
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                임직원은 전체 개인용 컴퓨터의 전산보안을 강화하기 위하여 패치관리시스템
+                                및 보안관리 클라이언트 프로그램을 이용할 수 있고, 업무용 모든 개인용
+                                컴퓨터는 보안관리 클라이언트 프로그램을 의무적으로 설치해야 하며 미설치
+                                개인용 컴퓨터는 외부망 접속을 차단할 수 있다.
+                            </p>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </LicenseMainPageContentMainPageDiv>
     );
 };
