@@ -473,10 +473,10 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     asset_distribute_date: new Date(),
                     company_code: '',
                 });
+                hadldeRandomCodeData();
 
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             }
-            console.log(UserWriteData);
         } catch (error) {
             console.log(error);
         }

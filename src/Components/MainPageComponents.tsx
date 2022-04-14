@@ -77,68 +77,19 @@ type CompanySelectTypes = {
 };
 const PcAssetMainPage = () => {
     let { type } = useParams<URLParamsType>();
-    useEffect(() => {
-        console.log(type);
-    }, [type]);
-    const [CompanySelectAccessKey, setCompanySelectAccessKey] = useState<CompanySelectTypes[]>([
-        { name: 'DHKS', AccessKey: true },
-        { name: 'YIKC', AccessKey: false },
-        { name: 'EXICON', AccessKey: false },
-        { name: 'SEMCNS', AccessKey: false },
-        { name: 'SEMTEK', AccessKey: false },
-        { name: 'DDDIA', AccessKey: false },
-        { name: 'YIKJ', AccessKey: false },
-        { name: 'DAS', AccessKey: false },
-        { name: 'SEMMICRO', AccessKey: false },
-    ]);
-
-    const handleCompanyClicks = (data: { name: string }) => {
-        const ChangeCompany = CompanySelectAccessKey.map((list, i) => {
-            if (list.name === data.name) {
-                list.AccessKey = true;
-            } else {
-                list.AccessKey = false;
-            }
-            return list;
-        });
-        setCompanySelectAccessKey(ChangeCompany);
-    };
 
     return (
-        // <div>
-        //     <div style={{ display: 'flex' }}>
-        //         <div>
-        //             <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
-        //         </div>
-                <LicenseMainPageContentMainPageDiv>
-                    <LicenseMainPageMainDivBox>
-                        <div>
-                            <ul>
-                                {CompanySelectAccessKey.map((list, i) => {
-                                    return (
-                                        <li key={list.name} onClick={() => handleCompanyClicks(list)}>
-                                            {list.AccessKey ? (
-                                                <>
-                                                    <div className="LineText" style={{ color: '#050404', fontWeight: 'bold' }}>
-                                                        {list.name}
-                                                    </div>
-                                                    <div className="LineActions"></div>
-                                                </>
-                                            ) : (
-                                                <div className="LineText">{list.name}</div>
-                                            )}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </LicenseMainPageMainDivBox>
+        <LicenseMainPageContentMainPageDiv>
+            <LicenseMainPageMainDivBox>
+                <div>
+                    <ul></ul>
+                </div>
+            </LicenseMainPageMainDivBox>
 
-                  
-                    <h1>IT 자산 프로그램</h1>
-                </LicenseMainPageContentMainPageDiv>
-        //     </div>
-        // </div>
+            <h1>IT 자산 프로그램</h1>
+            <h4>보안 관련 문구가 들어갑니다.</h4>
+            <div></div>
+        </LicenseMainPageContentMainPageDiv>
     );
 };
 

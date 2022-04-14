@@ -98,10 +98,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
         GetInfoLicensData();
     }, [type]);
 
-    // useEffect(() => {
-    //     setSelectCode('');
-    // }, [type]);
-
     const handleClicksUserAdd = (data: LicenseDataType) => {
         setModalType('Show_info');
         setUserClickLicenseData(data);
@@ -152,7 +148,10 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
             ></DownLoadMainPage>
             <div>
                 <div>
-                    <h2>{type}</h2>
+                    <h2>{type === 'volume_license' ? '볼륨라이선스' : ''}</h2>
+                    <h2>{type === 'package_license' ? '패키지라이선스' : ''}</h2>
+                    <h2>{type === 'usbtype_license' ? 'USB타입라이선스' : ''}</h2>
+                    <h2>{type === 'network_license' ? '네트워크라이선스' : ''}</h2>
                 </div>
                 <LicensMainTableIncludeBox>
                     {LoadingState ? (

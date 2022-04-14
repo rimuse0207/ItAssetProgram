@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
-import { LicenseDataType } from '../../VolumeLicenseDataTypes';
 import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
 import { MainModalContent } from '../../../../PCAssetMainPage/PcAssetMenuIcons/PcAssetModals/NewPcAssetDataModal';
@@ -9,7 +8,6 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { GrCheckbox, GrCheckboxSelected } from 'react-icons/gr';
-import { AddDetailLicenseData } from '../../../../../Apis/core/api/AuthNeedApi/LicenseApi';
 import { FileDrop } from 'react-file-drop';
 import { TiDelete } from 'react-icons/ti';
 import axios from 'axios';
@@ -19,6 +17,11 @@ import AsyncSelect from 'react-select/async';
 import { IoMdAddCircle } from 'react-icons/io';
 import { ObjectNameSortData } from '../../../../../PublicFunc/ObjectNameSort';
 import { UserInfoGet } from '../../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
+import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
+import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../Models';
+import { License_getLicenseDataThunk } from '../../../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
 
 registerLocale('ko', ko);
 
@@ -245,6 +248,8 @@ const AddLicenseDetailMainPage = ({
     function closeModal() {
         setSelectClicksModals(false);
     }
+    const dispatch = useDispatch();
+    const LicenseFilteringData = useSelector((state: RootState) => state.LicenseFilteringData);
     const [SearchNames, setSearchNames] = useState('');
     const [SearchSomething, setSearchSomething] = useState<string | null>('');
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
@@ -308,7 +313,19 @@ const AddLicenseDetailMainPage = ({
                 config
             );
             if (AddLicenseData.data.dataSuccess) {
-                alert('성공');
+                const ParamasData = {
+                    company: SelectCompany,
+                    license: type,
+                    SortTable: LicenseFilteringData,
+                };
+                await dispatch(License_getLicenseDataThunk(ParamasData));
+                toast.show({
+                    title: `라이선스 수량 등록 완료.`,
+                    successCheck: true,
+                    duration: ToastTime,
+                });
+
+                closeModal();
             }
         } catch (error) {
             console.log(error);

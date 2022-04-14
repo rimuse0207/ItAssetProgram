@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from '../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../Configs/ToastTimerConfig';
 import { AccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
+import PasswordChangeModal from './PasswordChangeModal/PasswordChangeModal';
 
 const LoginMainPageDivBox = styled.div`
     .page-container {
@@ -149,6 +150,7 @@ const LoginMainPage = ({ history }: any) => {
         email: '',
         password: '',
     });
+    const [PasswordChangeModalState, setPasswordChangeModalState] = useState(false);
 
     const handleClicksLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         try {
@@ -162,6 +164,7 @@ const LoginMainPage = ({ history }: any) => {
 
             if (LoginCheckFromServer.data.dataSuccess) {
                 if (LoginCheckFromServer.data.PasswordChange) {
+                    setPasswordChangeModalState(LoginCheckFromServer.data.PasswordChange);
                     alert('초기 비밀번호이므로 패스워드 변경 후 이용 가능합니다.');
                 } else {
                     const testSuccess = {
@@ -199,55 +202,66 @@ const LoginMainPage = ({ history }: any) => {
     };
 
     return (
-        <LoginMainPageDivBox>
-            <div className="page-container">
-                <div className="login-form-container shadow">
-                    <div className="login-form-right-side">
-                        <div className="top-logo-wrap"></div>
-                        <h1>IT 자산 프로그램</h1>
-                        <p>* 스마트 IT팀에 허가 되지 않은 소프트웨어 프로그램 사용 시에는 책임은 본인에게 있습니다.</p>
-                    </div>
-                    <div className="login-form-left-side">
-                        {/* <div className="login-top-wrap">
+        <div>
+            <LoginMainPageDivBox>
+                <div className="page-container">
+                    <div className="login-form-container shadow">
+                        <div className="login-form-right-side">
+                            <div className="top-logo-wrap"></div>
+                            <h1>IT 자산 프로그램</h1>
+                            <p>* 스마트 IT팀에 허가 되지 않은 소프트웨어 프로그램 사용 시에는 책임은 본인에게 있습니다.</p>
+                        </div>
+                        <div className="login-form-left-side">
+                            {/* <div className="login-top-wrap">
                     <span>Don't have an account?</span>
                     <button className="create-account-btn shadow-light">Create Profile</button>
                 </div> */}
-                        <form onSubmit={e => handleClicksLogin(e)}>
-                            <div className="login-input-container">
-                                <div className="login-input-wrap input-id">
-                                    <i className="far fa-envelope">
-                                        <AiFillMail></AiFillMail>
-                                    </i>
-                                    <input
-                                        placeholder="Email"
-                                        type="text"
-                                        value={LoginDataInfo.email}
-                                        onChange={e => setLoginDataInfo({ ...LoginDataInfo, email: e.target.value })}
-                                    />
+                            <form onSubmit={e => handleClicksLogin(e)}>
+                                <div className="login-input-container">
+                                    <div className="login-input-wrap input-id">
+                                        <i className="far fa-envelope">
+                                            <AiFillMail></AiFillMail>
+                                        </i>
+                                        <input
+                                            placeholder="Email"
+                                            type="text"
+                                            value={LoginDataInfo.email}
+                                            onChange={e => setLoginDataInfo({ ...LoginDataInfo, email: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="login-input-wrap input-password">
+                                        <i className="fas fa-key">
+                                            <BsKey></BsKey>
+                                        </i>
+                                        <input
+                                            placeholder="Password"
+                                            type="password"
+                                            value={LoginDataInfo.password}
+                                            onChange={e => setLoginDataInfo({ ...LoginDataInfo, password: e.target.value })}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="login-input-wrap input-password">
-                                    <i className="fas fa-key">
-                                        <BsKey></BsKey>
-                                    </i>
-                                    <input
-                                        placeholder="Password"
-                                        type="password"
-                                        value={LoginDataInfo.password}
-                                        onChange={e => setLoginDataInfo({ ...LoginDataInfo, password: e.target.value })}
-                                    />
+                                <div className="login-btn-wrap">
+                                    <button className="login-btn" type="submit">
+                                        Login
+                                    </button>
+                                    {/* <a href="#" >Forgot password?</a> */}
                                 </div>
-                            </div>
-                            <div className="login-btn-wrap">
-                                <button className="login-btn" type="submit">
-                                    Login
-                                </button>
-                                {/* <a href="#" >Forgot password?</a> */}
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </LoginMainPageDivBox>
+            </LoginMainPageDivBox>
+            {PasswordChangeModal ? (
+                <PasswordChangeModal
+                    PasswordChangeModalState={PasswordChangeModalState}
+                    setPasswordChangeModalState={() => setPasswordChangeModalState(false)}
+                    LoginDataInfo={LoginDataInfo}
+                ></PasswordChangeModal>
+            ) : (
+                <div></div>
+            )}
+        </div>
     );
 };
 

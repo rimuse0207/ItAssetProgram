@@ -14,8 +14,6 @@ import SettingChangeMainPage from './Components/PCAssetMainPage/PcAssetMenuIcons
 const RouterPage = () => {
     const LoginCheckData = useSelector((state: RootState) => state.LoginCheck);
 
-    console.log(LoginCheckData);
-
     return (
         <BrowserRouter>
             <Switch>

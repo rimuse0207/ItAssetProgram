@@ -6,6 +6,9 @@ import styled from 'styled-components';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
+
+import { AssetUserAdd } from '../../../../../Apis/core/api/AuthUnNeedApi/AssetUserAdd/AssetAdd';
+
 registerLocale('ko', ko);
 type PcInfoChangeDataProps = {
     SelectAssetData: DeskTopInfoDataType | null;
@@ -16,7 +19,8 @@ const PcInfoChangeDataMainDivBox = styled.div`
     .type03 {
         position: relative;
         td {
-            input {
+            input,
+            select {
                 width: 100%;
                 height: 40px;
                 padding-left: 15px;
@@ -51,6 +55,9 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
     const handleChangeAssetData = async () => {
         try {
             console.log(ChangeAssetData);
+
+            const ChangeAssetDatass = await AssetUserAdd('/Asset_app_server/Asset_data_update', { ChangeAssetData });
+
             setAssetDataChangeCheck();
         } catch (error) {
             console.log(error);
@@ -76,10 +83,13 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
                     <tr>
                         <th scope="row">종류</th>
                         <td>
-                            <input
+                            <select
                                 defaultValue={ChangeAssetData.asset_division}
                                 onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_division: e.target.value })}
-                            ></input>
+                            >
+                                <option value="데스크탑">데스크탑</option>
+                                <option value="노트북">노트북</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>

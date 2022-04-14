@@ -77,7 +77,8 @@ const NewDataInsertMainPage = ({
             const AddBigLicenseFromServer = await AddDetailBigLicense(
                 '/license_app_server/BigLicenseAddData',
                 LicenseInputData,
-                SelectCompany
+                SelectCompany,
+                type
             );
             const ParamasData = {
                 company: SelectCompany,

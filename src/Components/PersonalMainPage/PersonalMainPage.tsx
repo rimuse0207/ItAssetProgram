@@ -190,7 +190,6 @@ const PersonalMainPage = () => {
             email: LoginInfoData.email,
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
-        console.log(PersonalDatas);
         if (PersonalDatas.data.dataSuccess) {
             setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
             setAssetDatas(PersonalDatas.data.datas.Asset);
@@ -213,11 +212,6 @@ const PersonalMainPage = () => {
     };
 
     return (
-        // <div>
-        //     <div style={{ display: 'flex' }}>
-        //         <div>
-        //             <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
-        //         </div>
         <PersonalMainPageDivBox>
             <div className="PersonInfo">
                 <div>
@@ -328,8 +322,6 @@ const PersonalMainPage = () => {
                 </div>
             </div>
         </PersonalMainPageDivBox>
-        //     </div>
-        // </div>
     );
 };
 

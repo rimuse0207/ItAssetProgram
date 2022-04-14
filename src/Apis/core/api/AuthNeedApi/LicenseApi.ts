@@ -41,9 +41,10 @@ export const GetLicenseInfoNumber = (RequestURL: string, ParamasData: {}) => {
     });
 };
 
-export const AddDetailBigLicense = (RequestURL: string, ParamasData: {}, Companydata: string) => {
+export const AddDetailBigLicense = (RequestURL: string, ParamasData: {}, Companydata: string, licenseType: string) => {
     return request.post(RequestURL, {
         ParamasData,
         Companydata,
+        licenseType,
     });
 };

@@ -1,4 +1,4 @@
-const LoginCheckRedux_GET = 'LicenseFilteringRedux/LicenseFilteringRedux_GET' as const;
+const LoginCheckRedux_GET = 'LicenseFilteringRedux/LoginCheckRedux_GET' as const;
 const LogoutRedux_GET = 'LogoutRedux/LogoutRedux_GET' as const;
 
 export const LoginCheckRedux = (diff: LoginCheckState) => ({
