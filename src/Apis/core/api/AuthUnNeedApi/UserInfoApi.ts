@@ -22,3 +22,17 @@ export const PersonalInfoGet = (RequestURL: string, ParamasData: {}) => {
         params: ParamasData,
     });
 };
+
+export const PersonalInfoGetData = (RequestURL: string, ParamasData: string) => {
+    return request.get(RequestURL, {
+        params: {
+            SelectCompany: ParamasData,
+        },
+    });
+};
+
+export const InertPersonalData = (RequestURL: string, ParamasData: {}) => {
+    return request.post(RequestURL, {
+        params: ParamasData,
+    });
+};

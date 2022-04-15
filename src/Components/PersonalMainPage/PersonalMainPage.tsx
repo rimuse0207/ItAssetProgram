@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../Models';
 
-const PersonalMainPageDivBox = styled.div`
+export const PersonalMainPageDivBox = styled.div`
     width: 100%;
     background-color: #efefef;
     overflow-y: auto;
@@ -176,7 +176,11 @@ type LicenseTypes = {
     asset_purchase_date: string | null;
 };
 
-const PersonalMainPage = () => {
+type PersonalMainPageProps = {
+    names: string | null;
+};
+
+const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
     const [userInfoDatas, setUserInfoDatas] = useState<UserInfoTypes[]>([]);
     const [userAssetDatas, setAssetDatas] = useState<UserAssetTypes[]>([]);
     const [userLicenseDatas, setUserLicenseDatas] = useState<LicenseTypes[]>([]);
@@ -187,7 +191,7 @@ const PersonalMainPage = () => {
 
     const GetInfoDataPersonal = async () => {
         const Paramas = {
-            email: LoginInfoData.email,
+            email: names ? names : LoginInfoData.email,
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
         if (PersonalDatas.data.dataSuccess) {

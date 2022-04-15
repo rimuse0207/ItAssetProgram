@@ -57,8 +57,35 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
             console.log(ChangeAssetData);
 
             const ChangeAssetDatass = await AssetUserAdd('/Asset_app_server/Asset_data_update', { ChangeAssetData });
+            console.log(ChangeAssetDatass);
 
-            setAssetDataChangeCheck();
+            if (ChangeAssetDatass.data.dataSuccess) {
+                const {
+                    asset_cpu,
+                    asset_disk,
+                    asset_division,
+                    asset_maker,
+                    asset_model,
+                    asset_purchase_date,
+                    asset_ram,
+                    asset_pride,
+                    asset_newcode,
+                } = ChangeAssetDatass.data.data[0];
+                setChangeAssetData({
+                    ...ChangeAssetData,
+
+                    asset_division: asset_division,
+                    asset_maker,
+                    asset_model,
+                    asset_purchase_date: moment(asset_purchase_date).format('YYYY-MM-DD'),
+                    asset_pride,
+                    asset_cpu,
+                    asset_ram,
+                    asset_disk,
+                    asset_newcode,
+                });
+                setAssetDataChangeCheck();
+            }
         } catch (error) {
             console.log(error);
         }

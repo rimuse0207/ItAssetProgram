@@ -10,6 +10,8 @@ import { RootState } from './Models';
 import TestPage from './Containers/TestPage';
 import LoginMainPage from './Components/Login/LoginMainPage';
 import SettingChangeMainPage from './Components/PCAssetMainPage/PcAssetMenuIcons/PcAssetModals/SettingChange/SettingChangeMainPage';
+import PersonnelAdminDashBoardMainPage from './Components/PersonnelAdminDashBoard/PersonnelAdminDashBoardMainPage';
+import TotalDashBoardMainPage from './Components/TotalDashBoard/TotalDashBoardMainPage';
 
 const RouterPage = () => {
     const LoginCheckData = useSelector((state: RootState) => state.LoginCheck);
@@ -18,7 +20,7 @@ const RouterPage = () => {
         <BrowserRouter>
             <Switch>
                 <div>
-                    {!LoginCheckData.LoginCheck ? (
+                    {LoginCheckData.LoginCheck ? (
                         <div style={{ display: 'flex' }}>
                             <div>
                                 <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
@@ -29,6 +31,8 @@ const RouterPage = () => {
                             <Route path="/Test" component={TestPage}></Route>
                             <Route path="/Personal" component={PersonalMainPage}></Route>
                             <Route path="/settingChange" component={SettingChangeMainPage}></Route>
+                            <Route exact path="/PersonnelDashBoard/:type" component={PersonnelAdminDashBoardMainPage}></Route>
+                            <Route path="/TotalDashBoard" component={TotalDashBoardMainPage}></Route>
                         </div>
                     ) : (
                         <div>

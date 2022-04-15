@@ -91,9 +91,11 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     const [ModalType, setModalType] = useState('');
     const [DetailLicenseClicksData, setDetailLicenseClicksData] = useState({});
     const [UserClickLicenseData, setUserClickLicenseData] = useState<LicenseDataType | null>(null);
+    const [LicenseAllShow, setLicenseAllShow] = useState(true);
     const dispatch = useDispatch();
     const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
     const LicenseFilteringData = useSelector((state: RootState) => state.LicenseFilteringData);
+
     useEffect(() => {
         GetInfoLicensData();
     }, [type]);
@@ -153,6 +155,10 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                     <h2>{type === 'usbtype_license' ? 'USB타입라이선스' : ''}</h2>
                     <h2>{type === 'network_license' ? '네트워크라이선스' : ''}</h2>
                 </div>
+                <div>
+                    <input type="checkbox" checked={LicenseAllShow} onChange={() => setLicenseAllShow(!LicenseAllShow)}></input>
+                    <label>전체보기</label>
+                </div>
                 <LicensMainTableIncludeBox>
                     {LoadingState ? (
                         <table className="type09">
@@ -183,16 +189,15 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                     return (
                                         <React.Fragment key={list.license_product_code + list.asset_info_asset_management_number}>
                                             <tr key={list.license_product_code}>
-                                                <th scope="row" rowSpan={list.datas.length + 1}>
+                                                <th scope="row" rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>
                                                     {i + 1}
                                                 </th>
-
-                                                <td rowSpan={list.datas.length + 1}>{list.license_product_code}</td>
-                                                <td rowSpan={list.datas.length + 1}>{list.license_product_name}</td>
-                                                <td rowSpan={list.datas.length + 1}>{list.sumpermit} 명</td>
-                                                <td rowSpan={list.datas.length + 1}>{list.all_user_used_count}명</td>
+                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.license_product_code}</td>
+                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.license_product_name}</td>
+                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.sumpermit} 명</td>
+                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.all_user_used_count}명</td>
                                                 <td
-                                                    rowSpan={list.datas.length + 1}
+                                                    rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}
                                                     onClick={() => {
                                                         setModalType('Add_license');
                                                         setDetailLicenseClicksData(list);
@@ -201,31 +206,42 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                 >
                                                     <BiMessageAdd></BiMessageAdd>
                                                 </td>
-                                            </tr>
-                                            {list.datas.map((item: LicenseDataType, j: number) => {
-                                                return (
-                                                    <tr
-                                                        key={item.license_manage_code}
-                                                        style={
-                                                            item.license_permit_count - item.userData[0].useUserCount < 0
-                                                                ? { backgroundColor: '#edafaf' }
-                                                                : {}
-                                                        }
-                                                    >
-                                                        <td>{j + 1}</td>
-                                                        <td>{item.license_manage_code}</td>
-                                                        <td>{moment(item.license_purchase_date).format('YYYY-MM-DD')}</td>
-                                                        <td>{moment(item.license_purchase_finish_date).format('YYYY-MM-DD')}</td>
-                                                        <td>{item.license_purchase_pride.toLocaleString('ko-KR')}</td>
-                                                        <td>{item.license_purchase_company ? item.license_purchase_company : '-'}</td>
+                                                {!LicenseAllShow ? (
+                                                    <>
+                                                        <td>{list.datas.length}</td>
+                                                        <td>{list.datas[list.datas.length - 1].license_manage_code}</td>
                                                         <td>
-                                                            {item.license_prove_code ? (
-                                                                item.proveData?.length === 0 ? (
+                                                            {moment(list.datas[list.datas.length - 1].license_purchase_date).format(
+                                                                'YYYY-MM-DD'
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            {moment(list.datas[list.datas.length - 1].license_purchase_finish_date).format(
+                                                                'YYYY-MM-DD'
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            {list.datas[list.datas.length - 1].license_purchase_pride.toLocaleString(
+                                                                'ko-KR'
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            {list.datas[list.datas.length - 1].license_purchase_company
+                                                                ? list.datas[list.datas.length - 1].license_purchase_company
+                                                                : '-'}
+                                                        </td>
+                                                        <td>
+                                                            {list.datas[list.datas.length - 1].license_prove_code ? (
+                                                                list.datas[list.datas.length - 1].proveData?.length === 0 ? (
                                                                     '-'
                                                                 ) : (
                                                                     <div
                                                                         onClick={() =>
-                                                                            handleClicksProveData(item.proveData ? item.proveData : [])
+                                                                            handleClicksProveData(
+                                                                                list.datas[list.datas.length - 1].proveData
+                                                                                    ? list.datas[list.datas.length - 1].proveData
+                                                                                    : []
+                                                                            )
                                                                         }
                                                                     >
                                                                         클릭
@@ -235,16 +251,74 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                                 '-'
                                                             )}
                                                         </td>
-                                                        <td>{item.license_newcode ? item.license_newcode : '-'}</td>
-                                                        <td>{item.license_permit_count} 명</td>
-                                                        <td>{item.userData[0].useUserCount} 명</td>
-                                                        <td>{item.license_permit_count - item.userData[0].useUserCount} 명</td>
-                                                        <td onClick={() => handleClicksUserAdd(item)}>
+                                                        <td>
+                                                            {list.datas[list.datas.length - 1].license_newcode
+                                                                ? list.datas[list.datas.length - 1].license_newcode
+                                                                : '-'}
+                                                        </td>
+                                                        <td>{list.datas[list.datas.length - 1].license_permit_count} 명</td>
+                                                        <td>{list.datas[list.datas.length - 1].userData[0].useUserCount} 명</td>
+                                                        <td>
+                                                            {list.datas[list.datas.length - 1].license_permit_count -
+                                                                list.datas[list.datas.length - 1].userData[0].useUserCount}{' '}
+                                                            명
+                                                        </td>
+                                                        <td onClick={() => handleClicksUserAdd(list.datas[list.datas.length - 1])}>
                                                             <BsFillPersonPlusFill></BsFillPersonPlusFill>
                                                         </td>
-                                                    </tr>
-                                                );
-                                            })}
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </tr>
+
+                                            {LicenseAllShow
+                                                ? list.datas.map((item: LicenseDataType, j: number) => {
+                                                      return (
+                                                          <tr
+                                                              key={item.license_manage_code}
+                                                              style={
+                                                                  item.license_permit_count - item.userData[0].useUserCount < 0
+                                                                      ? { backgroundColor: '#edafaf' }
+                                                                      : {}
+                                                              }
+                                                          >
+                                                              <td>{j + 1}</td>
+                                                              <td>{item.license_manage_code}</td>
+                                                              <td>{moment(item.license_purchase_date).format('YYYY-MM-DD')}</td>
+                                                              <td>{moment(item.license_purchase_finish_date).format('YYYY-MM-DD')}</td>
+                                                              <td>{item.license_purchase_pride.toLocaleString('ko-KR')}</td>
+                                                              <td>{item.license_purchase_company ? item.license_purchase_company : '-'}</td>
+                                                              <td>
+                                                                  {item.license_prove_code ? (
+                                                                      item.proveData?.length === 0 ? (
+                                                                          '-'
+                                                                      ) : (
+                                                                          <div
+                                                                              onClick={() =>
+                                                                                  handleClicksProveData(
+                                                                                      item.proveData ? item.proveData : []
+                                                                                  )
+                                                                              }
+                                                                          >
+                                                                              클릭
+                                                                          </div>
+                                                                      )
+                                                                  ) : (
+                                                                      '-'
+                                                                  )}
+                                                              </td>
+                                                              <td>{item.license_newcode ? item.license_newcode : '-'}</td>
+                                                              <td>{item.license_permit_count} 명</td>
+                                                              <td>{item.userData[0].useUserCount} 명</td>
+                                                              <td>{item.license_permit_count - item.userData[0].useUserCount} 명</td>
+                                                              <td onClick={() => handleClicksUserAdd(item)}>
+                                                                  <BsFillPersonPlusFill></BsFillPersonPlusFill>
+                                                              </td>
+                                                          </tr>
+                                                      );
+                                                  })
+                                                : ''}
                                         </React.Fragment>
                                     );
                                 })}
