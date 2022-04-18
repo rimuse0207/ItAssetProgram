@@ -76,7 +76,7 @@ const PcAssetMainPage = () => {
             {CompanySelectAccessKey.map((list: MenuAccessType) =>
                 list.AccessKey ? (
                     <div key={list.name}>
-                        <PcAssetMenuIconsMainPage SelectCompany={list.name}></PcAssetMenuIconsMainPage>
+                        <PcAssetMenuIconsMainPage SelectCompany={list.name} type={type}></PcAssetMenuIconsMainPage>
                         <DeskTopMainPage SelectCompany={list.name} type={type}></DeskTopMainPage>
                         <NoteBookMainPage SelectCompany={list.name} type={type}></NoteBookMainPage>
                         <MonitorMainPage SelectCompany={list.name} type={type}></MonitorMainPage>

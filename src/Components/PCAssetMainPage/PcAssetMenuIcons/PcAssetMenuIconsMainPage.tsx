@@ -9,7 +9,7 @@ import { GrPowerReset } from 'react-icons/gr';
 import { GoSearch } from 'react-icons/go';
 import { useDispatch } from 'react-redux';
 import { AssetFilteringAdd, AssetFilteringReset } from '../../../Models/AssetFilteringRedux/AssetFilteringRedux';
-
+import { UserInfoGet } from '../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 const PcAssetMenuIconsMainPageDivBox = styled.div`
     width: 100%;
     margin-top: 30px;
@@ -170,6 +170,7 @@ export const FilterSearchMainPageDivBoxDownSlide = styled.div`
 
 type PcAssetMenuIconsMainPageProps = {
     SelectCompany: string;
+    type: string;
 };
 
 type FilteringDataTypes = {
@@ -184,7 +185,7 @@ type FilteringDataTypes = {
     asset_disk: string;
 };
 
-const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPageProps) => {
+const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainPageProps) => {
     const [SelectClicksModals, setSelectClicksModals] = useState({
         FilterSearch: false,
         NewDataModal: false,
@@ -231,6 +232,19 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
         }
     };
 
+    const ExcelDownloadOn = async () => {
+        try {
+            const Params = {
+                SelectCompany,
+                type,
+            };
+            const ExcelDatas = await UserInfoGet('/ExcelDownload_app_server/downloadXLSX', Params);
+            console.log(ExcelDatas);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <PcAssetMenuIconsMainPageDivBox>
             <div></div>
@@ -267,12 +281,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany }: PcAssetMenuIconsMainPagePro
                 <div>
                     <div
                         className="DownLoadIcons"
-                        onClick={() =>
+                        onClick={() => {
+                            ExcelDownloadOn();
+
                             setSelectClicksModals({
                                 ...SelectClicksModals,
                                 ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
-                            })
-                        }
+                            });
+                        }}
                     >
                         <BsFileEarmarkBarGraphFill></BsFileEarmarkBarGraphFill>
                     </div>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
-import { PersonalInfoGetData } from '../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
+import { PersonalInfoGetData, InertPersonalData } from '../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import PersonnelAdminInfoModalMainPage from './PersonnelAdminInfoModal/PersonnelAdminInfoModalMainPage';
+import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
+import { ToastTime } from '../../../Configs/ToastTimerConfig';
 
 const AdminDashBoardShowUsersTableMainDivBox = styled.div`
     padding-left: 40px;
@@ -114,36 +116,78 @@ const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertCont
             }
         } catch (error) {
             console.log(error);
+            toast.show({
+                title: `서버 연결 해제 IT팀에 문의 바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 
     const handleResetPassword = async (data: PesonnelInfoTypes) => {
-        //    try {
-        //        const ResetChangePasswordFromServer = await axios.post(
-        //            `${process.env.REACT_APP_DB_HOST}/AdminInsertLogin_app_server/ResetPassword`,
-        //            {
-        //                data,
-        //            }
-        //        );
-        //        if (ResetChangePasswordFromServer.data.dataSuccess) {
-        //        } else {
-        //        }
-        //    } catch (error) {
-        //        console.log(error);
-        //    }
+        const CheckPasswordReset = window.confirm(`${data.name} ${data.position}의 비밀번호를 초기화 하시겠습니까?`);
+        if (!CheckPasswordReset) {
+            return;
+        }
+        try {
+            const ResetChangePasswordFromServer = await InertPersonalData(`/UserInfo_app_server/ResetPassword`, {
+                data,
+            });
+            if (ResetChangePasswordFromServer.data.dataSuccess) {
+                toast.show({
+                    title: `${data.name} ${
+                        data.position
+                    }의 비밀번호 초기화 완료. \n 초기 비밀번호는 !@${data.company_name.toLowerCase()}입니다.`,
+                    successCheck: true,
+                    duration: ToastTime,
+                });
+            } else {
+                toast.show({
+                    title: `비밀번호 초기화 에러 IT팀에 문의 바랍니다.`,
+                    successCheck: false,
+                    duration: ToastTime,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            toast.show({
+                title: `서버 연결 해제 IT팀에 문의 바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
+        }
     };
 
     const handleDeleteData = async (data: PesonnelInfoTypes) => {
-        console.log(data);
+        const CheckPasswordReset = window.confirm(`${data.name} ${data.position} 퇴사처리를 하시겠습니까?`);
+        if (!CheckPasswordReset) {
+            return;
+        }
         try {
-            //    const ConfrimCheck = window.confirm(`${data.name}님의 데이터를 삭제 하시겠습니까?`);
-            //    if (!ConfrimCheck) return;
-            //    const ResetChangePasswordFromServer =
-            //    if (ResetChangePasswordFromServer.data.dataSuccess) {
-            //        getLoginInfoDataAxios();
-            //    }
+            const ResetChangePasswordFromServer = await InertPersonalData('/UserInfo_app_server/DeleteInfoUsers', {
+                data,
+            });
+            if (ResetChangePasswordFromServer.data.dataSuccess) {
+                getLoginInfoDataAxios();
+                toast.show({
+                    title: `${data.name} ${data.position} 퇴사처리 완료`,
+                    successCheck: true,
+                    duration: ToastTime,
+                });
+            } else {
+                toast.show({
+                    title: `퇴사처리 실패 IT팀에 문의 바랍니다.`,
+                    successCheck: false,
+                    duration: ToastTime,
+                });
+            }
         } catch (error) {
             console.log(error);
+            toast.show({
+                title: `서버 연결 해제 IT팀에 문의 바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 
@@ -191,8 +235,8 @@ const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertCont
                                 </div>
                             </th>
                             <th scope="cols">비밀번호 초기화</th>
-                            <th scope="cols">자세한 정보</th>
-                            <th scope="cols">삭제</th>
+                            <th scope="cols">정보 보기</th>
+                            <th scope="cols">퇴사 처리</th>
                         </tr>
                     </thead>
                     <tbody>

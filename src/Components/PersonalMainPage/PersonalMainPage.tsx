@@ -35,7 +35,7 @@ export const PersonalMainPageDivBox = styled.div`
         table {
             font-size: 0.8em;
             position: relative;
-            width: 500px;
+            width: 700px;
             display: inline-block;
             margin-top: 20px;
             border: 1px solid #ccc;
@@ -145,8 +145,10 @@ type UserAssetTypes = {
     asset_maker: string | null;
 };
 type UserInfoTypes = {
-    companylocation: string | null;
-    companyname: string | null;
+    company_location: string | null;
+    company_building: string | null;
+    company_floor: string | null;
+    company_name: string | null;
     name: string | null;
     position: string | null;
     team: string | null;
@@ -195,6 +197,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
         if (PersonalDatas.data.dataSuccess) {
+            console.log(PersonalDatas);
             setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
             setAssetDatas(PersonalDatas.data.datas.Asset);
             var arr = PersonalDatas.data.datas.License;
@@ -234,7 +237,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                                     return (
                                         <tr key={list.name}>
                                             <td>
-                                                {list.companyname}_{list.companylocation}
+                                                {list.company_name}_{list.company_building}_{list.company_location}_{list.company_floor}
                                             </td>
                                             <td>{list.name}</td>
                                             <td>{list.position}</td>
