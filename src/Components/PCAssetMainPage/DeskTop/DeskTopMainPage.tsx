@@ -120,6 +120,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
 
     const handleMinusUsered = async (data: DeskTopInfoDataType) => {
         try {
+            console.log(data);
             setSelectAssetData(data);
             setUserUpdateModalOpen(true);
         } catch (error) {
@@ -228,6 +229,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                 <UpdatePcAssetUserDataModal
                     UserAddModalOpen={UserUpdateModalOpen}
                     setUserAddModalOpen={() => setUserUpdateModalOpen(false)}
+                    setSelectAssetData={(data: any) => setSelectAssetData(data)}
                     SelectAssetData={SelectAssetData}
                     SelectCompany={SelectCompany}
                 ></UpdatePcAssetUserDataModal>

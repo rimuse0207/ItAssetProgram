@@ -6,6 +6,7 @@ import { PersonalInfoGetData, InertPersonalData } from '../../../Apis/core/api/A
 import PersonnelAdminInfoModalMainPage from './PersonnelAdminInfoModal/PersonnelAdminInfoModalMainPage';
 import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../../Configs/ToastTimerConfig';
+import PersonnelAdminDeleteModal from './PersonnelAdminInfoModal/PersonnelAdminDeleteModal';
 
 const AdminDashBoardShowUsersTableMainDivBox = styled.div`
     padding-left: 40px;
@@ -79,7 +80,7 @@ type PersonnelAdminInsertContentProps = {
     SelectCompany: string;
 };
 
-export type PesonnelInfoTypes = {
+type UserInfoDataTypes = {
     companyInfo_companycode: string;
     email: string;
     entercompany: string | null;
@@ -96,12 +97,48 @@ export type PesonnelInfoTypes = {
     company_name: string;
 };
 
+type assetInfoDataTypes = {
+    asset_cpu: string;
+    asset_destroy_check: number;
+    asset_disk: string;
+    asset_distribute_date: string | null;
+    asset_division: string;
+    asset_maker: string;
+    asset_management_number: string;
+    asset_model: string;
+    asset_newcode: string | null;
+    asset_pride: string;
+    asset_purchase_date: string;
+    asset_ram: string;
+    company_info_company_code: string;
+    userinfo_email: string;
+};
+
+export type PesonnelInfoTypes = {
+    companyInfo_companycode: string;
+    email: string;
+    entercompany: string | null;
+    exitcompany: string | null;
+    inservice: number;
+    name: string;
+    position: string;
+    team: string;
+    updatedate: string;
+    company_building: string;
+    company_code: string;
+    company_floor: string;
+    company_location: string;
+    company_name: string;
+    assetData: [];
+};
+
 const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertContentProps) => {
     const [SearchNames, setSearchNames] = useState('');
     const [SearchCompanys, setSearchCompanys] = useState('');
     const [SearchEmail, setSearchEmail] = useState('');
     const [getLoginInfoData, setGetLoginInfoData] = useState<PesonnelInfoTypes[]>([]);
     const [InfoModalOpen, setInfoModalOpen] = useState(false);
+    const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [CilcksData, setClicksData] = useState<PesonnelInfoTypes | null>(null);
 
     useEffect(() => {
@@ -163,9 +200,18 @@ const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertCont
         if (!CheckPasswordReset) {
             return;
         }
+        let CheckAssetData = false;
+        if (data.assetData.length >= 1) {
+            CheckAssetData = window.confirm(`등록된 PC(${data.assetData.length}대)가 존재합니다. \n전부 반납처리 하시겠습니까?`);
+        }
+
         try {
-            const ResetChangePasswordFromServer = await InertPersonalData('/UserInfo_app_server/DeleteInfoUsers', {
+            const ParamasData = {
                 data,
+                CheckAssetData,
+            };
+            const ResetChangePasswordFromServer = await InertPersonalData('/UserInfo_app_server/DeleteInfoUsers', {
+                ParamasData,
             });
             if (ResetChangePasswordFromServer.data.dataSuccess) {
                 getLoginInfoDataAxios();
@@ -289,6 +335,15 @@ const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertCont
                     setInfoModalOpen={() => setInfoModalOpen(false)}
                     CilcksData={CilcksData}
                 ></PersonnelAdminInfoModalMainPage>
+            ) : (
+                ''
+            )}
+            {DeleteModalOpen ? (
+                <PersonnelAdminDeleteModal
+                    DeleteModalOpen={DeleteModalOpen}
+                    setDeleteModalOpen={() => setDeleteModalOpen(false)}
+                    CilcksData={CilcksData}
+                ></PersonnelAdminDeleteModal>
             ) : (
                 ''
             )}

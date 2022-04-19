@@ -165,18 +165,23 @@ const DownLoadMainPage = ({
                 </div>
 
                 <div>
-                    <div
-                        className="DownLoadIcons"
-                        onClick={() =>
-                            setSelectClicksModals({
-                                ...SelectClicksModals,
-                                ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
-                            })
-                        }
+                    <a
+                        style={{ color: 'black' }}
+                        href={`${process.env.REACT_APP_API_URL}/ExcelDownload_app_server/volume_license_Excel?company=${SelectCompany}&license=${type}`}
                     >
-                        <BsFileEarmarkBarGraphFill></BsFileEarmarkBarGraphFill>
-                    </div>
-                    <div className="IconText">EXCEL</div>
+                        <div
+                            className="DownLoadIcons"
+                            // onClick={() =>
+                            //     setSelectClicksModals({
+                            //         ...SelectClicksModals,
+                            //         ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
+                            //     })
+                            // }
+                        >
+                            <BsFileEarmarkBarGraphFill></BsFileEarmarkBarGraphFill>
+                        </div>
+                        <div className="IconText">EXCEL</div>
+                    </a>
                 </div>
             </div>
 

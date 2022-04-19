@@ -144,10 +144,15 @@ const LoginMainPageDivBox = styled.div`
     }
 `;
 
+type LoginDataInfoTypes = {
+    email: string | null;
+    password: string | null;
+};
+
 const LoginMainPage = ({ history }: any) => {
     const dispatch = useDispatch();
-    const [LoginDataInfo, setLoginDataInfo] = useState({
-        email: '',
+    const [LoginDataInfo, setLoginDataInfo] = useState<LoginDataInfoTypes>({
+        email: localStorage.getItem('id') ? localStorage.getItem('id') : '',
         password: '',
     });
     const [PasswordChangeModalState, setPasswordChangeModalState] = useState(false);
@@ -156,7 +161,11 @@ const LoginMainPage = ({ history }: any) => {
         try {
             e.preventDefault();
             if (LoginDataInfo.email === '' || LoginDataInfo.password === '') {
-                alert('아이디 또는 비밀번호를 입력 해주세요.');
+                toast.show({
+                    title: `ID 또는 패스워드를 확인 해 주세요.`,
+                    successCheck: false,
+                    duration: ToastTime,
+                });
                 return;
             }
 
@@ -165,7 +174,16 @@ const LoginMainPage = ({ history }: any) => {
             if (LoginCheckFromServer.data.dataSuccess) {
                 if (LoginCheckFromServer.data.PasswordChange) {
                     setPasswordChangeModalState(LoginCheckFromServer.data.PasswordChange);
-                    alert('초기 비밀번호이므로 패스워드 변경 후 이용 가능합니다.');
+                    setLoginDataInfo({
+                        ...LoginDataInfo,
+                        password: '',
+                    });
+                    // alert('초기 비밀번호이므로 패스워드 변경 후 이용 가능합니다.');
+                    toast.show({
+                        title: `초기 비밀번호이므로 패스워드 변경 후 이용 가능합니다.`,
+                        successCheck: true,
+                        duration: ToastTime,
+                    });
                 } else {
                     const testSuccess = {
                         LoginCheck: true,
@@ -176,6 +194,8 @@ const LoginMainPage = ({ history }: any) => {
                     };
                     await dispatch(AccessKeyMenuBarRedux(LoginCheckFromServer.data.CompanySelectAccessKey));
                     await dispatch(LoginCheckRedux(testSuccess));
+
+                    localStorage.setItem('id', LoginDataInfo.email ? LoginDataInfo.email : '');
 
                     setLoginDataInfo({
                         email: '',
@@ -198,6 +218,11 @@ const LoginMainPage = ({ history }: any) => {
             }
         } catch (error) {
             console.log(error);
+            toast.show({
+                title: `서버와의 연결 끊김 IT팀에 문의바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 
@@ -225,7 +250,7 @@ const LoginMainPage = ({ history }: any) => {
                                         <input
                                             placeholder="Email"
                                             type="text"
-                                            value={LoginDataInfo.email}
+                                            value={LoginDataInfo.email ? LoginDataInfo.email : ''}
                                             onChange={e => setLoginDataInfo({ ...LoginDataInfo, email: e.target.value })}
                                         />
                                     </div>
@@ -236,7 +261,7 @@ const LoginMainPage = ({ history }: any) => {
                                         <input
                                             placeholder="Password"
                                             type="password"
-                                            value={LoginDataInfo.password}
+                                            value={LoginDataInfo.password ? LoginDataInfo.password : ''}
                                             onChange={e => setLoginDataInfo({ ...LoginDataInfo, password: e.target.value })}
                                         />
                                     </div>

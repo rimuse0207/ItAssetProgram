@@ -232,19 +232,6 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
         }
     };
 
-    const ExcelDownloadOn = async () => {
-        try {
-            const Params = {
-                SelectCompany,
-                type,
-            };
-            const ExcelDatas = await UserInfoGet('/ExcelDownload_app_server/downloadXLSX', Params);
-            console.log(ExcelDatas);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     return (
         <PcAssetMenuIconsMainPageDivBox>
             <div></div>
@@ -279,20 +266,23 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                 </div>
 
                 <div>
-                    <div
-                        className="DownLoadIcons"
-                        onClick={() => {
-                            ExcelDownloadOn();
-
-                            setSelectClicksModals({
-                                ...SelectClicksModals,
-                                ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
-                            });
-                        }}
+                    <a
+                        style={{ color: 'black' }}
+                        href={`${process.env.REACT_APP_API_URL}/ExcelDownload_app_server/AssetExcel?SelectCompany=${SelectCompany}`}
                     >
-                        <BsFileEarmarkBarGraphFill></BsFileEarmarkBarGraphFill>
-                    </div>
-                    <div className="IconText">EXCEL</div>
+                        <div
+                            className="DownLoadIcons"
+                            onClick={() => {
+                                setSelectClicksModals({
+                                    ...SelectClicksModals,
+                                    ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
+                                });
+                            }}
+                        >
+                            <BsFileEarmarkBarGraphFill></BsFileEarmarkBarGraphFill>
+                        </div>
+                        <div className="IconText">EXCEL</div>
+                    </a>
                 </div>
             </div>
             {SelectClicksModals.NewDataModal ? (

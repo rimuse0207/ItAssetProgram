@@ -8,11 +8,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 
 import { AssetUserAdd } from '../../../../../Apis/core/api/AuthUnNeedApi/AssetUserAdd/AssetAdd';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../Models/index';
+import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
+import { NoteBookAsset_getNoteBookAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetNotBookDataThunks';
+import { MonitorAsset_getMonitorAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetMonitorDataThunks';
+import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
+import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
 
 registerLocale('ko', ko);
 type PcInfoChangeDataProps = {
     SelectAssetData: DeskTopInfoDataType | null;
     setAssetDataChangeCheck: () => void;
+    setSelectAssetData: any;
+    SelectCompany: string;
 };
 
 const PcInfoChangeDataMainDivBox = styled.div`
@@ -34,7 +43,9 @@ const PcInfoChangeDataMainDivBox = styled.div`
     }
 `;
 
-const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoChangeDataProps) => {
+const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectAssetData, SelectCompany }: PcInfoChangeDataProps) => {
+    const dispatch = useDispatch();
+    const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
     const [ChangeAssetData, setChangeAssetData] = useState({
         asset_management_number: SelectAssetData?.asset_management_number,
         asset_division: SelectAssetData?.asset_division ? SelectAssetData?.asset_division : '',
@@ -54,11 +65,7 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
 
     const handleChangeAssetData = async () => {
         try {
-            console.log(ChangeAssetData);
-
             const ChangeAssetDatass = await AssetUserAdd('/Asset_app_server/Asset_data_update', { ChangeAssetData });
-            console.log(ChangeAssetDatass);
-
             if (ChangeAssetDatass.data.dataSuccess) {
                 const {
                     asset_cpu,
@@ -70,10 +77,10 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
                     asset_ram,
                     asset_pride,
                     asset_newcode,
-                } = ChangeAssetDatass.data.data[0];
-                setChangeAssetData({
-                    ...ChangeAssetData,
+                } = ChangeAssetData;
 
+                setSelectAssetData({
+                    ...SelectAssetData,
                     asset_division: asset_division,
                     asset_maker,
                     asset_model,
@@ -84,6 +91,32 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
                     asset_disk,
                     asset_newcode,
                 });
+
+                const ParamasDatasDesktop = {
+                    types: '데스크탑',
+                    SelectCompany,
+                    FilteringData,
+                };
+                const ParamasDatasNoteBook = {
+                    types: '노트북',
+                    SelectCompany,
+                    FilteringData,
+                };
+                const ParamasDatasMonitor = {
+                    types: '모니터',
+                    SelectCompany,
+                    FilteringData,
+                };
+                await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatasDesktop));
+                await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatasNoteBook));
+                await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatasMonitor));
+
+                toast.show({
+                    title: `자산 정보 수정을 완료하였습니다.`,
+                    successCheck: true,
+                    duration: ToastTime,
+                });
+
                 setAssetDataChangeCheck();
             }
         } catch (error) {
@@ -170,19 +203,61 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoCh
                     <tr>
                         <th scope="row">RAM</th>
                         <td>
-                            <input
+                            {/* <input
                                 defaultValue={ChangeAssetData.asset_ram}
                                 onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_ram: e.target.value })}
-                            ></input>
+                            ></input> */}
+                            <select
+                                className="select"
+                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_ram: e.target.value })}
+                                value={ChangeAssetData.asset_ram}
+                            >
+                                <option defaultValue="4GB" value={'4GB'}>
+                                    4GB
+                                </option>
+                                <option defaultValue="8GB" value={'8GB'}>
+                                    8GB
+                                </option>
+                                <option defaultValue="16GB" value={'16GB'}>
+                                    16GB
+                                </option>
+                                <option defaultValue="32GB" value={'32GB'}>
+                                    32GB
+                                </option>
+                                <option defaultValue="64GB" value={'64GB'}>
+                                    64GB
+                                </option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">DISK</th>
                         <td>
-                            <input
+                            {/* <input
                                 defaultValue={ChangeAssetData.asset_disk}
                                 onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_disk: e.target.value })}
-                            ></input>
+                            ></input> */}
+                            <select
+                                className="select"
+                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_disk: e.target.value })}
+                                value={ChangeAssetData.asset_disk}
+                            >
+                                <option defaultValue="SSD_256GB" value={'SSD_256GB'}>
+                                    SSD_256GB
+                                </option>
+                                <option defaultValue="SSD_512GB" value={'SSD_512GB'}>
+                                    SSD_512GB
+                                </option>
+                                <option defaultValue="SSD_1TB" value={'SSD_1TB'}>
+                                    SSD_1TB
+                                </option>
+                                <option defaultValue="HDD_512GB" value={'HDD_512GB'}>
+                                    HDD_512GB
+                                </option>
+                                <option defaultValue="HDD_1TB" value={'HDD_1TB'}>
+                                    HDD_1TB
+                                </option>
+                            </select>
                         </td>
                     </tr>
                     <tr>

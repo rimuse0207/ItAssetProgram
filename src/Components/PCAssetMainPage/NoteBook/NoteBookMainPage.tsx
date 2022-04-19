@@ -127,6 +127,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                     setUserAddModalOpen={() => setUserUpdateModalOpen(false)}
                     SelectAssetData={SelectAssetData}
                     SelectCompany={SelectCompany}
+                    setSelectAssetData={(data: any) => setSelectAssetData(data)}
                 ></UpdatePcAssetUserDataModal>
             ) : (
                 ''

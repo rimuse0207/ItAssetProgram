@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DeskTopMainPage from './DeskTop/DeskTopMainPage';
@@ -10,6 +10,7 @@ import CompanySelectMenuBar from '../Navigation/CompanySelectMenuBar/CompanySele
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Models';
 import { ChangeAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
+import { AssetFilteringReset } from '../../Models/AssetFilteringRedux/AssetFilteringRedux';
 
 type URLParamsType = {
     type: string;
@@ -51,6 +52,10 @@ const PcAssetMainPage = () => {
 
     const dispatch = useDispatch();
     const CompanySelectAccessKey = useSelector((state: RootState) => state.AccessKeyMenuBarData.CompanySelectAccessKey);
+
+    useEffect(() => {
+        dispatch(AssetFilteringReset());
+    }, []);
 
     const handleCompanyClicks = async (data: MenuAccessType) => {
         const ChangeCompany = CompanySelectAccessKey.map((list: MenuAccessType, i: number) => {

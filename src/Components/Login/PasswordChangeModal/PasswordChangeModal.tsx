@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { LoginCheckAPI } from '../../../Apis/core/api/AuthUnNeedApi/LoginCheck/LoginCheck';
+import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
+import { ToastTime } from '../../../Configs/ToastTimerConfig';
 
 const PasswordChangeMainDivBox = styled.div`
     padding: 10px;
@@ -76,8 +78,8 @@ type PasswordChangeModalProps = {
     PasswordChangeModalState: boolean;
     setPasswordChangeModalState: () => void;
     LoginDataInfo: {
-        email: string;
-        password: string;
+        email: string | null;
+        password: string | null;
     };
 };
 
@@ -95,12 +97,37 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
     const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            if (LoginDataInfo.password !== NewPassword.NowPassword) {
-                alert('기존 비밀번호가 틀립니다.');
+            const regex = new RegExp('^(?=.*?[A-Za-z])(?=.*?d)[A-Za-zd]{6,}$');
+            console.log(regex.test(NewPassword.NewPassword));
+            // var reg = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
+
+            // if (LoginDataInfo.password !== NewPassword.NowPassword) {
+            //     toast.show({
+            //         title: `기존 비밀번호가 틀립니다.`,
+            //         successCheck: false,
+            //         duration: ToastTime,
+            //     });
+            //     return;
+            // } else
+            if (NewPassword.NewPassword !== NewPassword.NewPasswordCheck) {
+                toast.show({
+                    title: `신규 비밀번호가 틀립니다.`,
+                    successCheck: false,
+                    duration: ToastTime,
+                });
                 return;
-            } else if (NewPassword.NewPassword !== NewPassword.NewPasswordCheck) {
-                alert('신규비밀번호가 틀립니다.');
-                return;
+            } else if (!regex.test(NewPassword.NewPassword)) {
+                toast.show({
+                    title: `보안을 위해 최소 6 자, 하나 이상의 문자와 하나의 숫자를 입력 해주세요.`,
+                    successCheck: false,
+                    duration: 6000,
+                });
+                setNewPassword({
+                    ...NewPassword,
+                    NewPassword: '',
+                    NewPasswordCheck: '',
+                });
+                return false;
             } else {
                 const Parmas = {
                     LoginDataInfo,
@@ -109,12 +136,21 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
                 const ChangePasswordFromServer = await LoginCheckAPI('/LoginCheck_app_server/LoginPasswordChangeData', { Parmas });
 
                 if (ChangePasswordFromServer.data.dataSuccess) {
-                    alert('비밀번호 성공');
                     setPasswordChangeModalState();
+                    toast.show({
+                        title: `비밀번호가 변경 되었습니다.`,
+                        successCheck: true,
+                        duration: ToastTime,
+                    });
                 }
             }
         } catch (error) {
             console.log(error);
+            toast.show({
+                title: `서버와의 연결이 끊겼습니다. IT팀에 문의 바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 
@@ -125,14 +161,14 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
                     <h2 style={{ marginBottom: '30px' }}>비밀번호 변경</h2>
                     <form onSubmit={e => handleChangePassword(e)}>
                         <div>
-                            <div className="InputContainer">
+                            {/* <div className="InputContainer">
                                 <label>기존 비밀번호</label>
                                 <input
                                     type="password"
                                     value={NewPassword.NowPassword}
                                     onChange={e => setNewPassword({ ...NewPassword, NowPassword: e.target.value })}
                                 ></input>
-                            </div>
+                            </div> */}
                             <div className="InputContainer">
                                 <label>신규 비밀번호</label>
                                 <input

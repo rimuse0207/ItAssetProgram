@@ -54,7 +54,7 @@ const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDa
                     </tr>
                     <tr>
                         <th scope="row">구입 금액</th>
-                        <td>{SelectAssetData?.asset_pride}</td>
+                        <td>{SelectAssetData?.asset_pride ? Number(SelectAssetData.asset_pride).toLocaleString('ko-KR') : '-'}</td>
                     </tr>
                     <tr>
                         <th scope="row">CPU</th>

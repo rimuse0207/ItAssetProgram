@@ -49,7 +49,7 @@ const HistoryMainPage = ({ asset_management_number }: HistortyMainPageProps) => 
             const gethistoryDataFromServer = await axios.get('http://192.168.2.155:3001/Asset_app_server/historyData', {
                 params: { historySelected: asset_management_number },
             });
-            console.log(gethistoryDataFromServer);
+
             if (gethistoryDataFromServer.data.dataSuccess) {
                 sethistorySelected(gethistoryDataFromServer.data.data);
             }

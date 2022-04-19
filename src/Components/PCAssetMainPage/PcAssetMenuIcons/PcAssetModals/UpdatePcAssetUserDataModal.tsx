@@ -312,6 +312,7 @@ type NewPcAssetUserDataModalProps = {
     setUserAddModalOpen: (data: boolean) => void;
     SelectAssetData: DeskTopInfoDataType | null;
     SelectCompany: string;
+    setSelectAssetData: any;
 };
 
 const UpdatePcAssetUserDataModal = ({
@@ -319,6 +320,7 @@ const UpdatePcAssetUserDataModal = ({
     setUserAddModalOpen,
     SelectAssetData,
     SelectCompany,
+    setSelectAssetData,
 }: NewPcAssetUserDataModalProps) => {
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
     const [SelectUsered, setSelectUsered] = useState<null | string>(null);
@@ -368,7 +370,6 @@ const UpdatePcAssetUserDataModal = ({
             const personOptionsData = await UserInfoGet('/Asset_app_server/UserSelect', ParamasData);
 
             if (personOptionsData.data.dataSuccess) {
-                console.log(personOptionsData);
                 setInfoUserData(personOptionsData.data.data);
             } else {
                 alert('error');
@@ -431,10 +432,19 @@ const UpdatePcAssetUserDataModal = ({
                     duration: ToastTime,
                 });
             } else {
-                alert('에러발생');
+                toast.show({
+                    title: `서버 연결 실패 IT 팀에 문의 바랍니다.`,
+                    successCheck: false,
+                    duration: ToastTime,
+                });
             }
         } catch (error) {
             console.log(error);
+            toast.show({
+                title: `서버 연결 실패 IT 팀에 문의 바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 
@@ -465,6 +475,8 @@ const UpdatePcAssetUserDataModal = ({
                                 <PcInfoChangeData
                                     SelectAssetData={SelectAssetData}
                                     setAssetDataChangeCheck={() => setAssetDataChangeCheck(false)}
+                                    setSelectAssetData={(data: any) => setSelectAssetData(data)}
+                                    SelectCompany={SelectCompany}
                                 ></PcInfoChangeData>
                             ) : (
                                 <PcInfoDataUpdate
