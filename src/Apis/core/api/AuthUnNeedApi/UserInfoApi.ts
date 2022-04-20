@@ -36,3 +36,12 @@ export const InertPersonalData = (RequestURL: string, ParamasData: {}) => {
         params: ParamasData,
     });
 };
+
+export const LicenseSettingDuplicate = (RequestURL: string, email: string, title: string) => {
+    return request.get(RequestURL, {
+        params: {
+            email,
+            title,
+        },
+    });
+};

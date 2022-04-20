@@ -215,11 +215,12 @@ const NavigationMenuBarMainPage = () => {
                             {LoginCheckState.AdminAccess ? (
                                 <>
                                     <li>
-                                        <BsPieChartFill></BsPieChartFill>
-                                    </li>
-                                    <li>
                                         <BsFillPersonLinesFill></BsFillPersonLinesFill>
                                     </li>
+                                    <li>
+                                        <BsPieChartFill></BsPieChartFill>
+                                    </li>
+
                                     <li>
                                         <BsFillCartFill></BsFillCartFill>
                                     </li>
@@ -423,7 +424,11 @@ const NavigationMenuBarMainPage = () => {
                             <div className="SubHiddenListsMenu">
                                 {MenuCheckedSubLists.setting ? (
                                     <ul className="settingClassNamesOn">
+                                        <Link to="/LicenseSettingSelect">
+                                            <li>라이선스 설정</li>
+                                        </Link>
                                         <li>비밀번호 변경</li>
+
                                         <li onClick={handleLogout}>로그아웃</li>
                                     </ul>
                                 ) : (

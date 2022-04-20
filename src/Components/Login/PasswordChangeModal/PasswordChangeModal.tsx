@@ -8,9 +8,16 @@ import { ToastTime } from '../../../Configs/ToastTimerConfig';
 const PasswordChangeMainDivBox = styled.div`
     padding: 10px;
     margin: 0 auto;
-    width: 60%;
+    width: 80%;
     .InputContainer {
         margin-bottom: 20px;
+        position: relative;
+        .PasswordRegexText {
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            font-size: 0.5em;
+        }
         label {
             display: block;
             font-size: 1.1em;
@@ -94,13 +101,15 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
         setPasswordChangeModalState();
     };
 
+    const PasswordRegexCheck = (password: string) => {
+        const regex: RegExp = new RegExp(/^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?=[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{6,}$/);
+        const checked = regex.test(password);
+        return checked;
+    };
+
     const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const regex = new RegExp('^(?=.*?[A-Za-z])(?=.*?d)[A-Za-zd]{6,}$');
-            console.log(regex.test(NewPassword.NewPassword));
-            // var reg = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
-
             // if (LoginDataInfo.password !== NewPassword.NowPassword) {
             //     toast.show({
             //         title: `기존 비밀번호가 틀립니다.`,
@@ -109,6 +118,7 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
             //     });
             //     return;
             // } else
+            const PasswordRegexCheckresult = PasswordRegexCheck(NewPassword.NewPassword);
             if (NewPassword.NewPassword !== NewPassword.NewPasswordCheck) {
                 toast.show({
                     title: `신규 비밀번호가 틀립니다.`,
@@ -116,7 +126,7 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
                     duration: ToastTime,
                 });
                 return;
-            } else if (!regex.test(NewPassword.NewPassword)) {
+            } else if (!PasswordRegexCheckresult) {
                 toast.show({
                     title: `보안을 위해 최소 6 자, 하나 이상의 문자와 하나의 숫자를 입력 해주세요.`,
                     successCheck: false,
@@ -170,6 +180,9 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
                                 ></input>
                             </div> */}
                             <div className="InputContainer">
+                                <div className="PasswordRegexText">
+                                    비밀번호는 보안을 위해 영문, 숫자, 특수문자 중 2가지 이상 조합하여 10자리 이내
+                                </div>
                                 <label>신규 비밀번호</label>
                                 <input
                                     type="password"

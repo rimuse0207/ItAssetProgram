@@ -18,7 +18,10 @@ import { RootState } from '../../../../Models';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-import axios from 'axios';
+import { IoMdAddCircle } from 'react-icons/io';
+import { AiOutlineMinusCircle } from 'react-icons/ai';
+import { PersonalInfoGetData, LicenseSettingDuplicate } from '../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
+import { LicenseSettingProps } from '../../../LicenseSetting/LicenseSettingTypes';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -53,7 +56,24 @@ export const MainModalContent = styled.div`
         /* margin: 0 auto 60px; */
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
     }
-
+    .License_Select_Box {
+        width: 100%;
+        height: 45px;
+        padding-left: 10px;
+        box-sizing: border-box;
+        line-height: 30px;
+        font-size: 14px;
+        border: 0;
+        background: none;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        -webkit-appearance: none;
+        margin-bottom: 20px;
+        option {
+            padding: 5px 0;
+        }
+    }
     //layout
     .input {
         &-header {
@@ -259,14 +279,45 @@ export const MainModalContent = styled.div`
         .BigBoxContentLeft {
             width: 45%;
             height: 100%;
-            border: 1px solid darkgray;
+
             float: left;
         }
         .BigBoxContentRight {
             width: 45%;
             height: 100%;
-            border: 1px solid darkgray;
+
             float: right;
+        }
+        ul {
+            margin-top: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            height: 40vh;
+            border: 1px dashed gray;
+            li {
+                border: 1px dashed black;
+                padding: 5px;
+                width: 90%;
+                font-size: 0.8em;
+                margin-bottom: 5px;
+                display: flex;
+                flex-flow: wrap;
+                justify-content: space-between;
+                .IconsClickPlus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: green;
+                        cursor: pointer;
+                    }
+                }
+                .IconsClickMinus {
+                    font-size: 1.2em;
+                    :hover {
+                        color: red;
+                        cursor: pointer;
+                    }
+                }
+            }
         }
     }
 `;
@@ -280,6 +331,7 @@ type NewAssetDataModalProps = {
 };
 
 const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCompany }: NewAssetDataModalProps) => {
+    const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [SearchSomething, setSearchSomething] = useState<string | null>('');
     const [ChooseAssetData, setChooseAssetData] = useState('데스크탑');
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
@@ -306,9 +358,15 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     }, []);
 
     const [licenseSettingData, setLicenseSettingData] = useState([]);
-    const [SelectedLicenseData, setSelectedLicenseData] = useState<any>([]);
+    // const [SelectedLicenseData, setSelectedLicenseData] = useState<any>([]);
     const [textText, setTextTest] = useState('');
     const [Q1, setQ1] = useState('');
+
+    const [LicenseSelectResult, setLicenseSelectResult] = useState<LicenseSettingProps[]>([]);
+    const [BasicSeletResult, setBasicSelectResult] = useState<LicenseSettingProps[]>([]);
+    const [SelectedLicenseData, setSelectedLicenseData] = useState<LicenseSettingProps[]>([]);
+    const [SettingLicenstLists, setSettingLicenseLists] = useState<LicenseSettingProps[]>([]);
+    const [SelectLists, setSeletLists] = useState('');
 
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
 
@@ -334,14 +392,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         getSettingData();
     }, [SelectCompany]);
 
-    const settingChange = () => {
-        var url = '/settingChange';
-        var title = 'setting';
-
-        var status = 'toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=900, height=500, top=50%,left=50%';
-        window.open(url, title, status);
-    };
-
+    //회사 정보 받기 API 호출
     const getCompanyInfo = async () => {
         try {
             const ParamsData = {
@@ -356,6 +407,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         }
     };
 
+    //사용자 정보 받기 API 호출
     const getUserInfo = async () => {
         const ParamasData = {
             SelectCompany,
@@ -373,29 +425,15 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         }
     };
 
-    const getSettingData = async () => {
-        try {
-            const getSettingDatas = await axios.get(`${process.env.REACT_APP_API_URL}/Asset_app_server/license_settingData`, {
-                params: {
-                    id: 'sjyoo@dhk.co.kr',
-                },
-            });
-            setLicenseSettingData(getSettingDatas.data.data);
-            console.log(getSettingDatas);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        const selectedLicensedatas: any = [];
-        licenseSettingData.map((list: any, i) => {
-            if (list.setting_title === Q1) {
-                selectedLicensedatas.push({ key: list.license_code, label: list.name });
-            }
-        });
-        setSelectedLicenseData(selectedLicensedatas);
-    }, [Q1]);
+    // useEffect(() => {
+    //     const selectedLicensedatas: any = [];
+    //     licenseSettingData.map((list: any, i) => {
+    //         if (list.setting_title === Q1) {
+    //             selectedLicensedatas.push({ key: list.license_code, label: list.name });
+    //         }
+    //     });
+    //     setSelectedLicenseData(selectedLicensedatas);
+    // }, [Q1]);
 
     //관리번호 다시 받기 클릭 시
     const hadldeRandomCodeData = async () => {
@@ -407,7 +445,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                 SelectDate: UserWriteData.asset_purchase_date,
             };
             const getRandomCodeData = await RandomCodeDataGet('/Asset_app_server/RandCodeData', ParamasData);
-            console.log(getRandomCodeData);
             if (getRandomCodeData.data.dataSuccess) {
                 setUserWriteData({ ...UserWriteData, asset_management_number: getRandomCodeData.data.RandomCode });
             }
@@ -429,6 +466,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                 UserWriteData,
                 SelectCompany,
                 ChooseAssetData,
+                SelectedLicenseData,
             };
             const SaveAssetData = await AssetAdd('/Asset_app_server/AssetAdd', ParamasData);
             if (SaveAssetData.data.dataSuccess) {
@@ -473,11 +511,129 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     company_code: '',
                 });
                 hadldeRandomCodeData();
-
+                closeModal();
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             }
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    // 라이선스 설정 관련
+
+    const getSettingData = async () => {
+        try {
+            const email = LoginInfoData.email;
+            const getLicenseDatas = await CompanyInfoGet('/UserInfo_app_server/LicenseSettingInfo', {
+                email,
+            });
+            if (getLicenseDatas.data.dataSuccess) {
+                setLicenseSelectResult(getLicenseDatas.data.data);
+                setBasicSelectResult(getLicenseDatas.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleClicksLicense = (licenseData: LicenseSettingProps) => {
+        if (!SelectLists) {
+            toast.show({
+                title: `라이선스 목록 선택 후 사용 가능합니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
+            return;
+        }
+        //데이터 삭제
+        const DeleteLicenseData = LicenseSelectResult.filter((item, j) =>
+            item.license_product_code === licenseData.license_product_code ? '' : item
+        );
+        setLicenseSelectResult(DeleteLicenseData);
+
+        //데이터 추가
+        const dataAdd = SelectedLicenseData.concat(licenseData);
+        setSelectedLicenseData(dataAdd);
+    };
+
+    const handleClicksLicenseDelete = (licenseData: LicenseSettingProps) => {
+        //데이터 삭제
+        const DeleteLicenseData = SelectedLicenseData.filter((item, j) =>
+            item.license_product_code === licenseData.license_product_code ? '' : item
+        );
+        setSelectedLicenseData(DeleteLicenseData);
+
+        //데이터 추가
+        const dataAdd = LicenseSelectResult.concat(licenseData);
+        setLicenseSelectResult(dataAdd);
+    };
+
+    const getLicenseSettingLists = async () => {
+        try {
+            const email = LoginInfoData.email ? LoginInfoData.email : '';
+            const LicenseSettingListsAPI = await PersonalInfoGetData('/UserInfo_app_server/License_setting_lists', email);
+            if (LicenseSettingListsAPI.data.dataSuccess) {
+                setSettingLicenseLists(LicenseSettingListsAPI.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getLicenseSettingLists();
+        getLicneseData();
+    }, []);
+
+    useEffect(() => {
+        if (!SelectLists) {
+            setSelectedLicenseData([]);
+            getLicneseData();
+            return;
+        } else {
+            getLicenseSettingDatas();
+        }
+    }, [SelectLists]);
+
+    const getLicenseSettingDatas = async () => {
+        try {
+            const email = LoginInfoData.email ? LoginInfoData.email : '';
+            const LicenseDatas = await LicenseSettingDuplicate('/UserInfo_app_server/License_setting_Datas', email, SelectLists);
+
+            if (LicenseDatas.data.dataSuccess) {
+                let datas = BasicSeletResult;
+
+                for (var i = 0; i < LicenseDatas.data.data.length; i++) {
+                    datas = datas.filter((item: { license_product_code: string }) =>
+                        item.license_product_code === LicenseDatas.data.data[i].license_product_code ? '' : item
+                    );
+                }
+
+                setLicenseSelectResult(datas);
+                setSelectedLicenseData(LicenseDatas.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const getLicneseData = async () => {
+        try {
+            const email = LoginInfoData.email;
+            const getLicenseDatas = await CompanyInfoGet('/UserInfo_app_server/LicenseSettingInfo', {
+                email,
+            });
+            if (getLicenseDatas.data.dataSuccess) {
+                setLicenseSelectResult(getLicenseDatas.data.data);
+                setBasicSelectResult(getLicenseDatas.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.show({
+                title: `서버와의 연결이 끊김 IT팀에 문의바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 
@@ -552,7 +708,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             }
                                                             value={UserWriteData.company_code}
                                                         >
-                                                            <option disabled>사용처 선택</option>
+                                                            <option value="">사용처 선택</option>
                                                             {CompanyInfoData.map((list, i) => {
                                                                 return (
                                                                     <option key={list.value} defaultValue={list.value} value={list.value}>
@@ -753,39 +909,64 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     </dd>
                                                 </dl>
                                                 <h4>라이선스 등록</h4>
-                                                <button onClick={settingChange}>설정변경</button>
+                                                {/* <button onClick={settingChange}>설정변경</button> */}
                                                 <div>
-                                                    <input
-                                                        type="radio"
-                                                        id="경영지원"
-                                                        name="setting"
-                                                        value="경영지원"
-                                                        checked={Q1 === '경영지원' ? true : false}
-                                                        onChange={e => setQ1(e.target.value)}
-                                                    ></input>
-                                                    <label htmlFor="경영지원">경영지원</label>
-                                                    <input
-                                                        type="radio"
-                                                        id="영업"
-                                                        name="setting"
-                                                        value="영업"
-                                                        checked={Q1 === '영업' ? true : false}
-                                                        onChange={e => setQ1(e.target.value)}
-                                                    ></input>
-                                                    <label htmlFor="영업">영업</label>
+                                                    <select onChange={e => setSeletLists(e.target.value)} className="License_Select_Box">
+                                                        <option value="">조회 할 라이선스 목록 선택</option>
+                                                        {SettingLicenstLists.map(list => {
+                                                            return (
+                                                                <option value={list.setting_title} key={list.setting_title}>
+                                                                    {list.setting_title}
+                                                                </option>
+                                                            );
+                                                        })}
+                                                    </select>
                                                 </div>
 
                                                 <div>
                                                     <div className="BigBoxContent">
                                                         <div className="BigBoxContentLeft">
                                                             <h4>선택 전</h4>
+                                                            <div>
+                                                                <ul>
+                                                                    {LicenseSelectResult.map(list => {
+                                                                        return (
+                                                                            <li key={list.license_product_code}>
+                                                                                <div>
+                                                                                    {list.license_types}_{list.license_product_name}
+                                                                                </div>
+                                                                                <div
+                                                                                    className="IconsClickPlus"
+                                                                                    onClick={() => handleClicksLicense(list)}
+                                                                                >
+                                                                                    <IoMdAddCircle></IoMdAddCircle>
+                                                                                </div>
+                                                                            </li>
+                                                                        );
+                                                                    })}
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                         <div className="BigBoxContentRight">
                                                             <h4>선택 후</h4>
                                                             <div>
-                                                                {SelectedLicenseData.map((list: any) => {
-                                                                    return <div>{list.label}</div>;
-                                                                })}
+                                                                <ul>
+                                                                    {SelectedLicenseData.map(list => {
+                                                                        return (
+                                                                            <li key={list.license_product_code}>
+                                                                                <div>
+                                                                                    {list.license_types}_{list.license_product_name}
+                                                                                </div>
+                                                                                <div
+                                                                                    className="IconsClickMinus"
+                                                                                    onClick={() => handleClicksLicenseDelete(list)}
+                                                                                >
+                                                                                    <AiOutlineMinusCircle></AiOutlineMinusCircle>
+                                                                                </div>
+                                                                            </li>
+                                                                        );
+                                                                    })}
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
