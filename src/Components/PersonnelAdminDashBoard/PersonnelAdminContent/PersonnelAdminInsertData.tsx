@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PersonalInfoGetData, InertPersonalData } from '../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
+import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
 
 const PersonnelAdminInsertDataMainDivBox = styled.div`
     padding-left: 40px;
@@ -126,7 +127,24 @@ const PersonnelAdminInsertData = ({ SelectCompany }: PersonnelAdminInsertDataPro
         try {
             const DataSavePersonalData = await InertPersonalData('/UserInfo_app_server/DataSavePersonalData', UpdateUserData);
             if (DataSavePersonalData.data.dataSuccess) {
-                console.log('qweqwe');
+                toast.show({
+                    title: `임직원 추가 완료하였습니다.`,
+                    successCheck: true,
+                    duration: 3000,
+                });
+                setUpdateUserData({
+                    name: '',
+                    email: '',
+                    position: '',
+                    team: '',
+                    company: UpdateUserData.company,
+                });
+            } else {
+                toast.show({
+                    title: `임직원 추가 실패`,
+                    successCheck: false,
+                    duration: 3000,
+                });
             }
         } catch (error) {
             console.log(error);
@@ -188,6 +206,7 @@ const PersonnelAdminInsertData = ({ SelectCompany }: PersonnelAdminInsertDataPro
 
                             <td>
                                 <select onChange={e => setUpdateUserData({ ...UpdateUserData, company: e.target.value })}>
+                                    <option value="">근무장소를 선택 해 주세요.</option>
                                     {CompanyInfoData.map(list => {
                                         return (
                                             <option value={list.company_code} key={list.company_code}>

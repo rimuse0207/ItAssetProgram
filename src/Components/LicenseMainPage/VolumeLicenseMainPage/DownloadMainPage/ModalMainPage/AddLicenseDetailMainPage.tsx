@@ -167,8 +167,9 @@ const DetailLicneseSelectUserInfoMainDivBox = styled.div`
         height: 500px;
         min-width: 500px;
         .FloatLeftDivBox {
+            font-size: 0.8em;
             border: 0.5px solid gray;
-            width: 43%;
+            width: 48%;
             height: 100%;
             min-width: 200px;
             float: left;
@@ -176,8 +177,9 @@ const DetailLicneseSelectUserInfoMainDivBox = styled.div`
             padding: 5px;
         }
         .FloatRightDivBox {
+            font-size: 0.8em;
             border: 0.5px solid gray;
-            width: 43%;
+            width: 48%;
             height: 100%;
             min-width: 200px;
             float: right;
@@ -395,7 +397,9 @@ const AddLicenseDetailMainPage = ({
             asset_division: userData.asset_division,
             asset_management_number: userData.asset_management_number,
         };
-        const DeleteUserData = InfoUserData.filter((item, j) => (item.email === userData.email ? '' : item));
+        const DeleteUserData = InfoUserData.filter((item, j) =>
+            item.asset_management_number === userData.asset_management_number ? '' : item
+        );
         setInfoUserData(DeleteUserData);
 
         const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
@@ -420,7 +424,9 @@ const AddLicenseDetailMainPage = ({
             asset_management_number: userData.asset_management_number,
             label: `${userData.asset_management_number} || ${userData.asset_division} || ${userData.email} || ${userData.name} || ${userData.team} `,
         };
-        const DeleteUserData = SelectedInfoUserData.filter((item, j) => (item.email === userData.email ? '' : item));
+        const DeleteUserData = SelectedInfoUserData.filter((item, j) =>
+            item.asset_management_number === userData.asset_management_number ? '' : item
+        );
         setSelectedInfoUserData(DeleteUserData);
         const SortData = ObjectNameSortData(InfoUserData.concat(getChoiceData));
         setInfoUserData(SortData);
@@ -738,9 +744,9 @@ const AddLicenseDetailMainPage = ({
                                                     <ul>
                                                         {InfoUserData.map((list, i) => {
                                                             return (
-                                                                <li key={list.email}>
+                                                                <li key={list.asset_management_number}>
                                                                     <div>
-                                                                        {list.name} || {list.team}
+                                                                        {list.asset_management_number} || {list.name} || {list.team}
                                                                     </div>
                                                                     <div
                                                                         className="IconsClickPlus"
@@ -758,9 +764,10 @@ const AddLicenseDetailMainPage = ({
                                                     <ul>
                                                         {SelectedInfoUserData.map((list, i) => {
                                                             return (
-                                                                <li key={list.email}>
+                                                                <li key={list.asset_management_number}>
                                                                     <div>
-                                                                        {list.asset_division} || {list.name} || {list.team}
+                                                                        {list.asset_management_number} || {list.asset_division} ||{' '}
+                                                                        {list.name} || {list.team}
                                                                     </div>
                                                                     <div
                                                                         className="IconsClickMinus"

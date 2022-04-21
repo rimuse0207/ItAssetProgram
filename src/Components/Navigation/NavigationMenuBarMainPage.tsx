@@ -214,24 +214,27 @@ const NavigationMenuBarMainPage = () => {
                             </li>
                             {LoginCheckState.AdminAccess ? (
                                 <>
-                                    <li>
-                                        <BsFillPersonLinesFill></BsFillPersonLinesFill>
-                                    </li>
-                                    <li>
+                                    <Link to="/PersonnelDashBoard/Select">
+                                        <li>
+                                            <BsFillPersonLinesFill></BsFillPersonLinesFill>
+                                        </li>
+                                    </Link>
+                                    {/* <li>
                                         <BsPieChartFill></BsPieChartFill>
-                                    </li>
-
-                                    <li>
-                                        <BsFillCartFill></BsFillCartFill>
-                                    </li>
+                                    </li> */}
+                                    <Link to="/license/volume_license">
+                                        <li>
+                                            <BsFillCartFill></BsFillCartFill>
+                                        </li>
+                                    </Link>
                                     <li>
                                         <Link to="/PCAsset">
                                             <BsCircleSquare></BsCircleSquare>
                                         </Link>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <BiServer></BiServer>
-                                    </li>
+                                    </li> */}
                                 </>
                             ) : (
                                 ''
@@ -311,7 +314,7 @@ const NavigationMenuBarMainPage = () => {
                                             ''
                                         )}
                                     </div>
-
+                                    {/* 
                                     <li>
                                         <Link to="/TotalDashBoard">
                                             <div className="listStyleDivBox">
@@ -321,7 +324,7 @@ const NavigationMenuBarMainPage = () => {
                                                 <div className="listStyleSubLists">통합사용현황</div>
                                             </div>
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     <li>
                                         <div className="listStyleDivBox">
                                             <div>
@@ -381,14 +384,14 @@ const NavigationMenuBarMainPage = () => {
                                             </div>
                                         </Link>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <div className="listStyleDivBox">
                                             <div>
                                                 <BiServer></BiServer>
                                             </div>
                                             <div className="listStyleSubLists">Server</div>
                                         </div>
-                                    </li>
+                                    </li> */}
                                 </>
                             ) : (
                                 <div></div>
@@ -427,7 +430,7 @@ const NavigationMenuBarMainPage = () => {
                                         <Link to="/LicenseSettingSelect">
                                             <li>라이선스 설정</li>
                                         </Link>
-                                        <li>비밀번호 변경</li>
+                                        {/* <li>비밀번호 변경</li> */}
 
                                         <li onClick={handleLogout}>로그아웃</li>
                                     </ul>

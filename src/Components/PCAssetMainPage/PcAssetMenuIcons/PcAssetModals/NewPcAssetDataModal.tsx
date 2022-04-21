@@ -332,7 +332,6 @@ type NewAssetDataModalProps = {
 
 const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCompany }: NewAssetDataModalProps) => {
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
-    const [SearchSomething, setSearchSomething] = useState<string | null>('');
     const [ChooseAssetData, setChooseAssetData] = useState('데스크탑');
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
     const [CompanyInfoData, setCompanyInfoData] = useState<CompanyOption[]>([]);
@@ -356,11 +355,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     useEffect(() => {
         hadldeRandomCodeData();
     }, []);
-
-    const [licenseSettingData, setLicenseSettingData] = useState([]);
-    // const [SelectedLicenseData, setSelectedLicenseData] = useState<any>([]);
-    const [textText, setTextTest] = useState('');
-    const [Q1, setQ1] = useState('');
 
     const [LicenseSelectResult, setLicenseSelectResult] = useState<LicenseSettingProps[]>([]);
     const [BasicSeletResult, setBasicSelectResult] = useState<LicenseSettingProps[]>([]);
@@ -424,16 +418,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             console.log(error);
         }
     };
-
-    // useEffect(() => {
-    //     const selectedLicensedatas: any = [];
-    //     licenseSettingData.map((list: any, i) => {
-    //         if (list.setting_title === Q1) {
-    //             selectedLicensedatas.push({ key: list.license_code, label: list.name });
-    //         }
-    //     });
-    //     setSelectedLicenseData(selectedLicensedatas);
-    // }, [Q1]);
 
     //관리번호 다시 받기 클릭 시
     const hadldeRandomCodeData = async () => {
@@ -511,7 +495,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     company_code: '',
                 });
                 hadldeRandomCodeData();
-                closeModal();
+
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             }
         } catch (error) {
@@ -537,14 +521,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     };
 
     const handleClicksLicense = (licenseData: LicenseSettingProps) => {
-        if (!SelectLists) {
-            toast.show({
-                title: `라이선스 목록 선택 후 사용 가능합니다.`,
-                successCheck: false,
-                duration: ToastTime,
-            });
-            return;
-        }
         //데이터 삭제
         const DeleteLicenseData = LicenseSelectResult.filter((item, j) =>
             item.license_product_code === licenseData.license_product_code ? '' : item
@@ -878,7 +854,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                     <div className="PCAssetFloatRight">
                                         {/* 사용자 있을시 */}
                                         {UserWriteData.usercheck ? (
-                                            <>
+                                            <div>
                                                 <dl className="inputbox">
                                                     <dt className="inputbox-title">사용자</dt>
                                                     <dd className="inputbox-content">
@@ -971,9 +947,9 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </>
+                                            </div>
                                         ) : (
-                                            <>
+                                            <div>
                                                 <div>
                                                     <button
                                                         onClick={() =>
@@ -983,7 +959,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         유저추가
                                                     </button>
                                                 </div>
-                                            </>
+                                            </div>
                                         )}
                                     </div>
                                 </div>

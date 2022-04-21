@@ -65,6 +65,7 @@ const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPa
         const labels = [];
         const usedNumber = [];
         const notUsedNumber = [];
+        if (!LicenseData.data) return;
         for (var i = 0; i < LicenseData.data.length; i++) {
             labels.push(LicenseData.data[i].license_product_name);
             usedNumber.push(LicenseData.data[i].all_user_used_count);

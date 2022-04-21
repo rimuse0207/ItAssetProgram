@@ -437,7 +437,9 @@ const AddUserModalMainPage = ({
             asset_division: userData.asset_division,
             asset_management_number: userData.asset_management_number,
         };
-        const DeleteUserData = InfoUserData.filter((item, j) => (item.email === userData.email ? '' : item));
+        const DeleteUserData = InfoUserData.filter((item, j) =>
+            item.asset_management_number === userData.asset_management_number ? '' : item
+        );
         setInfoUserData(DeleteUserData);
 
         const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
@@ -454,7 +456,9 @@ const AddUserModalMainPage = ({
             asset_management_number: userData.asset_management_number,
             label: `${userData.asset_management_number} || ${userData.asset_division} || ${userData.email} || ${userData.name} || ${userData.team} `,
         };
-        const DeleteUserData = SelectedInfoUserData.filter((item, j) => (item.email === userData.email ? '' : item));
+        const DeleteUserData = SelectedInfoUserData.filter((item, j) =>
+            item.asset_management_number === userData.asset_management_number ? '' : item
+        );
         setSelectedInfoUserData(DeleteUserData);
         const SortData = ObjectNameSortData(InfoUserData.concat(getChoiceData));
         setInfoUserData(SortData);
@@ -500,7 +504,9 @@ const AddUserModalMainPage = ({
                 company: SelectCompany,
                 license: type,
                 data,
+                SortTable,
             };
+
             const deleteData = await AssetDeleteLicense('/license_app_server/license_delete_data', {
                 ParamasData,
             });
@@ -675,9 +681,9 @@ const AddUserModalMainPage = ({
                             <ul>
                                 {InfoUserData.map((list, i) => {
                                     return (
-                                        <li key={list.email}>
+                                        <li key={list.asset_management_number}>
                                             <div>
-                                                {list.name} || {list.team}
+                                                {list.asset_management_number} || {list.asset_division} || {list.name} || {list.team}
                                             </div>
                                             <div className="IconsClickPlus" onClick={() => handleSelectClickIconsUserAadd(list)}>
                                                 <IoMdAddCircle></IoMdAddCircle>
@@ -692,7 +698,7 @@ const AddUserModalMainPage = ({
                             <ul>
                                 {SelectedInfoUserData.map((list, i) => {
                                     return (
-                                        <li key={list.email}>
+                                        <li key={list.asset_management_number}>
                                             <div>
                                                 {list.asset_management_number} || {list.asset_division} || {list.name} || {list.team}
                                             </div>

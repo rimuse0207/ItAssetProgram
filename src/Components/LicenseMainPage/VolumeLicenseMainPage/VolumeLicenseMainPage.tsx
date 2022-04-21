@@ -208,29 +208,89 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                 </td>
                                                 {!LicenseAllShow ? (
                                                     <>
-                                                        <td>{list.datas.length}</td>
-                                                        <td>{list.datas[list.datas.length - 1].license_manage_code}</td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
+                                                            {list.datas.length}
+                                                        </td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
+                                                            {list.datas[list.datas.length - 1].license_manage_code}
+                                                        </td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {moment(list.datas[list.datas.length - 1].license_purchase_date).format(
                                                                 'YYYY-MM-DD'
                                                             )}
                                                         </td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {moment(list.datas[list.datas.length - 1].license_purchase_finish_date).format(
                                                                 'YYYY-MM-DD'
                                                             )}
                                                         </td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {list.datas[list.datas.length - 1].license_purchase_pride.toLocaleString(
                                                                 'ko-KR'
                                                             )}
                                                         </td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {list.datas[list.datas.length - 1].license_purchase_company
                                                                 ? list.datas[list.datas.length - 1].license_purchase_company
                                                                 : '-'}
                                                         </td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {list.datas[list.datas.length - 1].license_prove_code ? (
                                                                 list.datas[list.datas.length - 1].proveData?.length === 0 ? (
                                                                     '-'
@@ -251,14 +311,50 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                                 '-'
                                                             )}
                                                         </td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {list.datas[list.datas.length - 1].license_newcode
                                                                 ? list.datas[list.datas.length - 1].license_newcode
                                                                 : '-'}
                                                         </td>
-                                                        <td>{list.datas[list.datas.length - 1].license_permit_count} 명</td>
-                                                        <td>{list.datas[list.datas.length - 1].userData[0].useUserCount} 명</td>
-                                                        <td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
+                                                            {list.datas[list.datas.length - 1].license_permit_count} 명
+                                                        </td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
+                                                            {list.datas[list.datas.length - 1].userData[0].useUserCount} 명
+                                                        </td>
+                                                        <td
+                                                            style={
+                                                                list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                0
+                                                                    ? { backgroundColor: '#edafaf' }
+                                                                    : {}
+                                                            }
+                                                        >
                                                             {list.datas[list.datas.length - 1].license_permit_count -
                                                                 list.datas[list.datas.length - 1].userData[0].useUserCount}{' '}
                                                             명

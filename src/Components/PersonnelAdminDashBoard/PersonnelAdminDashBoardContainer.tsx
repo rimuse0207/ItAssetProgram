@@ -11,7 +11,7 @@ type URLParamsType = {
 };
 const PersonnelAdminDashBoardContainer = ({ SelectCompany }: PersonnelAdminDashBoardContainerProps) => {
     let { type } = useParams<URLParamsType>();
-    console.log(type);
+
     return (
         <div>
             <div>

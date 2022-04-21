@@ -143,6 +143,7 @@ type UserAssetTypes = {
     asset_ram: string | null;
     asset_purchase_date: string | null;
     asset_maker: string | null;
+    asset_distribute_date: string | null;
 };
 type UserInfoTypes = {
     company_location: string | null;
@@ -197,10 +198,14 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
         if (PersonalDatas.data.dataSuccess) {
-            console.log(PersonalDatas);
+            const datas = PersonalDatas.data.datas.License.filter(
+                (arr: any, index: any, callback: any) =>
+                    index === callback.findIndex((t: any) => t.license_product_name === arr.license_product_name)
+            );
             setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
             setAssetDatas(PersonalDatas.data.datas.Asset);
-            var arr = PersonalDatas.data.datas.License;
+            // var arr = PersonalDatas.data.datas.License;
+            var arr = datas;
             arr.sort(function (a: any, b: any) {
                 var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
                 var nameB = b.userinfo_email ? b.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
@@ -281,7 +286,9 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                                         <td>
                                             {list.asset_cpu}_{list.asset_ram}_{list.asset_disk}
                                         </td>
-                                        <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
+                                        <td>
+                                            {list.asset_distribute_date ? moment(list.asset_distribute_date).format('YYYY-MM-DD') : '-'}
+                                        </td>
                                     </tr>
                                 );
                             })}
@@ -302,7 +309,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                                 <th scope="cols">인덱스</th>
                                 <th scope="cols">등록 PC</th>
                                 <th scope="cols">구분</th>
-                                <th scope="cols">사용 여부</th>
+                                <th scope="cols">사용 가능 여부</th>
                                 <th scope="cols">지급 일자</th>
                             </tr>
                         </thead>
