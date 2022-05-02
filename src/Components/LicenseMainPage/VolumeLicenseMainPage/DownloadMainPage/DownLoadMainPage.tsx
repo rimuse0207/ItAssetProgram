@@ -71,6 +71,7 @@ type DownLoadMainPageProps = {
     type: string;
     SortTable: any;
     ModalType: string;
+    windowScrollss: any;
 };
 
 const DownLoadMainPage = ({
@@ -82,6 +83,7 @@ const DownLoadMainPage = ({
     type,
     SortTable,
     ModalType,
+    windowScrollss,
 }: DownLoadMainPageProps) => {
     const dispatch = useDispatch();
 
@@ -223,6 +225,7 @@ const DownLoadMainPage = ({
             <div>
                 {UserAddModals && ModalType === 'Show_info' ? (
                     <AddUserModalMainPage
+                        windowScrollss={windowScrollss}
                         SelectCompany={SelectCompany}
                         SelectClicksModals={UserAddModals}
                         setSelectClicksModals={() => {

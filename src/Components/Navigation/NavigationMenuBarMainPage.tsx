@@ -214,9 +214,9 @@ const NavigationMenuBarMainPage = () => {
                             </li>
                             {LoginCheckState.AdminAccess ? (
                                 <>
-                                    <Link to="/PersonnelDashBoard/Select">
+                                    <Link to="/PCAsset">
                                         <li>
-                                            <BsFillPersonLinesFill></BsFillPersonLinesFill>
+                                            <BsCircleSquare></BsCircleSquare>
                                         </li>
                                     </Link>
                                     {/* <li>
@@ -227,11 +227,11 @@ const NavigationMenuBarMainPage = () => {
                                             <BsFillCartFill></BsFillCartFill>
                                         </li>
                                     </Link>
-                                    <li>
-                                        <Link to="/PCAsset">
-                                            <BsCircleSquare></BsCircleSquare>
-                                        </Link>
-                                    </li>
+                                    <Link to="/PersonnelDashBoard/Select">
+                                        <li>
+                                            <BsFillPersonLinesFill></BsFillPersonLinesFill>
+                                        </li>
+                                    </Link>
                                     {/* <li>
                                         <BiServer></BiServer>
                                     </li> */}
@@ -271,49 +271,17 @@ const NavigationMenuBarMainPage = () => {
                             </li>
                             {LoginCheckState.AdminAccess ? (
                                 <>
-                                    <li>
-                                        <div className="listStyleDivBox">
-                                            <div>
-                                                <BsFillPersonLinesFill></BsFillPersonLinesFill>
-                                            </div>
-                                            <div className="listStyleSubLists">
-                                                <div
-                                                    className="listsSubListsDivBox"
-                                                    onClick={e =>
-                                                        setMenuCheckedSubLists({
-                                                            ...MenuCheckedSubLists,
-                                                            personnel: !MenuCheckedSubLists.personnel,
-                                                        })
-                                                    }
-                                                >
-                                                    <div>인사관리</div>
-                                                    {MenuCheckedSubLists.personnel ? (
-                                                        <div className="HiddenOff">
-                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="HiddenOn">
-                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
-                                                        </div>
-                                                    )}
+                                    <li className={window.location.pathname === '/PCAsset' ? 'NowPageSelect' : ''}>
+                                        <Link to="/PCAsset">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <BsCircleSquare></BsCircleSquare>
                                                 </div>
+                                                <div className="listStyleSubLists">PC</div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </li>
-                                    <div className="SubHiddenListsMenu">
-                                        {MenuCheckedSubLists.personnel ? (
-                                            <ul className="settingClassNamesOn">
-                                                <Link to="/PersonnelDashBoard/Select">
-                                                    <li>임직원 조회</li>
-                                                </Link>
-                                                <Link to="/PersonnelDashBoard/AddData">
-                                                    <li>임직원 추가</li>
-                                                </Link>
-                                            </ul>
-                                        ) : (
-                                            ''
-                                        )}
-                                    </div>
+
                                     {/* 
                                     <li>
                                         <Link to="/TotalDashBoard">
@@ -374,16 +342,49 @@ const NavigationMenuBarMainPage = () => {
                                             ''
                                         )}
                                     </div>
-                                    <li className={window.location.pathname === '/PCAsset' ? 'NowPageSelect' : ''}>
-                                        <Link to="/PCAsset">
-                                            <div className="listStyleDivBox">
-                                                <div>
-                                                    <BsCircleSquare></BsCircleSquare>
-                                                </div>
-                                                <div className="listStyleSubLists">PC</div>
+                                    <li>
+                                        <div className="listStyleDivBox">
+                                            <div>
+                                                <BsFillPersonLinesFill></BsFillPersonLinesFill>
                                             </div>
-                                        </Link>
+                                            <div className="listStyleSubLists">
+                                                <div
+                                                    className="listsSubListsDivBox"
+                                                    onClick={e =>
+                                                        setMenuCheckedSubLists({
+                                                            ...MenuCheckedSubLists,
+                                                            personnel: !MenuCheckedSubLists.personnel,
+                                                        })
+                                                    }
+                                                >
+                                                    <div>인사관리</div>
+                                                    {MenuCheckedSubLists.personnel ? (
+                                                        <div className="HiddenOff">
+                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="HiddenOn">
+                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
+                                    <div className="SubHiddenListsMenu">
+                                        {MenuCheckedSubLists.personnel ? (
+                                            <ul className="settingClassNamesOn">
+                                                <Link to="/PersonnelDashBoard/Select">
+                                                    <li>임직원 조회</li>
+                                                </Link>
+                                                <Link to="/PersonnelDashBoard/AddData">
+                                                    <li>임직원 추가</li>
+                                                </Link>
+                                            </ul>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
                                     {/* <li>
                                         <div className="listStyleDivBox">
                                             <div>

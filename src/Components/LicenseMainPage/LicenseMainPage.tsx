@@ -40,6 +40,13 @@ const LicenseMainPageContentMainPageDiv = styled.div`
         background-clip: content-box;
         background-color: gray;
     }
+    .MainContentBoxCotainer {
+        position: relative;
+        .AllShowButtons {
+            position: absolute;
+            right: 50px;
+        }
+    }
 `;
 
 const LicenseMainPage = () => {

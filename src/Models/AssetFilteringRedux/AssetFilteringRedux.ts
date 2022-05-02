@@ -21,6 +21,8 @@ export type FilteringState = {
         asset_cpu: string;
         asset_ram: string;
         asset_disk: string;
+        asset_model: string;
+        asset_newcode: string;
     };
 };
 
@@ -35,6 +37,8 @@ const initialState: FilteringState = {
         asset_cpu: '',
         asset_ram: '',
         asset_disk: '',
+        asset_model: '',
+        asset_newcode: '',
     },
 };
 

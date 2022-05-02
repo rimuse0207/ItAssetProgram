@@ -497,6 +497,8 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                 hadldeRandomCodeData();
 
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
+            } else {
+                toast.show({ title: `자산 등록 실패 관리번호 변경 후 다시 시도 해 주세요.`, successCheck: false, duration: ToastTime });
             }
         } catch (error) {
             console.log(error);

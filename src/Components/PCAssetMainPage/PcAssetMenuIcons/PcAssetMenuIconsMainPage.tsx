@@ -183,6 +183,8 @@ type FilteringDataTypes = {
     asset_cpu: string;
     asset_ram: string;
     asset_disk: string;
+    asset_newcode: string;
+    asset_model: string;
 };
 
 const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainPageProps) => {
@@ -201,6 +203,8 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
         asset_cpu: '',
         asset_ram: '',
         asset_disk: '',
+        asset_newcode: '',
+        asset_model: '',
     });
 
     const dispatch = useDispatch();
@@ -218,6 +222,8 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                 asset_cpu: '',
                 asset_ram: '',
                 asset_disk: '',
+                asset_newcode: '',
+                asset_model: '',
             });
         } catch (error) {
             console.log(error);
@@ -466,7 +472,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 <input
                                                     value={FilteringData.asset_ram}
                                                     type="text"
-                                                    placeholder="Ex) 32G.."
+                                                    placeholder="Ex) 32GB.."
                                                     onChange={e => setFilteringData({ ...FilteringData, asset_ram: e.target.value })}
                                                 ></input>
                                             </div>
@@ -488,8 +494,52 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 <input
                                                     value={FilteringData.asset_disk}
                                                     type="text"
-                                                    placeholder="Ex) S_256G.."
+                                                    placeholder="Ex) SSD_256GB.."
                                                     onChange={e => setFilteringData({ ...FilteringData, asset_disk: e.target.value })}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="SearchInputContainer">
+                                    <div className="SearchInputContainerTitle">
+                                        <h4>모델명.</h4>
+                                    </div>
+                                    <div className="SearchInputContainerSubTitle">
+                                        <div className="SearchInputContainerSubTitleFlexDivBox">
+                                            <div className="IconsDivBox">
+                                                <label>
+                                                    <BsFillPencilFill></BsFillPencilFill>
+                                                </label>
+                                            </div>
+                                            <div className="InputDivBox">
+                                                <input
+                                                    value={FilteringData.asset_model}
+                                                    type="text"
+                                                    placeholder="Ex) ..."
+                                                    onChange={e => setFilteringData({ ...FilteringData, asset_model: e.target.value })}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="SearchInputContainer">
+                                    <div className="SearchInputContainerTitle">
+                                        <h4>자산코드.</h4>
+                                    </div>
+                                    <div className="SearchInputContainerSubTitle">
+                                        <div className="SearchInputContainerSubTitleFlexDivBox">
+                                            <div className="IconsDivBox">
+                                                <label>
+                                                    <BsFillPencilFill></BsFillPencilFill>
+                                                </label>
+                                            </div>
+                                            <div className="InputDivBox">
+                                                <input
+                                                    value={FilteringData.asset_newcode}
+                                                    type="text"
+                                                    placeholder="Ex) G00000...."
+                                                    onChange={e => setFilteringData({ ...FilteringData, asset_newcode: e.target.value })}
                                                 ></input>
                                             </div>
                                         </div>

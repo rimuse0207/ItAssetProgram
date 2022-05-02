@@ -197,6 +197,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
             email: names ? names : LoginInfoData.email,
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
+        console.log(PersonalDatas)
         if (PersonalDatas.data.dataSuccess) {
             const datas = PersonalDatas.data.datas.License.filter(
                 (arr: any, index: any, callback: any) =>

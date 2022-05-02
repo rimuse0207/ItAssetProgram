@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { LicenseDataType } from '../../VolumeLicenseDataTypes';
@@ -318,6 +318,7 @@ type NewDataInsertMainPageProps = {
     SelectCompany: string;
     type: string;
     SortTable: any;
+    windowScrollss: any;
 };
 
 type selectUserInfoDataType = {
@@ -334,6 +335,7 @@ const AddUserModalMainPage = ({
     UserClickLicenseData,
     SelectCompany,
     type,
+    windowScrollss,
     SortTable,
 }: NewDataInsertMainPageProps) => {
     const [SelectedLicenseData, setSelectedLicenseData] = useState<LicenseDataType[]>([]);
@@ -341,6 +343,12 @@ const AddUserModalMainPage = ({
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
     const [SearchNames, setSearchNames] = useState('');
     const [SelectedInfoUserData, setSelectedInfoUserData] = useState<selectUserInfoDataType[]>([]);
+    const [ScrollPosition, setScrollPosition] = useState(0);
+
+    useEffect(() => {
+        console.log(ScrollPosition);
+    }, [ScrollPosition]);
+
     const dispatch = useDispatch();
     function closeModal() {
         setSelectedInfoUserData([]);
@@ -365,14 +373,14 @@ const AddUserModalMainPage = ({
     const getInfoDataLicenseInfo = async () => {
         const ParamasData = {
             license_manage_code: UserClickLicenseData?.license_manage_code,
+            type,
         };
         try {
             const getDataFromServerLicenseInfo = await GetDataFromServerLicenseInfos(
-                `license_app_server/getDataFromServerLicenseInfo`,
+                `/license_app_server/getDataFromServerLicenseInfo`,
                 ParamasData
             );
             setSelectedLicenseData(getDataFromServerLicenseInfo.data.data);
-            console.log(getDataFromServerLicenseInfo);
         } catch (error) {
             console.log(error);
         }
@@ -380,6 +388,8 @@ const AddUserModalMainPage = ({
     useEffect(() => {
         UserInfoGetApi();
     }, []);
+
+    //사용자 조회 API
     const UserInfoGetApi = async () => {
         const ParamasData = {
             code: UserClickLicenseData?.license_manage_code,
@@ -397,6 +407,8 @@ const AddUserModalMainPage = ({
             console.log(error);
         }
     };
+
+    //Select로 유저 추가시.
     const handleSelectedName = (e: any) => {
         setSearchSomething(e.value);
         const getChoiceData = {
@@ -407,18 +419,19 @@ const AddUserModalMainPage = ({
             asset_management_number: e.asset_management_number,
         };
         for (var i = 0; i < SelectedInfoUserData.length; i++) {
-            if (SelectedInfoUserData[i].email === e.email) {
+            if (SelectedInfoUserData[i].asset_management_number === e.asset_management_number) {
                 alert('중복되어 추가가 불가합니다.');
                 return;
             }
         }
 
-        const DeleteUserData = InfoUserData.filter((item, j) => (item.email === e.email ? '' : item));
+        const DeleteUserData = InfoUserData.filter((item, j) => (item.asset_management_number === e.asset_management_number ? '' : item));
         setInfoUserData(DeleteUserData);
         const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
         setSelectedInfoUserData(SortData);
     };
 
+    //선택된 유저 추가
     const handleSelectClickIconsUserAadd = (userData: PersonOption) => {
         const assetCount =
             SelectedLicenseData[0].license_permit_count -
@@ -446,6 +459,7 @@ const AddUserModalMainPage = ({
         setSelectedInfoUserData(SortData);
     };
 
+    //선택된 유저 삭제
     const handleSelectClickIconsUserDelete = (userData: selectUserInfoDataType) => {
         const getChoiceData = {
             name: userData.name,
@@ -464,7 +478,10 @@ const AddUserModalMainPage = ({
         setInfoUserData(SortData);
     };
 
+    //유저 등록 API
     const handleSaveUser = async () => {
+        console.log(windowScrollss);
+        const nowHieht = windowScrollss.current.offsetHeight;
         const ParamasData = {
             code: UserClickLicenseData?.license_manage_code,
             type,
@@ -474,6 +491,9 @@ const AddUserModalMainPage = ({
         try {
             const UserDataOn = await LicenseUserAdd('/license_app_server/AddUserLicense', ParamasData);
             if (UserDataOn.data.dataSuccess) {
+                var y = window.scrollY;
+                setScrollPosition(y);
+                console.log('현재 스크롤 위치는 ?', y);
                 const ParamasData = {
                     company: SelectCompany,
                     license: type,
@@ -486,6 +506,8 @@ const AddUserModalMainPage = ({
                     successCheck: true,
                     duration: ToastTime,
                 });
+
+                window.scrollTo(0, nowHieht);
             } else {
                 alert('에러발생');
             }
@@ -494,7 +516,10 @@ const AddUserModalMainPage = ({
         }
     };
 
+    //등록된 유저 삭제 API
     const handleDeleteDataLicense = async (data: LicenseDataType) => {
+        console.log(windowScrollss);
+        const nowHieht = windowScrollss.current.offsetHeight;
         const checkDelete = window.confirm('정말 삭제할까요?');
         if (!checkDelete) {
             return;
@@ -511,11 +536,21 @@ const AddUserModalMainPage = ({
                 ParamasData,
             });
             if (deleteData.data.dataSuccess) {
-                dispatch(License_getLicenseDataThunk(ParamasData));
+                await dispatch(License_getLicenseDataThunk(ParamasData));
                 getInfoDataLicenseInfo();
                 toast.show({
                     title: `${type}에 라이선스 해제 성공`,
                     successCheck: true,
+                    duration: ToastTime,
+                });
+                console.log('asdasdasdasdad', nowHieht);
+                setTimeout(() => {
+                    window.scrollTo(0, nowHieht);
+                }, 6000);
+            } else {
+                toast.show({
+                    title: `${type}에 라이선스 해제 실패`,
+                    successCheck: false,
                     duration: ToastTime,
                 });
             }
@@ -545,6 +580,12 @@ const AddUserModalMainPage = ({
                 toast.show({
                     title: ` 라이선스 삭제 성공`,
                     successCheck: true,
+                    duration: ToastTime,
+                });
+            } else {
+                toast.show({
+                    title: ` 라이선스 삭제 실패`,
+                    successCheck: false,
                     duration: ToastTime,
                 });
             }

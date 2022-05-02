@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import SpinnerMainPage from '../../../PublicComponents/SpinnerMainPage/SpinnerMainPage';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
@@ -84,6 +84,9 @@ export const LicensMainTableIncludeBox = styled.div`
 const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPageProps) => {
     // const [getData, setGetData] = useState<LicenseDataType[]>([]);
     // const [SelectCode, setSelectCode] = useState('');
+
+    const windowScrollss = useRef<any>(null);
+
     const [LoadingState, setLoadingState] = useState(false);
 
     const [UserAddModals, setUserAddModals] = useState(false);
@@ -136,7 +139,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     };
 
     return (
-        <div style={{ marginBottom: '100px' }}>
+        <div style={{ marginBottom: '100px' }} ref={windowScrollss}>
             <LicenseGoogleGraphMainPage SelectCompany={SelectCompany} type={type}></LicenseGoogleGraphMainPage>
             <DownLoadMainPage
                 SelectCompany={SelectCompany}
@@ -147,17 +150,18 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                 type={type}
                 SortTable={LicenseFilteringData}
                 ModalType={ModalType}
+                windowScrollss={windowScrollss}
             ></DownLoadMainPage>
-            <div>
+            <div className="MainContentBoxCotainer">
                 <div>
                     <h2>{type === 'volume_license' ? '볼륨라이선스' : ''}</h2>
                     <h2>{type === 'package_license' ? '패키지라이선스' : ''}</h2>
                     <h2>{type === 'usbtype_license' ? 'USB타입라이선스' : ''}</h2>
                     <h2>{type === 'network_license' ? '네트워크라이선스' : ''}</h2>
                 </div>
-                <div>
-                    <input type="checkbox" checked={LicenseAllShow} onChange={() => setLicenseAllShow(!LicenseAllShow)}></input>
-                    <label>전체보기</label>
+                <div onChange={() => setLicenseAllShow(!LicenseAllShow)} className="AllShowButtons">
+                    <input id="allShow" name="allShow" type="checkbox" checked={LicenseAllShow}></input>
+                    <label htmlFor="allShow">전체보기</label>
                 </div>
                 <LicensMainTableIncludeBox>
                     {LoadingState ? (
