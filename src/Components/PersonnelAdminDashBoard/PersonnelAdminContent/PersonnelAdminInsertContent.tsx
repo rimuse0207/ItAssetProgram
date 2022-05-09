@@ -9,10 +9,26 @@ import { ToastTime } from '../../../Configs/ToastTimerConfig';
 import PersonnelAdminDeleteModal from './PersonnelAdminInfoModal/PersonnelAdminDeleteModal';
 
 const AdminDashBoardShowUsersTableMainDivBox = styled.div`
-    padding-left: 40px;
-    padding-right: 30px;
     max-height: 90vh;
     overflow-y: auto;
+    direction: ltr;
+    scrollbar-color: #d4aa70 #e4e4e4;
+    scrollbar-width: thin;
+    ::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #e4e4e4;
+        border-radius: 100px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 100px;
+        border: 7px solid transparent;
+        background-clip: content-box;
+        background-color: gray;
+    }
 
     table.type09 {
         border: none !important;
@@ -38,6 +54,9 @@ const AdminDashBoardShowUsersTableMainDivBox = styled.div`
         background-color: #fff;
         border-bottom: 3px solid #036;
         font-size: 0.9em;
+        input {
+            width: 80%;
+        }
     }
     table.type09 tbody th {
         width: 150px;
@@ -51,7 +70,7 @@ const AdminDashBoardShowUsersTableMainDivBox = styled.div`
     }
     table.type09 td {
         width: 300px;
-        padding: 10px;
+
         vertical-align: center;
         border-bottom: 1px solid #ccc;
         font-size: 0.9em;

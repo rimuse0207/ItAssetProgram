@@ -5,6 +5,16 @@ import CompanySelectMenuBar from '../Navigation/CompanySelectMenuBar/CompanySele
 import { useDispatch } from 'react-redux';
 import { ChangeAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 import PersonnelAdminDashBoardContainer from './PersonnelAdminDashBoardContainer';
+import styled from 'styled-components';
+
+const PersonnelAdminDashBoardMainPageDivBox = styled.div`
+    min-height: 100vh;
+    width: 100%;
+    background-color: #efefef;
+    max-height: 100vh;
+    padding-left: 20px;
+    overflow: auto;
+`;
 
 type MenuAccessType = {
     name: string;
@@ -27,7 +37,7 @@ const PersonnelAdminDashBoardMainPage = () => {
         await dispatch(ChangeAccessKeyMenuBarRedux(ChangeCompany));
     };
     return (
-        <div>
+        <PersonnelAdminDashBoardMainPageDivBox>
             <CompanySelectMenuBar
                 CompanySelectAccessKey={CompanySelectAccessKey}
                 handleCompanyClicks={handleCompanyClicks}
@@ -39,7 +49,7 @@ const PersonnelAdminDashBoardMainPage = () => {
                     ''
                 )
             )}
-        </div>
+        </PersonnelAdminDashBoardMainPageDivBox>
     );
 };
 

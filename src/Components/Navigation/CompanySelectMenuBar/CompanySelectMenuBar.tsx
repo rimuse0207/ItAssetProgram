@@ -16,6 +16,13 @@ const LicenseMainPageMainDivBox = styled.div`
     ul {
         display: flex;
         li {
+            @media only screen and (max-width: 1600px) {
+                font-size: 0.9em;
+                .LineText {
+                    padding: 0 30px !important;
+                }
+            }
+
             :hover {
                 cursor: pointer;
             }

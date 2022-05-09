@@ -74,6 +74,7 @@ const PersonnelAdminInsertDataMainDivBox = styled.div`
             border-bottom: 2px solid #168;
             padding-left: 20px;
             width: 80%;
+            background: none;
         }
         input {
             margin-left: 20px;
@@ -82,6 +83,8 @@ const PersonnelAdminInsertDataMainDivBox = styled.div`
             border-bottom: 2px solid #168;
             padding-left: 20px;
             width: 80%;
+            background: none;
+
             :focus {
                 animation-name: FofusOnandlineOn;
                 animation-duration: 0.5s;

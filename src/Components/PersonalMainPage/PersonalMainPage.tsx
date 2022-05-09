@@ -187,6 +187,8 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
     const [userInfoDatas, setUserInfoDatas] = useState<UserInfoTypes[]>([]);
     const [userAssetDatas, setAssetDatas] = useState<UserAssetTypes[]>([]);
     const [userLicenseDatas, setUserLicenseDatas] = useState<LicenseTypes[]>([]);
+    const [LicenseExistLicense, setLicneseExistLicense] = useState<LicenseTypes[]>([]);
+    const [LicenseNoneExistLicense, setLicneseNoneExistLicense] = useState<LicenseTypes[]>([]);
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     useEffect(() => {
         GetInfoDataPersonal();
@@ -197,7 +199,9 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
             email: names ? names : LoginInfoData.email,
         };
         const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
-        console.log(PersonalDatas)
+
+        console.log(PersonalDatas);
+
         if (PersonalDatas.data.dataSuccess) {
             const datas = PersonalDatas.data.datas.License.filter(
                 (arr: any, index: any, callback: any) =>
@@ -205,7 +209,10 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
             );
             setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
             setAssetDatas(PersonalDatas.data.datas.Asset);
+            setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
+            setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
             // var arr = PersonalDatas.data.datas.License;
+
             var arr = datas;
             arr.sort(function (a: any, b: any) {
                 var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
@@ -300,7 +307,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
             <div className="AssetPersonalInfo">
                 <div>
                     <div>
-                        <h3>소프트웨어</h3>
+                        <h3>등록 소프트웨어</h3>
                     </div>
                 </div>
                 <div className="AssetTableContainer">
@@ -315,7 +322,63 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {userLicenseDatas.map((list, i) => {
+                            {/* {userLicenseDatas.map((list, i) => {
+                                return (
+                                    <tr key={i}>
+                                        <td>{i + 1}</td>
+                                        <td>
+                                            {list.asset_info_asset_management_number
+                                                ? `${list?.asset_division}_${moment(list.asset_purchase_date).format('YYYY-MM-DD')}`
+                                                : '-'}
+                                        </td>
+                                        <td>{list.license_product_name}</td>
+                                        <td>{list.asset_info_asset_management_number ? 'O' : 'X'}</td>
+                                        <td>
+                                            {list.license_register_date ? moment(list.license_register_date).format('YYYY-MM-DD') : '-'}
+                                        </td>
+                                    </tr>
+                                );
+                            })} */}
+                            {LicenseExistLicense.map((list, i) => {
+                                return (
+                                    <tr key={i}>
+                                        <td>{i + 1}</td>
+                                        <td>
+                                            {list.asset_info_asset_management_number
+                                                ? `${list?.asset_division}_${moment(list.asset_purchase_date).format('YYYY-MM-DD')}`
+                                                : '-'}
+                                        </td>
+                                        <td>{list.license_product_name}</td>
+                                        <td>{list.asset_info_asset_management_number ? 'O' : 'X'}</td>
+                                        <td>
+                                            {list.license_register_date ? moment(list.license_register_date).format('YYYY-MM-DD') : '-'}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className="AssetPersonalInfo">
+                <div>
+                    <div>
+                        <h3>미등록 소프트웨어</h3>
+                    </div>
+                </div>
+                <div className="AssetTableContainer">
+                    <table className="type09">
+                        <thead>
+                            <tr>
+                                <th scope="cols">인덱스</th>
+                                <th scope="cols">등록 PC</th>
+                                <th scope="cols">구분</th>
+                                <th scope="cols">사용 가능 여부</th>
+                                <th scope="cols">지급 일자</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {LicenseNoneExistLicense.map((list, i) => {
                                 return (
                                     <tr key={i}>
                                         <td>{i + 1}</td>
