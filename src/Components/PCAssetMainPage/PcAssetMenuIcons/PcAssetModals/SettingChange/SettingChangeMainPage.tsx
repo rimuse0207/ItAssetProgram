@@ -12,11 +12,15 @@ const SettingChangeMainPage = () => {
     }, []);
 
     const getLicenseData = async () => {
-        const GetLicenseData = await axios.get(`${process.env.REACT_APP_API_URL}/Asset_app_server/license_settingData`, {
-            params: {
-                id: LoginInfoData.email,
-            },
-        });
+        try {
+            const GetLicenseData = await axios.get(`${process.env.REACT_APP_API_URL}/Asset_app_server/license_settingData`, {
+                params: {
+                    id: LoginInfoData.email,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return <div>asdadad</div>;

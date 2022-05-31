@@ -11,7 +11,7 @@ const PcassetGraphMainDivBox = styled.div`
 
     .Asset_GraphContainer {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         height: 100%;
 
         border-radius: 5px;
@@ -36,7 +36,7 @@ const GraphContainer = () => {
             {DeskTopInfo.data || NotBookInfo.data || MonitorInfo.data ? (
                 <div className="Asset_GraphContainer">
                     <div className="Asset_GraphContent">
-                        <h2>데스크탑</h2>
+                        <h3>데스크탑</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {DeskTopInfo.data.length - NothingAssetCheckFunc(DeskTopInfo.data)}/{NothingAssetCheckFunc(DeskTopInfo.data)}/
                             {DeskTopInfo.data.length}
@@ -51,7 +51,7 @@ const GraphContainer = () => {
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
-                        <h2>노트북</h2>
+                        <h3>노트북</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {NotBookInfo.data.length - NothingAssetCheckFunc(NotBookInfo.data)}/{NothingAssetCheckFunc(NotBookInfo.data)}/
                             {NotBookInfo.data.length}
@@ -65,8 +65,8 @@ const GraphContainer = () => {
                             ]}
                         ></AssetGraphMainPage>
                     </div>
-                    <div className="Asset_GraphContent">
-                        <h2>모니터</h2>
+                    {/* <div className="Asset_GraphContent">
+                        <h3>모니터</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
                             {MonitorInfo.data.length - NothingAssetCheckFunc(MonitorInfo.data)}/{NothingAssetCheckFunc(MonitorInfo.data)}/
                             {MonitorInfo.data.length}
@@ -79,7 +79,7 @@ const GraphContainer = () => {
                                 MonitorInfo.data.length,
                             ]}
                         ></AssetGraphMainPage>
-                    </div>
+                    </div> */}
                 </div>
             ) : (
                 <div>Loading....</div>

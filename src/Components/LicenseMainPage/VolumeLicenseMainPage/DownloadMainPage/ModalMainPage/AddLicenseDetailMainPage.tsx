@@ -359,6 +359,7 @@ const AddLicenseDetailMainPage = ({
         try {
             const personOptionsData = await UserInfoGet('/UserInfo_app_server/Asset_User_Data', ParamasData);
             if (personOptionsData.data.dataSuccess) {
+                console.log(personOptionsData);
                 setInfoUserData(personOptionsData.data.data);
             } else {
                 alert('error');

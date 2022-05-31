@@ -82,9 +82,6 @@ export const LicensMainTableIncludeBox = styled.div`
 `;
 
 const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPageProps) => {
-    // const [getData, setGetData] = useState<LicenseDataType[]>([]);
-    // const [SelectCode, setSelectCode] = useState('');
-
     const windowScrollss = useRef<any>(null);
 
     const [LoadingState, setLoadingState] = useState(false);
@@ -94,13 +91,14 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     const [ModalType, setModalType] = useState('');
     const [DetailLicenseClicksData, setDetailLicenseClicksData] = useState({});
     const [UserClickLicenseData, setUserClickLicenseData] = useState<LicenseDataType | null>(null);
-    const [LicenseAllShow, setLicenseAllShow] = useState(true);
+    const [LicenseAllShow, setLicenseAllShow] = useState(false);
     const dispatch = useDispatch();
     const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
     const LicenseFilteringData = useSelector((state: RootState) => state.LicenseFilteringData);
 
     useEffect(() => {
         GetInfoLicensData();
+        console.log(LicenseData);
     }, [type]);
 
     const handleClicksUserAdd = (data: LicenseDataType) => {
@@ -169,13 +167,13 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                             <thead>
                                 <tr>
                                     <th scope="cols"></th>
-                                    <th scope="cols">코드</th>
+                                    {/* <th scope="cols">코드</th> */}
                                     <th scope="cols">라이선스 명</th>
                                     <th scope="cols">전체 인원</th>
                                     <th scope="cols">사용 인원</th>
                                     <th scope="cols">구매 이력 추가</th>
                                     <th scope="cols"></th>
-                                    <th scope="cols">관리번호</th>
+                                    {/* <th scope="cols">관리번호</th> */}
                                     <th scope="cols">구입날짜</th>
                                     <th scope="cols">만료날짜</th>
                                     <th scope="cols">구입가격</th>
@@ -189,41 +187,47 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                 </tr>
                             </thead>
                             <tbody>
-                                {LicenseData.data.map((list: LicenseDataType, i: number) => {
-                                    return (
-                                        <React.Fragment key={list.license_product_code + list.asset_info_asset_management_number}>
-                                            <tr key={list.license_product_code}>
-                                                <th scope="row" rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>
-                                                    {i + 1}
-                                                </th>
-                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.license_product_code}</td>
-                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.license_product_name}</td>
-                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.sumpermit} 명</td>
-                                                <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.all_user_used_count}명</td>
-                                                <td
-                                                    rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}
-                                                    onClick={() => {
-                                                        setModalType('Add_license');
-                                                        setDetailLicenseClicksData(list);
-                                                        setDetailLicenseAdd(true);
-                                                    }}
-                                                >
-                                                    <BiMessageAdd></BiMessageAdd>
-                                                </td>
-                                                {!LicenseAllShow ? (
-                                                    <>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas.length}
-                                                        </td>
-                                                        <td
+                                {LicenseData.loading ? (
+                                    LicenseData.data.map((list: LicenseDataType, i: number) => {
+                                        return (
+                                            <React.Fragment key={list.license_product_code}>
+                                                <tr key={list.license_product_code}>
+                                                    <th scope="row" rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>
+                                                        {i + 1}
+                                                    </th>
+                                                    {/* <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.license_product_code}</td> */}
+                                                    <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>
+                                                        {list.license_product_name}
+                                                    </td>
+                                                    <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>{list.sumpermit} 명</td>
+                                                    <td rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}>
+                                                        {list.all_user_used_count}명
+                                                    </td>
+                                                    <td
+                                                        rowSpan={LicenseAllShow ? list.datas.length + 1 : ''}
+                                                        onClick={() => {
+                                                            setModalType('Add_license');
+                                                            setDetailLicenseClicksData(list);
+                                                            setDetailLicenseAdd(true);
+                                                        }}
+                                                    >
+                                                        <BiMessageAdd></BiMessageAdd>
+                                                    </td>
+                                                    {!LicenseAllShow && list.datas[list.datas.length - 1] ? (
+                                                        <>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas.length}
+                                                            </td>
+
+                                                            {/* <td
                                                             style={
                                                                 list.datas[list.datas.length - 1].license_permit_count -
                                                                     list.datas[list.datas.length - 1].userData[0].useUserCount <
@@ -233,195 +237,200 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                             }
                                                         >
                                                             {list.datas[list.datas.length - 1].license_manage_code}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {moment(list.datas[list.datas.length - 1].license_purchase_date).format(
-                                                                'YYYY-MM-DD'
-                                                            )}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {moment(list.datas[list.datas.length - 1].license_purchase_finish_date).format(
-                                                                'YYYY-MM-DD'
-                                                            )}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].license_purchase_pride.toLocaleString(
-                                                                'ko-KR'
-                                                            )}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].license_purchase_company
-                                                                ? list.datas[list.datas.length - 1].license_purchase_company
-                                                                : '-'}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].license_prove_code ? (
-                                                                list.datas[list.datas.length - 1].proveData?.length === 0 ? (
-                                                                    '-'
+                                                        </td> */}
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {moment(list.datas[list.datas.length - 1].license_purchase_date).format(
+                                                                    'YYYY-MM-DD'
+                                                                )}
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {moment(
+                                                                    list.datas[list.datas.length - 1].license_purchase_finish_date
+                                                                ).format('YYYY-MM-DD')}
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].license_purchase_pride.toLocaleString(
+                                                                    'ko-KR'
+                                                                )}
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].license_purchase_company
+                                                                    ? list.datas[list.datas.length - 1].license_purchase_company
+                                                                    : '-'}
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].license_prove_code ? (
+                                                                    list.datas[list.datas.length - 1].proveData?.length === 0 ? (
+                                                                        '-'
+                                                                    ) : (
+                                                                        <div
+                                                                            onClick={() =>
+                                                                                handleClicksProveData(
+                                                                                    list.datas[list.datas.length - 1].proveData
+                                                                                        ? list.datas[list.datas.length - 1].proveData
+                                                                                        : []
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            클릭
+                                                                        </div>
+                                                                    )
                                                                 ) : (
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleClicksProveData(
-                                                                                list.datas[list.datas.length - 1].proveData
-                                                                                    ? list.datas[list.datas.length - 1].proveData
-                                                                                    : []
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        클릭
-                                                                    </div>
-                                                                )
-                                                            ) : (
-                                                                '-'
-                                                            )}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].license_newcode
-                                                                ? list.datas[list.datas.length - 1].license_newcode
-                                                                : '-'}
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].license_permit_count} 명
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].userData[0].useUserCount} 명
-                                                        </td>
-                                                        <td
-                                                            style={
-                                                                list.datas[list.datas.length - 1].license_permit_count -
-                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount <
-                                                                0
-                                                                    ? { backgroundColor: '#edafaf' }
-                                                                    : {}
-                                                            }
-                                                        >
-                                                            {list.datas[list.datas.length - 1].license_permit_count -
-                                                                list.datas[list.datas.length - 1].userData[0].useUserCount}{' '}
-                                                            명
-                                                        </td>
-                                                        <td onClick={() => handleClicksUserAdd(list.datas[list.datas.length - 1])}>
-                                                            <BsFillPersonPlusFill></BsFillPersonPlusFill>
-                                                        </td>
-                                                    </>
-                                                ) : (
-                                                    <></>
-                                                )}
-                                            </tr>
+                                                                    '-'
+                                                                )}
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].license_newcode
+                                                                    ? list.datas[list.datas.length - 1].license_newcode
+                                                                    : '-'}
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].license_permit_count} 명
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].userData[0].useUserCount} 명
+                                                            </td>
+                                                            <td
+                                                                style={
+                                                                    list.datas[list.datas.length - 1].license_permit_count -
+                                                                        list.datas[list.datas.length - 1].userData[0].useUserCount <
+                                                                    0
+                                                                        ? { backgroundColor: '#edafaf' }
+                                                                        : {}
+                                                                }
+                                                            >
+                                                                {list.datas[list.datas.length - 1].license_permit_count -
+                                                                    list.datas[list.datas.length - 1].userData[0].useUserCount}{' '}
+                                                                명
+                                                            </td>
+                                                            <td onClick={() => handleClicksUserAdd(list.datas[list.datas.length - 1])}>
+                                                                <BsFillPersonPlusFill></BsFillPersonPlusFill>
+                                                            </td>
+                                                        </>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </tr>
 
-                                            {LicenseAllShow
-                                                ? list.datas.map((item: LicenseDataType, j: number) => {
-                                                      return (
-                                                          <tr
-                                                              key={item.license_manage_code}
-                                                              style={
-                                                                  item.license_permit_count - item.userData[0].useUserCount < 0
-                                                                      ? { backgroundColor: '#edafaf' }
-                                                                      : {}
-                                                              }
-                                                          >
-                                                              <td>{j + 1}</td>
-                                                              <td>{item.license_manage_code}</td>
-                                                              <td>{moment(item.license_purchase_date).format('YYYY-MM-DD')}</td>
-                                                              <td>{moment(item.license_purchase_finish_date).format('YYYY-MM-DD')}</td>
-                                                              <td>{item.license_purchase_pride.toLocaleString('ko-KR')}</td>
-                                                              <td>{item.license_purchase_company ? item.license_purchase_company : '-'}</td>
-                                                              <td>
-                                                                  {item.license_prove_code ? (
-                                                                      item.proveData?.length === 0 ? (
-                                                                          '-'
+                                                {LicenseAllShow
+                                                    ? list.datas.map((item: LicenseDataType, j: number) => {
+                                                          return (
+                                                              <tr
+                                                                  key={item.license_manage_code}
+                                                                  style={
+                                                                      item.license_permit_count - item.userData[0].useUserCount < 0
+                                                                          ? { backgroundColor: '#edafaf' }
+                                                                          : {}
+                                                                  }
+                                                              >
+                                                                  <td>{j + 1}</td>
+                                                                  {/* <td>{item.license_manage_code}</td> */}
+                                                                  <td>{moment(item.license_purchase_date).format('YYYY-MM-DD')}</td>
+                                                                  <td>{moment(item.license_purchase_finish_date).format('YYYY-MM-DD')}</td>
+                                                                  <td>{item.license_purchase_pride.toLocaleString('ko-KR')}</td>
+                                                                  <td>
+                                                                      {item.license_purchase_company ? item.license_purchase_company : '-'}
+                                                                  </td>
+                                                                  <td>
+                                                                      {item.license_prove_code ? (
+                                                                          item.proveData?.length === 0 ? (
+                                                                              '-'
+                                                                          ) : (
+                                                                              <div
+                                                                                  onClick={() =>
+                                                                                      handleClicksProveData(
+                                                                                          item.proveData ? item.proveData : []
+                                                                                      )
+                                                                                  }
+                                                                              >
+                                                                                  클릭
+                                                                              </div>
+                                                                          )
                                                                       ) : (
-                                                                          <div
-                                                                              onClick={() =>
-                                                                                  handleClicksProveData(
-                                                                                      item.proveData ? item.proveData : []
-                                                                                  )
-                                                                              }
-                                                                          >
-                                                                              클릭
-                                                                          </div>
-                                                                      )
-                                                                  ) : (
-                                                                      '-'
-                                                                  )}
-                                                              </td>
-                                                              <td>{item.license_newcode ? item.license_newcode : '-'}</td>
-                                                              <td>{item.license_permit_count} 명</td>
-                                                              <td>{item.userData[0].useUserCount} 명</td>
-                                                              <td>{item.license_permit_count - item.userData[0].useUserCount} 명</td>
-                                                              <td onClick={() => handleClicksUserAdd(item)}>
-                                                                  <BsFillPersonPlusFill></BsFillPersonPlusFill>
-                                                              </td>
-                                                          </tr>
-                                                      );
-                                                  })
-                                                : ''}
-                                        </React.Fragment>
-                                    );
-                                })}
+                                                                          '-'
+                                                                      )}
+                                                                  </td>
+                                                                  <td>{item.license_newcode ? item.license_newcode : '-'}</td>
+                                                                  <td>{item.license_permit_count} 명</td>
+                                                                  <td>{item.userData[0].useUserCount} 명</td>
+                                                                  <td>{item.license_permit_count - item.userData[0].useUserCount} 명</td>
+                                                                  <td onClick={() => handleClicksUserAdd(item)}>
+                                                                      <BsFillPersonPlusFill></BsFillPersonPlusFill>
+                                                                  </td>
+                                                              </tr>
+                                                          );
+                                                      })
+                                                    : ''}
+                                            </React.Fragment>
+                                        );
+                                    })
+                                ) : (
+                                    <></>
+                                )}
                             </tbody>
                         </table>
                     ) : (

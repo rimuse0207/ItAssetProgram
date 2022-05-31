@@ -195,39 +195,41 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
     }, []);
 
     const GetInfoDataPersonal = async () => {
-        const Paramas = {
-            email: names ? names : LoginInfoData.email,
-        };
-        const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
+        try {
+            const Paramas = {
+                email: names ? names : LoginInfoData.email,
+            };
+            const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
 
-        console.log(PersonalDatas);
+            if (PersonalDatas.data.dataSuccess) {
+                const datas = PersonalDatas.data.datas.License.filter(
+                    (arr: any, index: any, callback: any) =>
+                        index === callback.findIndex((t: any) => t.license_product_name === arr.license_product_name)
+                );
+                setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
+                setAssetDatas(PersonalDatas.data.datas.Asset);
+                setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
+                setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
+                // var arr = PersonalDatas.data.datas.License;
 
-        if (PersonalDatas.data.dataSuccess) {
-            const datas = PersonalDatas.data.datas.License.filter(
-                (arr: any, index: any, callback: any) =>
-                    index === callback.findIndex((t: any) => t.license_product_name === arr.license_product_name)
-            );
-            setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
-            setAssetDatas(PersonalDatas.data.datas.Asset);
-            setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
-            setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
-            // var arr = PersonalDatas.data.datas.License;
+                var arr = datas;
+                arr.sort(function (a: any, b: any) {
+                    var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
+                    var nameB = b.userinfo_email ? b.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
 
-            var arr = datas;
-            arr.sort(function (a: any, b: any) {
-                var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
-                var nameB = b.userinfo_email ? b.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
-                if (nameA < nameB) {
-                    return -1;
-                }
-                if (nameA > nameB) {
-                    return 1;
-                }
-
-                // 이름이 같을 경우
-                return 0;
-            });
-            setUserLicenseDatas(arr);
+                    // 이름이 같을 경우
+                    return 0;
+                });
+                setUserLicenseDatas(arr);
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
 

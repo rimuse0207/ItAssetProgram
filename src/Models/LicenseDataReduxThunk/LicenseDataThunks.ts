@@ -20,7 +20,11 @@ const License_getLicenseDataAsync = createAsyncAction(
 const TeamLeader_getDataFoodApply = async (ParamsData: {}) => {
     try {
         const getInfoLicenseData = await LicenseInfoGet('/license_app_server/LicenseSelect', ParamsData);
-        return getInfoLicenseData.data.data;
+
+        if (getInfoLicenseData.data.dataSuccess) {
+            return getInfoLicenseData.data.data;
+        }
+        return false;
     } catch (error) {
         console.log(error);
     }
@@ -50,6 +54,7 @@ export function License_getLicenseDataThunk(ParamasData: {}): ThunkAction<void, 
             const getInfoLicenseData = await TeamLeader_getDataFoodApply(ParamasData);
             if (getInfoLicenseData) {
                 dispatch(success(getInfoLicenseData));
+            } else {
             }
         } catch (e: any) {
             dispatch(failure(e));

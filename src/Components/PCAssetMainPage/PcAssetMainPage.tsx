@@ -84,7 +84,7 @@ const PcAssetMainPage = () => {
                         <PcAssetMenuIconsMainPage SelectCompany={list.name} type={type}></PcAssetMenuIconsMainPage>
                         <DeskTopMainPage SelectCompany={list.name} type={type}></DeskTopMainPage>
                         <NoteBookMainPage SelectCompany={list.name} type={type}></NoteBookMainPage>
-                        <MonitorMainPage SelectCompany={list.name} type={type}></MonitorMainPage>
+                        {/* <MonitorMainPage SelectCompany={list.name} type={type}></MonitorMainPage> */}
                     </div>
                 ) : (
                     ''

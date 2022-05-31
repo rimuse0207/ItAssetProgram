@@ -480,7 +480,6 @@ const AddUserModalMainPage = ({
 
     //유저 등록 API
     const handleSaveUser = async () => {
-        console.log(windowScrollss);
         const nowHieht = windowScrollss.current.offsetHeight;
         const ParamasData = {
             code: UserClickLicenseData?.license_manage_code,
@@ -493,7 +492,6 @@ const AddUserModalMainPage = ({
             if (UserDataOn.data.dataSuccess) {
                 var y = window.scrollY;
                 setScrollPosition(y);
-                console.log('현재 스크롤 위치는 ?', y);
                 const ParamasData = {
                     company: SelectCompany,
                     license: type,

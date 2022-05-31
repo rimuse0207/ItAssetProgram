@@ -66,7 +66,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                         </div>
                                     </th>
 
-                                    <th scope="cols">관리번호</th>
+                                    {/* <th scope="cols">관리번호</th> */}
                                     <th scope="cols">제조사</th>
                                     <th scope="cols">모델명</th>
                                     <th scope="cols">구입일</th>
@@ -87,7 +87,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                         return (
                                             <tr key={list.asset_management_number}>
                                                 <td>{i + 1}</td>
-                                                <td>{list.asset_management_number}</td>
+                                                {/* <td>{list.asset_management_number}</td> */}
                                                 <td>{list.asset_maker}</td>
                                                 <td>{list.asset_model}</td>
                                                 <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>

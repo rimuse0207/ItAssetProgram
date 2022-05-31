@@ -95,6 +95,7 @@ const LicenseSettingSelect = () => {
         try {
             const email = LoginInfoData.email ? LoginInfoData.email : '';
             const LicenseDatas = await LicenseSettingDuplicate('/UserInfo_app_server/License_setting_Datas', email, SelectLists);
+            console.log(LicenseDatas);
 
             if (LicenseDatas.data.dataSuccess) {
                 let datas = BasicSeletResult;
@@ -133,6 +134,7 @@ const LicenseSettingSelect = () => {
         }
     };
 
+    //
     const handleSaveUser = async () => {
         try {
             if (!SelectLists) {
@@ -165,6 +167,7 @@ const LicenseSettingSelect = () => {
         }
     };
 
+    //등록된 라이선스 리셋 클릭 시
     const handleReset = () => {
         const ConfirmCheck = window.confirm('변경 하신 라이선스를 초기로 리셋하시겠습니까?');
         if (!ConfirmCheck) return;

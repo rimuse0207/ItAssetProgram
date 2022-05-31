@@ -135,7 +135,7 @@ const NewDataInsertMainPage = ({
 
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">
-                                                    라이선스 설명<span style={{ color: 'red' }}>*</span>
+                                                    라이선스 명<span style={{ color: 'red' }}>*</span>
                                                 </dt>
                                                 <dd className="inputbox-content">
                                                     <div className="selectBox">

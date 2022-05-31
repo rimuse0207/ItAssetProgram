@@ -181,7 +181,7 @@ const PasswordChangeModal = ({ PasswordChangeModalState, setPasswordChangeModalS
                             </div> */}
                             <div className="InputContainer">
                                 <div className="PasswordRegexText">
-                                    비밀번호는 보안을 위해 영문, 숫자, 특수문자 중 2가지 이상 조합하여 10자리 이내
+                                    비밀번호는 보안을 위해 영문, 숫자, 특수문자 중 2가지 이상 조합하여 6자리 이상
                                 </div>
                                 <label>신규 비밀번호</label>
                                 <input

@@ -46,7 +46,7 @@ const HistoryMainPage = ({ asset_management_number }: HistortyMainPageProps) => 
 
     const gethistoryData = async () => {
         try {
-            const gethistoryDataFromServer = await axios.get('http://192.168.2.155:3001/Asset_app_server/historyData', {
+            const gethistoryDataFromServer = await axios.get(`${process.env.REACT_APP_API_URL}/Asset_app_server/historyData`, {
                 params: { historySelected: asset_management_number },
             });
 
