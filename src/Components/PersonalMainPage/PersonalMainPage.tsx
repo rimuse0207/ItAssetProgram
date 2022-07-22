@@ -13,6 +13,7 @@ export const PersonalMainPageDivBox = styled.div`
     direction: ltr;
     scrollbar-color: #d4aa70 #e4e4e4;
     scrollbar-width: thin;
+
     ::-webkit-scrollbar {
         width: 20px;
     }
@@ -210,7 +211,6 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                 setAssetDatas(PersonalDatas.data.datas.Asset);
                 setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
                 setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
-                // var arr = PersonalDatas.data.datas.License;
 
                 var arr = datas;
                 arr.sort(function (a: any, b: any) {
@@ -251,9 +251,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                                 userInfoDatas.map((list, i) => {
                                     return (
                                         <tr key={list.name}>
-                                            <td>
-                                                {list.company_name}_{list.company_building}_{list.company_location}_{list.company_floor}
-                                            </td>
+                                            <td>{list.company_name}</td>
                                             <td>{list.name}</td>
                                             <td>{list.position}</td>
                                             <td>{list.team}</td>

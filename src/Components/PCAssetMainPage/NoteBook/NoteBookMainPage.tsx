@@ -49,13 +49,13 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
     };
 
     return (
-        <div style={{ marginTop: '50px' }}>
+        <div style={{ marginTop: '100px', marginBottom: '100px' }}>
             <div>
                 <AssetTableMainDivBox>
                     {NoteBookInfo.loading ? (
                         <table className="type09">
                             <thead>
-                                <tr>
+                                <tr className="PostionFixedFromScroll">
                                     <th scope="cols">
                                         <div>
                                             <GiLaptop></GiLaptop>노트북
@@ -66,7 +66,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                         </div>
                                     </th>
 
-                                    {/* <th scope="cols">관리번호</th> */}
+                                    <th scope="cols">관리번호</th>
                                     <th scope="cols">제조사</th>
                                     <th scope="cols">모델명</th>
                                     <th scope="cols">구입일</th>
@@ -76,7 +76,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                     <th scope="cols">RAM</th>
                                     <th scope="cols">DISK</th>
                                     <th scope="cols">자산코드</th>
-                                    <th scope="cols">사용장소</th>
+                                    {/* <th scope="cols">사용장소</th> */}
                                     <th scope="cols">사용자</th>
                                     <th scope="cols">정보 조회</th>
                                 </tr>
@@ -87,7 +87,7 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                         return (
                                             <tr key={list.asset_management_number}>
                                                 <td>{i + 1}</td>
-                                                {/* <td>{list.asset_management_number}</td> */}
+                                                <td>{list.asset_management_number}</td>
                                                 <td>{list.asset_maker}</td>
                                                 <td>{list.asset_model}</td>
                                                 <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
@@ -97,10 +97,20 @@ const NoteBookMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                                 <td>{list.asset_ram}</td>
                                                 <td>{list.asset_disk}</td>
                                                 <td>{list.asset_newcode ? list.asset_newcode : '-'}</td>
-                                                <td>
+                                                {/* <td>
                                                     {list.company_location}_{list.company_building}_{list.company_floor}
+                                                </td> */}
+                                                <td>
+                                                    {' '}
+                                                    {list.name ? (
+                                                        <div>
+                                                            <div>{list.team}</div>
+                                                            <div>{list.name}</div>
+                                                        </div>
+                                                    ) : (
+                                                        '-'
+                                                    )}
                                                 </td>
-                                                <td>{list.name ? list.name : '-'}</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="UserPlusIcons" onClick={() => handleMinusUsered(list)}>
                                                         <BsInfoCircleFill></BsInfoCircleFill>

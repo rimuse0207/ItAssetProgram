@@ -9,11 +9,17 @@ import { ToastTime } from '../../../Configs/ToastTimerConfig';
 import PersonnelAdminDeleteModal from './PersonnelAdminInfoModal/PersonnelAdminDeleteModal';
 
 const AdminDashBoardShowUsersTableMainDivBox = styled.div`
-    max-height: 90vh;
+    max-height: 85vh;
     overflow-y: auto;
     direction: ltr;
     scrollbar-color: #d4aa70 #e4e4e4;
     scrollbar-width: thin;
+
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+        rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    border-radius: 10px;
+    padding: 10px;
+
     ::-webkit-scrollbar {
         width: 20px;
     }
@@ -38,6 +44,7 @@ const AdminDashBoardShowUsersTableMainDivBox = styled.div`
         text-align: left;
         line-height: 1.5;
         table-layout: fixed;
+
         tr {
             :hover {
                 cursor: pointer;
@@ -277,14 +284,14 @@ const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertCont
                             </th>
                             <th scope="cols">
                                 <div>회사</div>
-                                <div>
+                                {/* <div>
                                     <input
                                         type="text"
                                         value={SearchCompanys}
                                         onChange={e => setSearchCompanys(e.target.value)}
                                         placeholder="회사 검색...."
                                     ></input>
-                                </div>
+                                </div> */}
                             </th>
                             <th scope="cols">팀명</th>
                             <th scope="cols">직급</th>
@@ -319,9 +326,7 @@ const PersonnelAdminInsertContent = ({ SelectCompany }: PersonnelAdminInsertCont
                                 return (
                                     <tr onDoubleClick={() => handleDoubleClicks(list)} key={list.email}>
                                         <th scope="row">{list.name}</th>
-                                        <td>
-                                            {list.company_name}_{list.company_location}_{list.company_building}_{list.company_floor}
-                                        </td>
+                                        <td>{list.company_name}</td>
                                         <td>{list.team}</td>
                                         <td>{list.position}</td>
                                         <td>{list.email}</td>

@@ -45,6 +45,12 @@ const LicenseMainPageContentMainPageDiv = styled.div`
         background-clip: content-box;
         background-color: gray;
     }
+
+    .PostionFixedFromScroll {
+        position: sticky;
+        top: -20px;
+        background-color: #fff;
+    }
 `;
 
 const PcAssetMainPage = () => {

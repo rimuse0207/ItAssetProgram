@@ -293,7 +293,7 @@ const NavigationMenuBarMainPage = () => {
                                             </div>
                                         </Link>
                                     </li> */}
-                                    <li>
+                                    {/* <li>
                                         <div className="listStyleDivBox">
                                             <div>
                                                 <BsFillCartFill></BsFillCartFill>
@@ -308,7 +308,9 @@ const NavigationMenuBarMainPage = () => {
                                                         })
                                                     }
                                                 >
-                                                    <div>라이선스</div>
+                                                    <Link to="/license/volume_license">
+                                                        <li className={type === 'volume_license' ? 'NowPageSelect' : ''}>Volume License</li>
+                                                    </Link>
                                                     {MenuCheckedSubLists.license ? (
                                                         <div className="HiddenOff">
                                                             <MdKeyboardArrowDown></MdKeyboardArrowDown>
@@ -321,8 +323,20 @@ const NavigationMenuBarMainPage = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                    </li> */}
+
+                                    <li className={window.location.pathname === '/license/volume_license' ? 'NowPageSelect' : ''}>
+                                        <Link to="/license/volume_license">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <BsCircleSquare></BsCircleSquare>
+                                                </div>
+                                                <div className="listStyleSubLists">라이선스</div>
+                                            </div>
+                                        </Link>
                                     </li>
-                                    <div className="SubHiddenListsMenu">
+
+                                    {/* <div className="SubHiddenListsMenu">
                                         {MenuCheckedSubLists.license ? (
                                             <ul className="settingClassNamesOn">
                                                 <Link to="/license/volume_license">
@@ -341,7 +355,7 @@ const NavigationMenuBarMainPage = () => {
                                         ) : (
                                             ''
                                         )}
-                                    </div>
+                                    </div> */}
                                     <li>
                                         <div className="listStyleDivBox">
                                             <div>

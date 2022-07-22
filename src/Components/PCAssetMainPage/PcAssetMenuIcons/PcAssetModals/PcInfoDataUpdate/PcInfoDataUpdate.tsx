@@ -72,12 +72,12 @@ const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDa
                         <th scope="row">자산코드</th>
                         <td>{SelectAssetData?.asset_newcode ? SelectAssetData?.asset_newcode : '-'}</td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                         <th scope="row">사용처</th>
                         <td>
                             {SelectAssetData?.company_name}_{SelectAssetData?.company_location}
                         </td>
-                    </tr>
+                    </tr> */}
                     <tr>
                         <th scope="row">사용자</th>
                         <td>

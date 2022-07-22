@@ -14,7 +14,7 @@ import { RootState } from '../../../Models';
 import UpdatePcAssetUserDataModal from '../PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
 
 export const AssetTableMainDivBox = styled.div`
-    max-height: 60vh;
+    max-height: 70vh;
     overflow: auto;
     background-color: #fff;
     margin: 0 auto;
@@ -135,7 +135,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                     {DeskTopInfo.data ? (
                         <table className="type09">
                             <thead>
-                                <tr>
+                                <tr className="PostionFixedFromScroll">
                                     <th scope="cols">
                                         <div>
                                             <CgDesktop></CgDesktop>
@@ -146,7 +146,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                             {NothingAssetCheckFunc(DeskTopInfo.data)}/{DeskTopInfo.data.length} )
                                         </div>
                                     </th>
-                                    {/* <th scope="cols">관리번호</th> */}
+                                    <th scope="cols">관리번호</th>
                                     <th scope="cols">제조사</th>
                                     <th scope="cols">모델명</th>
                                     <th scope="cols">구입일</th>
@@ -156,7 +156,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                     <th scope="cols">RAM</th>
                                     <th scope="cols">DISK</th>
                                     <th scope="cols">자산코드</th>
-                                    <th scope="cols">사용장소</th>
+                                    {/* <th scope="cols">사용장소</th> */}
                                     <th scope="cols">사용자</th>
                                     <th scope="cols">정보 조회</th>
                                     {/* <th scope="cols">폐기 여부</th> */}
@@ -168,7 +168,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                         return (
                                             <tr key={list.asset_management_number}>
                                                 <td>{i + 1}</td>
-                                                {/* <td>{list.asset_management_number}</td> */}
+                                                <td>{list.asset_management_number}</td>
                                                 <td>{list.asset_maker}</td>
                                                 <td>{list.asset_model}</td>
                                                 <td>{moment(list.asset_purchase_date).format('YYYY-MM-DD')}</td>
@@ -178,7 +178,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                                 <td>{list.asset_ram}</td>
                                                 <td>{list.asset_disk}</td>
                                                 <td>{list.asset_newcode ? list.asset_newcode : '-'}</td>
-                                                <td>
+                                                {/* <td>
                                                     {list.companyInfo_companycode ? (
                                                         <div>
                                                             <div>{list.company_location}</div>
@@ -188,7 +188,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                                                     ) : (
                                                         '-'
                                                     )}
-                                                </td>
+                                                </td> */}
                                                 <td>
                                                     {list.name ? (
                                                         <div>

@@ -381,7 +381,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         setUserWriteData({ ...UserWriteData, userinfo_email: e.value });
     };
     useEffect(() => {
-        getCompanyInfo();
+        // getCompanyInfo();
         getUserInfo();
         getSettingData();
     }, [SelectCompany]);
@@ -436,12 +436,14 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             console.log(error);
         }
     };
+
     //저장시
     const saveData = async () => {
-        if (UserWriteData.asset_management_number === '' || UserWriteData.company_code === '') {
-            alert('공란을 작성해주세요.');
-            return;
-        } else if (UserWriteData.usercheck && UserWriteData.userinfo_email === '') {
+        // if ( UserWriteData.company_code === '') {
+        //     alert('공란을 작성해주세요.');
+        //     return;
+        // } else
+        if (UserWriteData.usercheck && UserWriteData.userinfo_email === '') {
             alert('사용자를 등록 해주세요.');
             return;
         }
@@ -469,14 +471,15 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                         FilteringData,
                     };
                     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                } else {
-                    const ParamasDatas = {
-                        types: '모니터',
-                        SelectCompany,
-                        FilteringData,
-                    };
-                    await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 }
+                // else {
+                //     const ParamasDatas = {
+                //         types: '모니터',
+                //         SelectCompany,
+                //         FilteringData,
+                //     };
+                //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
+                // }
 
                 setUserWriteData({
                     asset_management_number: '',
@@ -494,7 +497,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     asset_distribute_date: new Date(),
                     company_code: '',
                 });
-                hadldeRandomCodeData();
+                // hadldeRandomCodeData();
 
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             } else {
@@ -633,7 +636,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                 <div className="PCAssetFloatContainer">
                                     <div className="PCAssetFloatLeft">
                                         <div className="input-content-wrap">
-                                            <dl className="inputbox">
+                                            {/* <dl className="inputbox">
                                                 <dt className="inputbox-title">
                                                     관리번호<span style={{ color: 'red' }}>*</span>
                                                 </dt>
@@ -654,7 +657,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         <GiPerspectiveDiceSixFacesRandom></GiPerspectiveDiceSixFacesRandom>
                                                     </div>
                                                 </dd>
-                                            </dl>
+                                            </dl> */}
 
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">
@@ -673,7 +676,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
-                                            <dl className="inputbox">
+                                            {/* <dl className="inputbox">
                                                 <dt className="inputbox-title">
                                                     사용처<span style={{ color: 'red' }}>*</span>
                                                 </dt>
@@ -698,7 +701,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         <span className="icoArrow"></span>
                                                     </div>
                                                 </dd>
-                                            </dl>
+                                            </dl> */}
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">구분</dt>
                                                 <dd className="inputbox-content">

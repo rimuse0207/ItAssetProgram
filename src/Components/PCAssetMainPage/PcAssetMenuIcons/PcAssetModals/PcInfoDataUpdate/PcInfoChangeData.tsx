@@ -269,12 +269,12 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                             ></input>
                         </td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                         <th scope="row">사용처</th>
                         <td>
                             {SelectAssetData?.company_name}_{SelectAssetData?.company_location}
                         </td>
-                    </tr>
+                    </tr> */}
                     <tr>
                         <th scope="row">사용자</th>
                         <td>

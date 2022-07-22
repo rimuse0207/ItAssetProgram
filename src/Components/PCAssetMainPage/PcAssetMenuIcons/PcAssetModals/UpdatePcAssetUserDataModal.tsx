@@ -116,6 +116,11 @@ const NewPcAssetUserDataMainModalContent = styled.div`
                 background: #2962ff;
                 color: #fff;
             }
+            &-delete {
+                border: 1px solid #e5a5a5;
+                background: #e5a5a5;
+                color: #fff;
+            }
         }
     }
     .input {
@@ -329,6 +334,7 @@ const UpdatePcAssetUserDataModal = ({
         { name: '반납', AccessKey: false },
         { name: '이관', AccessKey: false },
         { name: '폐기', AccessKey: false },
+        { name: '라이선스 등록', AccessKey: false },
     ]);
     const [AssetDataChangeCheck, setAssetDataChangeCheck] = useState(false);
 
@@ -353,11 +359,13 @@ const UpdatePcAssetUserDataModal = ({
                 { name: '반납', AccessKey: true },
                 { name: '이관', AccessKey: false },
                 { name: '폐기', AccessKey: false },
+                { name: '라이선스 등록', AccessKey: false },
             ]);
         } else {
             setCompanySelectAccessKey([
                 { name: '사용자 등록', AccessKey: true },
                 { name: '폐기', AccessKey: false },
+                { name: '라이선스 등록', AccessKey: false },
             ]);
         }
     }, [SelectAssetData?.asset_management_number]);
@@ -421,9 +429,10 @@ const UpdatePcAssetUserDataModal = ({
                     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
                 } else if (SelectAssetData?.asset_division === '노트북') {
                     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                } else {
-                    await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 }
+                // else {
+                //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
+                // }
                 setSelectUsered(null);
                 closeModal();
                 toast.show({
@@ -445,6 +454,49 @@ const UpdatePcAssetUserDataModal = ({
                 successCheck: false,
                 duration: ToastTime,
             });
+        }
+    };
+
+    const deleteData = async () => {
+        try {
+            const ParamasData = {
+                SelectAssetData,
+                SelectedData,
+            };
+            if (window.confirm(`정말 삭제 하시겠습니까?`)) {
+                const Asset_Delete_Data = await AssetDelete('/Asset_app_server/Asset_Delete', ParamasData);
+
+                if (Asset_Delete_Data.data.dataSuccess) {
+                    const ParamasDatas = {
+                        types: SelectAssetData?.asset_division,
+                        SelectCompany,
+                        FilteringData,
+                    };
+                    if (SelectAssetData?.asset_division === '데스크탑') {
+                        await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
+                    } else if (SelectAssetData?.asset_division === '노트북') {
+                        await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
+                    } else {
+                        await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
+                    }
+                    toast.show({
+                        title: `데이터 삭제 성공`,
+                        successCheck: true,
+                        duration: ToastTime,
+                    });
+                    closeModal();
+                } else {
+                    toast.show({
+                        title: `데이터 삭제 실패 IT 팀에 문의 바랍니다.`,
+                        successCheck: false,
+                        duration: ToastTime,
+                    });
+                }
+            } else {
+                return;
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -606,6 +658,9 @@ const UpdatePcAssetUserDataModal = ({
                                 </div>
                             </div>
                             <div className="btns">
+                                <button className="btn btn-delete" onClick={() => deleteData()}>
+                                    삭제
+                                </button>
                                 <button className="btn btn-confirm" onClick={() => saveData()}>
                                     저장
                                 </button>

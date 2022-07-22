@@ -8,12 +8,11 @@ import PersonnelAdminDashBoardContainer from './PersonnelAdminDashBoardContainer
 import styled from 'styled-components';
 
 const PersonnelAdminDashBoardMainPageDivBox = styled.div`
-    min-height: 100vh;
     width: 100%;
     background-color: #efefef;
     max-height: 100vh;
     padding-left: 20px;
-    overflow: auto;
+    overflow: hidden;
 `;
 
 type MenuAccessType = {
