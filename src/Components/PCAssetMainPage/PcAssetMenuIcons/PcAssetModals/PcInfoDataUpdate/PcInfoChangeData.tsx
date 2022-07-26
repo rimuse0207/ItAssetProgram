@@ -61,6 +61,7 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
         userinfo_email: '',
         asset_distribute_date: new Date(),
         company_code: '',
+        asset_notepad: '',
     });
 
     const handleChangeAssetData = async () => {
@@ -268,6 +269,13 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                                 onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_newcode: e.target.value })}
                             ></input>
                         </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">메모</th>
+                        <input
+                            defaultValue={ChangeAssetData.asset_notepad}
+                            onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_notepad: e.target.value })}
+                        ></input>
                     </tr>
                     {/* <tr>
                         <th scope="row">사용처</th>

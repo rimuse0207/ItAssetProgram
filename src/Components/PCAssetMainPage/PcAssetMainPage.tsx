@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Models';
 import { ChangeAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 import { AssetFilteringReset } from '../../Models/AssetFilteringRedux/AssetFilteringRedux';
+import PCAssetAllData from './PCAssetAllData';
 
 type URLParamsType = {
     type: string;
@@ -82,14 +83,15 @@ const PcAssetMainPage = () => {
                 handleCompanyClicks={handleCompanyClicks}
             ></CompanySelectMenuBar>
 
-            <GraphContainer></GraphContainer>
-
             {CompanySelectAccessKey.map((list: MenuAccessType) =>
                 list.AccessKey ? (
                     <div key={list.name}>
+                        <GraphContainer SelectCompany={list.name}></GraphContainer>
                         <PcAssetMenuIconsMainPage SelectCompany={list.name} type={type}></PcAssetMenuIconsMainPage>
-                        <DeskTopMainPage SelectCompany={list.name} type={type}></DeskTopMainPage>
-                        <NoteBookMainPage SelectCompany={list.name} type={type}></NoteBookMainPage>
+                        {/* <DeskTopMainPage SelectCompany={list.name} type={type}></DeskTopMainPage>
+                        <NoteBookMainPage SelectCompany={list.name} type={type}></NoteBookMainPage> */}
+
+                        <PCAssetAllData SelectCompany={list.name}></PCAssetAllData>
                         {/* <MonitorMainPage SelectCompany={list.name} type={type}></MonitorMainPage> */}
                     </div>
                 ) : (

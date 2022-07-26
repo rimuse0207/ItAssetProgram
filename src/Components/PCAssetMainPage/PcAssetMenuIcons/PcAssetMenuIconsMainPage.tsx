@@ -110,6 +110,10 @@ export const FilterSearchMainPageDivBox = styled.div`
                     .InputDivBox {
                         width: 100%;
                         height: 100%;
+                        form {
+                            width: 100%;
+                            height: 100%;
+                        }
                         input {
                             width: 100%;
                             height: 100%;
@@ -238,6 +242,16 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
         }
     };
 
+    const handleEnterButton = async (e: React.FormEvent<HTMLFormElement>) => {
+        try {
+            e.preventDefault();
+
+            dispatch(AssetFilteringAdd({ FilteringData }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <PcAssetMenuIconsMainPageDivBox>
             <div></div>
@@ -327,14 +341,16 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    type="text"
-                                                    value={FilteringData.asset_management_number}
-                                                    placeholder="Ex) DHKS-22001"
-                                                    onChange={e =>
-                                                        setFilteringData({ ...FilteringData, asset_management_number: e.target.value })
-                                                    }
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        type="text"
+                                                        value={FilteringData.asset_management_number}
+                                                        placeholder="Ex) DHKS-22001"
+                                                        onChange={e =>
+                                                            setFilteringData({ ...FilteringData, asset_management_number: e.target.value })
+                                                        }
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -351,12 +367,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.asset_maker}
-                                                    type="text"
-                                                    placeholder="Ex) 삼성.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_maker: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_maker}
+                                                        type="text"
+                                                        placeholder="Ex) 삼성.."
+                                                        onChange={e => setFilteringData({ ...FilteringData, asset_maker: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -376,7 +394,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                     }
                                                 ></input>
                                             </div>
-                                            <div style={{ lineHeight: '40px', marginRight: '10px', marginLeft: '10px', fontSize: '1.5em' }}>
+                                            <div
+                                                style={{
+                                                    lineHeight: '40px',
+                                                    marginRight: '10px',
+                                                    marginLeft: '10px',
+                                                    fontSize: '1.5em',
+                                                }}
+                                            >
                                                 ~
                                             </div>
                                             <div className="InputDivBox">
@@ -384,14 +409,17 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                     type="date"
                                                     value={FilteringData.finish_asset_purchasedate}
                                                     onChange={e =>
-                                                        setFilteringData({ ...FilteringData, finish_asset_purchasedate: e.target.value })
+                                                        setFilteringData({
+                                                            ...FilteringData,
+                                                            finish_asset_purchasedate: e.target.value,
+                                                        })
                                                     }
                                                 ></input>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="SearchInputContainer">
+                                {/* <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
                                         <h4>사용장소.</h4>
                                     </div>
@@ -403,16 +431,18 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    type="text"
-                                                    value={FilteringData.companyInfo}
-                                                    placeholder="Ex) 판교, 아산.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, companyInfo: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        type="text"
+                                                        value={FilteringData.companyInfo}
+                                                        placeholder="Ex) 판교, 아산.."
+                                                        onChange={e => setFilteringData({ ...FilteringData, companyInfo: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
                                         <h4>사용자.</h4>
@@ -425,12 +455,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.userInfo}
-                                                    type="text"
-                                                    placeholder="Ex) 유성재.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, userInfo: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.userInfo}
+                                                        type="text"
+                                                        placeholder="Ex) 유성재.."
+                                                        onChange={e => setFilteringData({ ...FilteringData, userInfo: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -447,12 +479,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.asset_cpu}
-                                                    type="text"
-                                                    placeholder="Ex) i7.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_cpu: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_cpu}
+                                                        type="text"
+                                                        placeholder="Ex) i7.."
+                                                        onChange={e => setFilteringData({ ...FilteringData, asset_cpu: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -469,12 +503,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.asset_ram}
-                                                    type="text"
-                                                    placeholder="Ex) 32GB.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_ram: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_ram}
+                                                        type="text"
+                                                        placeholder="Ex) 32GB.."
+                                                        onChange={e => setFilteringData({ ...FilteringData, asset_ram: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -491,12 +527,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.asset_disk}
-                                                    type="text"
-                                                    placeholder="Ex) SSD_256GB.."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_disk: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_disk}
+                                                        type="text"
+                                                        placeholder="Ex) SSD_256GB.."
+                                                        onChange={e => setFilteringData({ ...FilteringData, asset_disk: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -513,12 +551,14 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.asset_model}
-                                                    type="text"
-                                                    placeholder="Ex) ..."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_model: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_model}
+                                                        type="text"
+                                                        placeholder="Ex) ..."
+                                                        onChange={e => setFilteringData({ ...FilteringData, asset_model: e.target.value })}
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -535,12 +575,16 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                 </label>
                                             </div>
                                             <div className="InputDivBox">
-                                                <input
-                                                    value={FilteringData.asset_newcode}
-                                                    type="text"
-                                                    placeholder="Ex) G00000...."
-                                                    onChange={e => setFilteringData({ ...FilteringData, asset_newcode: e.target.value })}
-                                                ></input>
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_newcode}
+                                                        type="text"
+                                                        placeholder="Ex) G00000...."
+                                                        onChange={e =>
+                                                            setFilteringData({ ...FilteringData, asset_newcode: e.target.value })
+                                                        }
+                                                    ></input>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>

@@ -11,6 +11,7 @@ export type DeskTopInfoDataType = {
     asset_newcode: string | null;
     asset_distribute_date: string | null;
     asset_destroy_check: number | null;
+    asset_notepad: string;
     userinfo_email: string | null;
     company_info_company_code: string | null;
     company_code: string | null;

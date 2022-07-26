@@ -79,6 +79,10 @@ const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDa
                         </td>
                     </tr> */}
                     <tr>
+                        <th scope="row">메모</th>
+                        <td>{SelectAssetData?.asset_notepad}</td>
+                    </tr>
+                    <tr>
                         <th scope="row">사용자</th>
                         <td>
                             {SelectAssetData?.team}_{SelectAssetData?.name}

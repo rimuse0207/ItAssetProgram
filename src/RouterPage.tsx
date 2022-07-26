@@ -29,7 +29,7 @@ const RouterPage = () => {
                             </div>
                             <Route exact path="/" component={App}></Route>
                             <Route exact path="/license/:type" component={LicenseMainPage}></Route>
-                            <Route path="/PCAsset" component={PcAssetMainPage}></Route>
+                            <Route path="/PCAsset/:type" component={PcAssetMainPage}></Route>
                             <Route path="/Test" component={TestPage}></Route>
                             <Route path="/Personal" component={PersonalMainPage}></Route>
                             <Route path="/settingChange" component={SettingChangeMainPage}></Route>

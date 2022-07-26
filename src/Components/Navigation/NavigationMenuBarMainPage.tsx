@@ -214,7 +214,7 @@ const NavigationMenuBarMainPage = () => {
                             </li>
                             {LoginCheckState.AdminAccess ? (
                                 <>
-                                    <Link to="/PCAsset">
+                                    <Link to="/PCAsset/All">
                                         <li>
                                             <BsCircleSquare></BsCircleSquare>
                                         </li>
@@ -271,8 +271,8 @@ const NavigationMenuBarMainPage = () => {
                             </li>
                             {LoginCheckState.AdminAccess ? (
                                 <>
-                                    <li className={window.location.pathname === '/PCAsset' ? 'NowPageSelect' : ''}>
-                                        <Link to="/PCAsset">
+                                    <li className={window.location.pathname.includes('/PCAsset') ? 'NowPageSelect' : ''}>
+                                        <Link to="/PCAsset/All">
                                             <div className="listStyleDivBox">
                                                 <div>
                                                     <BsCircleSquare></BsCircleSquare>

@@ -3,6 +3,8 @@ import AssetGraphMainPage from './AssetGraphMainPage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../Models';
 import { NothingAssetCheckFunc } from '../../../PublicFunc/NothingAssetData';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const PcassetGraphMainDivBox = styled.div`
     height: 30vh;
@@ -26,42 +28,110 @@ const PcassetGraphMainDivBox = styled.div`
     }
 `;
 
-const GraphContainer = () => {
-    const DeskTopInfo = useSelector((state: RootState) => state.DeskTopAssetData.DeskTopAssetData);
-    const NotBookInfo = useSelector((state: RootState) => state.NoteBookAssetData.NoteBookAssetData);
-    const MonitorInfo = useSelector((state: RootState) => state.MonitorAssetData.MonitorAssetData);
+type GraphContainerProps = {
+    Asset_Count: number;
+    Asset_Count_Null: number;
+    DeskTop_Count: number;
+    DeskTop_Count_Null: number;
+    NoteBook_Count: number;
+    NoteBook_Count_Null: number;
+};
+
+type GraphContainerPropsType = {
+    SelectCompany: string;
+};
+
+const GraphContainer = ({ SelectCompany }: GraphContainerPropsType) => {
+    // const DeskTopInfo = useSelector((state: RootState) => state.DeskTopAssetData.DeskTopAssetData);
+    // const NotBookInfo = useSelector((state: RootState) => state.NoteBookAssetData.NoteBookAssetData);
+    // const MonitorInfo = useSelector((state: RootState) => state.MonitorAssetData.MonitorAssetData);
+
+    const [GraphCount, setGraphCount] = useState<GraphContainerProps>({
+        Asset_Count: 0,
+        Asset_Count_Null: 0,
+        DeskTop_Count: 0,
+        DeskTop_Count_Null: 0,
+        NoteBook_Count: 0,
+        NoteBook_Count_Null: 0,
+    });
+
+    const [Loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        getAllCountAssetData();
+    }, [SelectCompany]);
+
+    const getAllCountAssetData = async () => {
+        try {
+            setLoading(true);
+            const getAllCountAssetDataFromServer = await axios.get(
+                `${process.env.REACT_APP_API_URL}/Asset_app_server/Asset_Count_For_Graph`,
+                {
+                    params: {
+                        company: SelectCompany,
+                    },
+                }
+            );
+
+            if (getAllCountAssetDataFromServer.data.dataSuccess) {
+                console.log(getAllCountAssetDataFromServer);
+                setGraphCount(getAllCountAssetDataFromServer.data.datas);
+                setLoading(false);
+            } else {
+                alert('에러 발생');
+            }
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
 
     return (
         <PcassetGraphMainDivBox>
-            {DeskTopInfo.data || NotBookInfo.data || MonitorInfo.data ? (
+            {!Loading ? (
                 <div className="Asset_GraphContainer">
+                    <div className="Asset_GraphContent">
+                        <h3>데스크탑 + 노트북</h3>
+                        <h4 style={{ position: 'absolute', left: '20px' }}>
+                            {GraphCount.Asset_Count} / {GraphCount.Asset_Count_Null} /{' '}
+                            {GraphCount.Asset_Count + GraphCount.Asset_Count_Null}
+                        </h4>
+                        <AssetGraphMainPage
+                            assetType="데스크탑 + 노트북"
+                            usedData={[
+                                GraphCount.Asset_Count,
+                                GraphCount.Asset_Count_Null,
+                                GraphCount.Asset_Count + GraphCount.Asset_Count_Null,
+                            ]}
+                        ></AssetGraphMainPage>
+                    </div>
                     <div className="Asset_GraphContent">
                         <h3>데스크탑</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
-                            {DeskTopInfo.data.length - NothingAssetCheckFunc(DeskTopInfo.data)}/{NothingAssetCheckFunc(DeskTopInfo.data)}/
-                            {DeskTopInfo.data.length}
+                            {GraphCount.DeskTop_Count} / {GraphCount.DeskTop_Count_Null} /
+                            {GraphCount.DeskTop_Count + GraphCount.DeskTop_Count_Null}
                         </h4>
                         <AssetGraphMainPage
                             assetType="데스크탑"
                             usedData={[
-                                DeskTopInfo.data.length - NothingAssetCheckFunc(DeskTopInfo.data),
-                                NothingAssetCheckFunc(DeskTopInfo.data),
-                                DeskTopInfo.data.length,
+                                GraphCount.DeskTop_Count,
+                                GraphCount.DeskTop_Count_Null,
+                                GraphCount.DeskTop_Count + GraphCount.DeskTop_Count_Null,
                             ]}
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
                         <h3>노트북</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
-                            {NotBookInfo.data.length - NothingAssetCheckFunc(NotBookInfo.data)}/{NothingAssetCheckFunc(NotBookInfo.data)}/
-                            {NotBookInfo.data.length}
+                            {GraphCount.NoteBook_Count} / {GraphCount.NoteBook_Count_Null} /
+                            {GraphCount.NoteBook_Count + GraphCount.NoteBook_Count_Null}
                         </h4>
                         <AssetGraphMainPage
                             assetType="노트북"
                             usedData={[
-                                NotBookInfo.data.length - NothingAssetCheckFunc(NotBookInfo.data),
-                                NothingAssetCheckFunc(NotBookInfo.data),
-                                NotBookInfo.data.length,
+                                GraphCount.NoteBook_Count,
+                                GraphCount.NoteBook_Count_Null,
+                                GraphCount.NoteBook_Count + GraphCount.NoteBook_Count_Null,
                             ]}
                         ></AssetGraphMainPage>
                     </div>

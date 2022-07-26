@@ -21,6 +21,9 @@ import { ko } from 'date-fns/esm/locale';
 import HistoryMainPage from './HistoryMainPage/HistoryMainPage';
 import PcInfoDataUpdate from './PcInfoDataUpdate/PcInfoDataUpdate';
 import PcInfoChangeData from './PcInfoDataUpdate/PcInfoChangeData';
+import PCReturnMainPage from './PCReturn/PCReturnMainPage';
+import TransferMainPage from './Transfer/TransferMainPage';
+import DiscardMainPage from './Discard/DiscardMainPage';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -566,30 +569,39 @@ const UpdatePcAssetUserDataModal = ({
                                     <div>
                                         <div id="wrap" className="input">
                                             <section className="input-content">
-                                                <dl className="inputbox">
-                                                    <dt className="inputbox-title">
-                                                        {CompanySelectAccessKey.map((list, i) => {
-                                                            return list.AccessKey ? list.name : '';
-                                                        })}
-                                                        날짜
-                                                    </dt>
-                                                    <dl>
-                                                        <dd className="inputbox-content">
-                                                            <DatePicker
-                                                                selected={SelectedData.selected_date}
-                                                                onChange={(date: any) =>
-                                                                    setSelectedData({ ...SelectedData, selected_date: date })
-                                                                }
-                                                                withPortal
-                                                                locale={ko}
-                                                                dateFormat="yyy-MM-dd"
-                                                                maxDate={new Date()}
-                                                            />
-                                                            <span className="underline"></span>
-                                                        </dd>
-                                                    </dl>
-                                                </dl>
                                                 {CompanySelectAccessKey.map((list, i) => {
+                                                    return list.AccessKey && list.name === '반납' ? (
+                                                        <PCReturnMainPage
+                                                            SelectedData={SelectedData}
+                                                            setSelectedData={data => setSelectAssetData(data)}
+                                                        ></PCReturnMainPage>
+                                                    ) : (
+                                                        <></>
+                                                    );
+                                                })}
+                                                {CompanySelectAccessKey.map((list, i) => {
+                                                    return list.AccessKey && list.name === '이관' ? (
+                                                        <TransferMainPage
+                                                            SelectedData={SelectedData}
+                                                            setSelectedData={data => setSelectAssetData(data)}
+                                                            SelectCompany={SelectCompany}
+                                                        ></TransferMainPage>
+                                                    ) : (
+                                                        ''
+                                                    );
+                                                })}
+                                                {CompanySelectAccessKey.map((list, i) => {
+                                                    return list.AccessKey && list.name === '폐기' ? (
+                                                        <DiscardMainPage
+                                                            SelectedData={SelectedData}
+                                                            setSelectedData={data => setSelectAssetData(data)}
+                                                        ></DiscardMainPage>
+                                                    ) : (
+                                                        ''
+                                                    );
+                                                })}
+
+                                                {/* {CompanySelectAccessKey.map((list, i) => {
                                                     return list.AccessKey && list.name === '사용자 등록' ? (
                                                         <dl className="inputbox" key={'사용자 목록' + list.name}>
                                                             <dt className="inputbox-title">사용자</dt>
@@ -632,26 +644,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     ) : (
                                                         ''
                                                     );
-                                                })}
-
-                                                {CompanySelectAccessKey.map((list, i) => {
-                                                    return list.AccessKey && list.name === '이관' ? (
-                                                        <dl className="inputbox" key={'이관' + list.name}>
-                                                            <dt className="inputbox-title">{list.name} 사용자</dt>
-                                                            <dd className="inputbox-content">
-                                                                <Select
-                                                                    options={InfoUserData}
-                                                                    onChange={(value: any) =>
-                                                                        setSelectedData({ ...SelectedData, selected_user: value })
-                                                                    }
-                                                                ></Select>
-                                                                <span className="underline"></span>
-                                                            </dd>
-                                                        </dl>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })}
+                                                })} */}
                                             </section>
                                         </div>
                                     </div>
