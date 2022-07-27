@@ -32,7 +32,15 @@ const PCReturnMainPage = ({ SelectedData, setSelectedData }: PCReturnMainPagePro
                 <dt className="inputbox-title">반납 사유</dt>
                 <dl>
                     <dd className="inputbox-content">
-                        <textarea></textarea>
+                        <textarea
+                            value={SelectedData.selected_reason}
+                            onChange={e =>
+                                setSelectedData({
+                                    ...SelectedData,
+                                    selected_reason: e.target.value,
+                                })
+                            }
+                        ></textarea>
                         <span className="underline"></span>
                     </dd>
                 </dl>

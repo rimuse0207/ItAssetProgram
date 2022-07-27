@@ -24,6 +24,8 @@ import PcInfoChangeData from './PcInfoDataUpdate/PcInfoChangeData';
 import PCReturnMainPage from './PCReturn/PCReturnMainPage';
 import TransferMainPage from './Transfer/TransferMainPage';
 import DiscardMainPage from './Discard/DiscardMainPage';
+import RegisterUserMainPage from './RegisterUser/RegisterUserMainPage';
+import LicenseRegisterMainPage, { LicenseDataTypes } from './LicenseRegister/LicenseRegisterMainPage';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -86,18 +88,23 @@ const NewPcAssetUserDataMainModalContent = styled.div`
         }
         .ModalFloatLeft {
             float: left;
-            width: 50%;
+            width: 40%;
             border-right: 1px solid lightgray;
             padding-right: 50px;
         }
         .ModalFloatRight {
             float: right;
-            width: 45%;
+            width: 58%;
             margin-top: 40px;
         }
     }
     .btns {
-        padding: 30px 0 0 200px;
+        width: 300px;
+        margin: 0 auto;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
         .btn {
             display: inline-block;
             margin-right: 2px;
@@ -347,6 +354,9 @@ const UpdatePcAssetUserDataModal = ({
         selected_user: '',
     });
 
+    const [BasicLicenseData, setBasicLicenseData] = useState<LicenseDataTypes[]>([]);
+    const [ChangeBasicLicenseData, setChangeBasicLicenseData] = useState<LicenseDataTypes[]>([]);
+
     const dispatch = useDispatch();
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
     function closeModal() {
@@ -403,7 +413,8 @@ const UpdatePcAssetUserDataModal = ({
             } else if (
                 SelectedData.selected_reason === '' &&
                 CompanySelectAccessKey[i].AccessKey &&
-                CompanySelectAccessKey[i].name !== '사용자 등록'
+                CompanySelectAccessKey[i].name !== '사용자 등록' &&
+                CompanySelectAccessKey[i].name !== '라이선스 등록'
             ) {
                 return alert('사유를 작성 해주세요.');
             }
@@ -420,6 +431,8 @@ const UpdatePcAssetUserDataModal = ({
                 SelectAssetData,
                 SelectedData,
                 CompanySelectAccessKey: selectedpickers,
+                BasicLicenseData,
+                ChangeBasicLicenseData,
             };
             const UserAssetAdd = await AssetDelete('/Asset_app_server/AssetDeleteData', ParamasData);
             if (UserAssetAdd.data.dataSuccess) {
@@ -428,11 +441,11 @@ const UpdatePcAssetUserDataModal = ({
                     SelectCompany,
                     FilteringData,
                 };
-                if (SelectAssetData?.asset_division === '데스크탑') {
-                    await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                } else if (SelectAssetData?.asset_division === '노트북') {
-                    await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                }
+                // if (SelectAssetData?.asset_division === '데스크탑') {
+                //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
+                // } else if (SelectAssetData?.asset_division === '노트북') {
+                //     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
+                // }
                 // else {
                 //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 // }
@@ -540,68 +553,95 @@ const UpdatePcAssetUserDataModal = ({
                                 ></PcInfoDataUpdate>
                             )}
                         </div>
-
-                        <div className="ModalFloatRight">
-                            <NavigationUpdateModalMainDivBox>
-                                <div>
-                                    <ul>
-                                        {CompanySelectAccessKey.map((list, i) => {
-                                            return (
-                                                <li key={list.name} onClick={() => handleCompanyClicks(list)}>
-                                                    {list.AccessKey ? (
-                                                        <>
-                                                            <div className="LineText" style={{ color: '#050404', fontWeight: 'bold' }}>
-                                                                {list.name}
-                                                            </div>
-                                                            <div className="LineActions"></div>
-                                                        </>
-                                                    ) : (
-                                                        <div className="LineText">{list.name}</div>
-                                                    )}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            </NavigationUpdateModalMainDivBox>
-                            <div>
+                        {!AssetDataChangeCheck ? (
+                            <div className="ModalFloatRight">
+                                <NavigationUpdateModalMainDivBox>
+                                    <div>
+                                        <ul>
+                                            {CompanySelectAccessKey.map((list, i) => {
+                                                return (
+                                                    <li key={list.name} onClick={() => handleCompanyClicks(list)}>
+                                                        {list.AccessKey ? (
+                                                            <>
+                                                                <div className="LineText" style={{ color: '#050404', fontWeight: 'bold' }}>
+                                                                    {list.name}
+                                                                </div>
+                                                                <div className="LineActions"></div>
+                                                            </>
+                                                        ) : (
+                                                            <div className="LineText">{list.name}</div>
+                                                        )}
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                </NavigationUpdateModalMainDivBox>
                                 <div>
                                     <div>
-                                        <div id="wrap" className="input">
-                                            <section className="input-content">
-                                                {CompanySelectAccessKey.map((list, i) => {
-                                                    return list.AccessKey && list.name === '반납' ? (
-                                                        <PCReturnMainPage
-                                                            SelectedData={SelectedData}
-                                                            setSelectedData={data => setSelectAssetData(data)}
-                                                        ></PCReturnMainPage>
-                                                    ) : (
-                                                        <></>
-                                                    );
-                                                })}
-                                                {CompanySelectAccessKey.map((list, i) => {
-                                                    return list.AccessKey && list.name === '이관' ? (
-                                                        <TransferMainPage
-                                                            SelectedData={SelectedData}
-                                                            setSelectedData={data => setSelectAssetData(data)}
-                                                            SelectCompany={SelectCompany}
-                                                        ></TransferMainPage>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })}
-                                                {CompanySelectAccessKey.map((list, i) => {
-                                                    return list.AccessKey && list.name === '폐기' ? (
-                                                        <DiscardMainPage
-                                                            SelectedData={SelectedData}
-                                                            setSelectedData={data => setSelectAssetData(data)}
-                                                        ></DiscardMainPage>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })}
+                                        <div>
+                                            <div id="wrap" className="input">
+                                                <section className="input-content">
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '반납' ? (
+                                                            <PCReturnMainPage
+                                                                SelectedData={SelectedData}
+                                                                setSelectedData={data => setSelectedData(data)}
+                                                            ></PCReturnMainPage>
+                                                        ) : (
+                                                            <></>
+                                                        );
+                                                    })}
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '이관' ? (
+                                                            <TransferMainPage
+                                                                SelectedData={SelectedData}
+                                                                setSelectedData={data => setSelectedData(data)}
+                                                                SelectCompany={SelectCompany}
+                                                            ></TransferMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '폐기' ? (
+                                                            <DiscardMainPage
+                                                                SelectedData={SelectedData}
+                                                                setSelectedData={data => setSelectedData(data)}
+                                                            ></DiscardMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '사용자 등록' ? (
+                                                            <RegisterUserMainPage
+                                                                SelectedData={SelectedData}
+                                                                setSelectedData={data => setSelectedData(data)}
+                                                                SelectCompany={SelectCompany}
+                                                            ></RegisterUserMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '라이선스 등록' ? (
+                                                            <LicenseRegisterMainPage
+                                                                SelectAssetData={SelectAssetData}
+                                                                SelectCompany={SelectCompany}
+                                                                setBasicLicenseData={(data: LicenseDataTypes[]) =>
+                                                                    setBasicLicenseData(data)
+                                                                }
+                                                                setChangeBasicLicenseData={(data: LicenseDataTypes[]) =>
+                                                                    setChangeBasicLicenseData(data)
+                                                                }
+                                                            ></LicenseRegisterMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
 
-                                                {/* {CompanySelectAccessKey.map((list, i) => {
+                                                    {/* {CompanySelectAccessKey.map((list, i) => {
                                                     return list.AccessKey && list.name === '사용자 등록' ? (
                                                         <dl className="inputbox" key={'사용자 목록' + list.name}>
                                                             <dt className="inputbox-title">사용자</dt>
@@ -645,23 +685,31 @@ const UpdatePcAssetUserDataModal = ({
                                                         ''
                                                     );
                                                 })} */}
-                                            </section>
+                                                </section>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className="btns">
+                                    <button className="btn btn-delete" onClick={() => deleteData()}>
+                                        삭제
+                                    </button>
+                                    <button className="btn btn-confirm" onClick={() => saveData()}>
+                                        저장
+                                    </button>
+                                    <button className="btn btn-cancel" onClick={() => closeModal()}>
+                                        취소
+                                    </button>
+                                </div>
                             </div>
-                            <div className="btns">
-                                <button className="btn btn-delete" onClick={() => deleteData()}>
-                                    삭제
-                                </button>
-                                <button className="btn btn-confirm" onClick={() => saveData()}>
-                                    저장
-                                </button>
-                                <button className="btn btn-cancel" onClick={() => closeModal()}>
-                                    취소
-                                </button>
+                        ) : (
+                            <div className="ModalFloatRight">
+                                <div>
+                                    <h2>자산 정보 수정 작업중 ..... </h2>
+                                    <h3>자산 정보 저장 이후에 사용 가능합니다.</h3>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                     <HistoryMainPage asset_management_number={SelectAssetData?.asset_management_number}></HistoryMainPage>
                 </NewPcAssetUserDataMainModalContent>

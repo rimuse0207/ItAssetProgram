@@ -130,6 +130,11 @@ const PCAssetAllDataMainDivBox = styled.div`
             }
         }
     }
+    .Thead_tr_table {
+        position: sticky;
+        top: 0px;
+        background-color: #fff;
+    }
 `;
 
 export type DeskTopInfoDataType = {
@@ -241,7 +246,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
             </div>
             <table className="type09">
                 <thead>
-                    <tr>
+                    <tr className="Thead_tr_table">
                         <th>부서</th>
                         <th>인덱스</th>
                         <th>이름</th>
@@ -255,7 +260,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                         <th>RAM</th>
                         <th>DISK</th>
                         <th>자산코드</th>
-                        <th>메모장</th>
+                        <th>비고</th>
                         <th>정보조회</th>
                     </tr>
                 </thead>
@@ -272,7 +277,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                                         >
                                             {j === 0 ? (
                                                 <td rowSpan={list.rows2.length} style={{ fontWeight: 'bold' }}>
-                                                    {list.show_team}
+                                                    {list.show_team} <br /> ( {list.rows2.length}명 )
                                                 </td>
                                             ) : (
                                                 <></>

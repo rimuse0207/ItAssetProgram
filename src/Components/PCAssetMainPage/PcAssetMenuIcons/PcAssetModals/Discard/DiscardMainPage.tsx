@@ -29,7 +29,15 @@ const DiscardMainPage = ({ SelectedData, setSelectedData }: PCReturnMainPageProp
                 <dt className="inputbox-title">폐기 사유</dt>
                 <dl>
                     <dd className="inputbox-content">
-                        <textarea></textarea>
+                        <textarea
+                            value={SelectedData.selected_reason}
+                            onChange={e =>
+                                setSelectedData({
+                                    ...SelectedData,
+                                    selected_reason: e.target.value,
+                                })
+                            }
+                        ></textarea>
                         <span className="underline"></span>
                     </dd>
                 </dl>

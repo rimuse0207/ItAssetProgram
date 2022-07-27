@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { TransferMainPagePropsType } from '../PcModalTypes';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import Select from 'react-select';
-import { TransferMainPagePropsType } from '../PcModalTypes';
 import { UserInfoGet } from '../../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import { PersonOption } from '../../../../LicenseMainPage/VolumeLicenseMainPage/DownloadMainPage/ModalMainPage/docs/data';
 
-registerLocale('ko', ko);
-const TransferMainPage = ({ SelectedData, setSelectedData, SelectCompany }: TransferMainPagePropsType) => {
+const RegisterUserMainPage = ({ SelectedData, setSelectedData, SelectCompany }: TransferMainPagePropsType) => {
     const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
     useEffect(() => {
         getUserInfo();
@@ -31,8 +30,9 @@ const TransferMainPage = ({ SelectedData, setSelectedData, SelectCompany }: Tran
     };
     return (
         <div>
+            {' '}
             <dl className="inputbox">
-                <dt className="inputbox-title">이관 날짜</dt>
+                <dt className="inputbox-title">등록 날짜</dt>
                 <dl>
                     <dd className="inputbox-content">
                         <DatePicker
@@ -47,25 +47,17 @@ const TransferMainPage = ({ SelectedData, setSelectedData, SelectCompany }: Tran
                     </dd>
                 </dl>
             </dl>
-            <dl className="inputbox">
+            {/* <dl className="inputbox">
                 <dt className="inputbox-title">이관 사유</dt>
                 <dl>
                     <dd className="inputbox-content">
-                        <textarea
-                            value={SelectedData.selected_reason}
-                            onChange={e =>
-                                setSelectedData({
-                                    ...SelectedData,
-                                    selected_reason: e.target.value,
-                                })
-                            }
-                        ></textarea>
+                        <textarea></textarea>
                         <span className="underline"></span>
                     </dd>
                 </dl>
-            </dl>
+            </dl> */}
             <dl className="inputbox">
-                <dt className="inputbox-title">이관 사용자</dt>
+                <dt className="inputbox-title">등록 사용자</dt>
                 <dd className="inputbox-content">
                     <Select
                         options={InfoUserData}
@@ -78,4 +70,4 @@ const TransferMainPage = ({ SelectedData, setSelectedData, SelectCompany }: Tran
     );
 };
 
-export default TransferMainPage;
+export default RegisterUserMainPage;

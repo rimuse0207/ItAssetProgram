@@ -272,10 +272,13 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                     </tr>
                     <tr>
                         <th scope="row">메모</th>
-                        <input
-                            defaultValue={ChangeAssetData.asset_notepad}
-                            onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_notepad: e.target.value })}
-                        ></input>
+                        <td>
+                            <input
+                                placeholder="비고사항을 입력 해 주세요."
+                                defaultValue={ChangeAssetData.asset_notepad}
+                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_notepad: e.target.value })}
+                            ></input>
+                        </td>
                     </tr>
                     {/* <tr>
                         <th scope="row">사용처</th>
