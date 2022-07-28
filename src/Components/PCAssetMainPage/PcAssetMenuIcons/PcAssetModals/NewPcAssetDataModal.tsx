@@ -22,6 +22,7 @@ import { IoMdAddCircle } from 'react-icons/io';
 import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { PersonalInfoGetData, LicenseSettingDuplicate } from '../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import { LicenseSettingProps } from '../../../LicenseSetting/LicenseSettingTypes';
+import { useParams } from 'react-router-dom';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -329,7 +330,9 @@ type NewAssetDataModalProps = {
     setSelectClicksModals: (data: boolean) => void;
     SelectCompany: string;
 };
-
+type paramasType = {
+    type: string;
+};
 const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCompany }: NewAssetDataModalProps) => {
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [ChooseAssetData, setChooseAssetData] = useState('데스크탑');
@@ -350,6 +353,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         userinfo_email: '',
         asset_distribute_date: new Date(),
         company_code: '',
+        asset_notepad: '',
     });
 
     useEffect(() => {
@@ -363,6 +367,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     const [SelectLists, setSeletLists] = useState('');
 
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
+    const { type } = useParams<paramasType>();
 
     const dispatch = useDispatch();
 
@@ -456,22 +461,22 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             };
             const SaveAssetData = await AssetAdd('/Asset_app_server/AssetAdd', ParamasData);
             if (SaveAssetData.data.dataSuccess) {
-                if (UserWriteData.asset_division === '데스크탑') {
-                    const ParamasDatas = {
-                        types: '데스크탑',
-                        SelectCompany,
-                        FilteringData,
-                        UserWriteData,
-                    };
-                    await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                } else if (UserWriteData.asset_division === '노트북') {
-                    const ParamasDatas = {
-                        types: '노트북',
-                        SelectCompany,
-                        FilteringData,
-                    };
-                    await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                }
+                // if (UserWriteData.asset_division === '데스크탑') {
+                //     const ParamasDatas = {
+                //         types: '데스크탑',
+                //         SelectCompany,
+                //         FilteringData,
+                //         UserWriteData,
+                //     };
+                //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
+                // } else if (UserWriteData.asset_division === '노트북') {
+                //     const ParamasDatas = {
+                //         types: '노트북',
+                //         SelectCompany,
+                //         FilteringData,
+                //     };
+                //     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
+                // }
                 // else {
                 //     const ParamasDatas = {
                 //         types: '모니터',
@@ -480,6 +485,13 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                 //     };
                 //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 // }
+
+                const paramasData = {
+                    company: SelectCompany,
+                    type,
+                    FilteringData,
+                };
+                await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
 
                 setUserWriteData({
                     asset_management_number: '',
@@ -496,12 +508,14 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     userinfo_email: '',
                     asset_distribute_date: new Date(),
                     company_code: '',
+                    asset_notepad: '',
                 });
                 // hadldeRandomCodeData();
+                closeModal();
 
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
             } else {
-                toast.show({ title: `자산 등록 실패 관리번호 변경 후 다시 시도 해 주세요.`, successCheck: false, duration: ToastTime });
+                toast.show({ title: `자산 등록 실패,다시 시도 해 주세요.`, successCheck: false, duration: ToastTime });
             }
         } catch (error) {
             console.log(error);
@@ -850,6 +864,20 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             setUserWriteData({ ...UserWriteData, asset_newcode: e.target.value })
                                                         }
                                                         placeholder="G10039 등등.."
+                                                    />
+                                                    <span className="underline"></span>
+                                                </dd>
+                                            </dl>
+                                            <dl className="inputbox">
+                                                <dt className="inputbox-title">비고</dt>
+                                                <dd className="inputbox-content">
+                                                    <input
+                                                        id="input10"
+                                                        value={UserWriteData.asset_notepad}
+                                                        onChange={e =>
+                                                            setUserWriteData({ ...UserWriteData, asset_notepad: e.target.value })
+                                                        }
+                                                        placeholder="공용PC-***** 등등.."
                                                     />
                                                     <span className="underline"></span>
                                                 </dd>

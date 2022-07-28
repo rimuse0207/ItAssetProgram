@@ -6,6 +6,7 @@ import { ThunkAction } from 'redux-thunk';
 import { ActionType } from 'typesafe-actions';
 import { DeskTopInfoDataType } from '../../Components/PCAssetMainPage/PCAssetDataType';
 import { AssetDesktopInfoGet } from '../../Apis/core/api/AuthNeedApi/LicenseApi';
+import { getDatasProps } from '../../Components/PCAssetMainPage/PCAssetAllData';
 
 const DeskTopAsset_GET_DeskTopAssetData_GET = 'DeskTopAsset_DeskTopAssetData/DeskTopAsset_GET_DeskTopAssetData_GET';
 const DeskTopAsset_GET_DeskTopAssetData_SUCCESS = 'DeskTopAsset_DeskTopAssetData/DeskTopAsset_GET_DeskTopAssetData_SUCCESS';
@@ -19,8 +20,8 @@ const DeskTopAsset_getDeskTopAssetDataAsync = createAsyncAction(
 
 const TeamLeader_getDataDeskTopAssetApply = async (ParamsData: {}) => {
     try {
-        const getInfoLicenseData = await AssetDesktopInfoGet('/Asset_app_server/AssetSelect', ParamsData);
-        return getInfoLicenseData.data.data;
+        const getInfoLicenseData = await AssetDesktopInfoGet('/Asset_app_server/Asset_Data_Getting', ParamsData);
+        return getInfoLicenseData.data.datas;
     } catch (error) {
         console.log(error);
     }
@@ -37,7 +38,7 @@ type DeskTopAssetDataTypes = {
     DeskTopAssetData: {
         loading: boolean;
         error: Error | null;
-        data: DeskTopInfoDataType | any;
+        data: getDatasProps[];
         dataChecked: boolean;
     };
 };
@@ -62,7 +63,7 @@ const initialState: DeskTopAssetDataTypes = {
     DeskTopAssetData: {
         loading: false,
         error: null,
-        data: null,
+        data: [],
         dataChecked: false,
     },
 };

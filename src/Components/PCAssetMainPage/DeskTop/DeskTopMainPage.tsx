@@ -165,7 +165,7 @@ const DeskTopMainPage = ({ SelectCompany, type }: DeskTopMainPageProps) => {
                             </thead>
                             <tbody>
                                 {DeskTopInfo.data.length > 0 ? (
-                                    DeskTopInfo.data.map((list: DeskTopInfoDataType, i: number) => {
+                                    DeskTopInfo.data.map((list: any, i: number) => {
                                         return (
                                             <tr key={list.asset_management_number}>
                                                 <td>{i + 1}</td>

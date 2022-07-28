@@ -189,6 +189,7 @@ type FilteringDataTypes = {
     asset_disk: string;
     asset_newcode: string;
     asset_model: string;
+    asset_not_used_user: boolean;
 };
 
 const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainPageProps) => {
@@ -209,6 +210,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
         asset_disk: '',
         asset_newcode: '',
         asset_model: '',
+        asset_not_used_user: false,
     });
 
     const dispatch = useDispatch();
@@ -228,6 +230,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                 asset_disk: '',
                 asset_newcode: '',
                 asset_model: '',
+                asset_not_used_user: false,
             });
         } catch (error) {
             console.log(error);
@@ -585,6 +588,27 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                         }
                                                     ></input>
                                                 </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="SearchInputContainer">
+                                    <div className="SearchInputContainerTitle">
+                                        <h5>미사용자</h5>
+                                    </div>
+                                    <div className="SearchInputContainerSubTitle">
+                                        <div className="SearchInputContainerSubTitleFlexDivBox">
+                                            <div className="CheckBox_InputDivBox">
+                                                <input
+                                                    checked={FilteringData.asset_not_used_user}
+                                                    type="checkbox"
+                                                    onChange={e =>
+                                                        setFilteringData({
+                                                            ...FilteringData,
+                                                            asset_not_used_user: !FilteringData.asset_not_used_user,
+                                                        })
+                                                    }
+                                                ></input>
                                             </div>
                                         </div>
                                     </div>

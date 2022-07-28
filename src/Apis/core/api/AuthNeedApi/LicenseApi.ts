@@ -12,9 +12,7 @@ export const LicenseUserInfoGet = (RequestURL: string, ParamasData: {}) => {
 };
 
 export const AssetDesktopInfoGet = (RequestURL: string, ParamasData: {}) => {
-    return request.post(RequestURL, {
-        params: ParamasData,
-    });
+    return request.post(RequestURL, ParamasData);
 };
 
 export const AssetDeleteLicense = (RequestURL: string, ParamasData: {}) => {

@@ -196,7 +196,7 @@ const LoginMainPage = ({ history }: any) => {
                     await dispatch(LoginCheckRedux(testSuccess));
 
                     localStorage.setItem('id', LoginDataInfo.email ? LoginDataInfo.email : '');
-
+                    localStorage.setItem('DHKS_TOKEN', LoginCheckFromServer.data.token);
                     setLoginDataInfo({
                         email: '',
                         password: '',

@@ -3,10 +3,11 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FcInfo } from 'react-icons/fc';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Models';
 import { Link, useParams } from 'react-router-dom';
 import UpdatePcAssetUserDataModal from './PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
+import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
 
 const PCAssetAllDataMainDivBox = styled.div`
     background-color: #fff;
@@ -174,7 +175,7 @@ export type DeskTopInfoDataType = {
     team_lists_team_name: string;
     asset_notepad: string;
 };
-type getDatasProps = {
+export type getDatasProps = {
     show_team: string;
     show_team_id: string;
     rows2: DeskTopInfoDataType[];
@@ -189,12 +190,15 @@ type paramasType = {
 };
 
 const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
+    const dispatch = useDispatch();
     const [getDatas, setGetData] = useState<getDatasProps[]>([]);
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
+    const DeskTopAssetData = useSelector((state: RootState) => state.DeskTopAssetData.DeskTopAssetData.data);
     const [Loading, setLoading] = useState(false);
     const [UserUpdateModalOpen, setUserUpdateModalOpen] = useState(false);
     const [SelectAssetData, setSelectAssetData] = useState<DeskTopInfoDataType | null>(null);
     const { type } = useParams<paramasType>();
+
     useEffect(() => {
         GetAllData();
     }, [type, FilteringData]);
@@ -203,16 +207,23 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
         try {
             setLoading(true);
             setGetData([]);
-            const getData = await axios.post(`${process.env.REACT_APP_API_URL}/Asset_app_server/Asset_Data_Getting`, {
+            const paramasData = {
                 company: SelectCompany,
                 type,
                 FilteringData,
-            });
-            if (getData.data.dataSuccess) {
-                setLoading(false);
-                console.log(getData);
-                setGetData(getData.data.datas);
-            }
+            };
+            await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+            setLoading(false);
+            // const getData = await axios.post(`${process.env.REACT_APP_API_URL}/Asset_app_server/Asset_Data_Getting`, {
+            //     company: SelectCompany,
+            //     type,
+            //     FilteringData,
+            // });
+            // if (getData.data.dataSuccess) {
+            //     setLoading(false);
+            //     console.log(getData);
+            //     setGetData(getData.data.datas);
+            // }
         } catch (error) {
             console.log(error);
             setLoading(false);
@@ -242,6 +253,9 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                     <Link to="/PCAsset/NoteBook">
                         <li className={type === 'NoteBook' ? 'Select_Menus' : ''}>노트북</li>
                     </Link>
+                    <Link to="/PCAsset/Discard">
+                        <li className={type === 'Discard' ? 'Select_Menus' : ''}>폐기</li>
+                    </Link>
                 </ul>
             </div>
             <table className="type09">
@@ -266,7 +280,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                 </thead>
                 <tbody>
                     {!Loading ? (
-                        getDatas.map((list, i) => {
+                        DeskTopAssetData.map((list, i) => {
                             return list.rows2.length > 0 ? (
                                 list.rows2.map((item, j) => {
                                     return (
@@ -296,20 +310,16 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                                             <td>{item.asset_newcode}</td>
                                             <td>{item.asset_notepad}</td>
                                             <td style={{ textAlign: 'center' }}>
-                                                {item.asset_destroy_check === 0 ? (
-                                                    <div className="UserPlusIcons" onClick={() => handleMinusUsered(item)}>
-                                                        <FcInfo></FcInfo>
-                                                    </div>
-                                                ) : (
-                                                    <div>폐기 처리</div>
-                                                )}
+                                                <div className="UserPlusIcons" onClick={() => handleMinusUsered(item)}>
+                                                    <FcInfo></FcInfo>
+                                                </div>
                                             </td>
                                         </tr>
                                     );
                                 })
                             ) : (
                                 <tr>
-                                    <td>{list.show_team}</td>
+                                    <td style={{ fontWeight: 'bold' }}>{list.show_team}</td>
                                     <td colSpan={13}>데이터 없음</td>
                                 </tr>
                             );

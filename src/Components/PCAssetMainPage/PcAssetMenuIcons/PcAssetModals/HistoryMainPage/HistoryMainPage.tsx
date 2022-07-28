@@ -10,6 +10,8 @@ type HistortyMainPageProps = {
 type HistoryDataType = {
     asset_destroy_date: string | null;
     asset_destroy_reason: string | null;
+    asset_destroy_restore_date: string | null;
+    asset_destroy_restore_reason: string | null;
     asset_info_asset_management: string;
     asset_return_date: string | null;
     asset_return_reason: string | null;
@@ -71,7 +73,7 @@ const HistoryMainPage = ({ asset_management_number }: HistortyMainPageProps) => 
                                 <th scope="cols">유형</th>
                                 <th scope="cols">날짜</th>
                                 <th scope="cols">사유</th>
-                                <th scope="cols">장소</th>
+                                {/* <th scope="cols">장소</th> */}
                                 <th scope="cols">이전 사용자</th>
                             </tr>
                         </thead>
@@ -88,6 +90,8 @@ const HistoryMainPage = ({ asset_management_number }: HistortyMainPageProps) => 
                                                     ? '반납'
                                                     : list.asset_transfer_date
                                                     ? '이관'
+                                                    : list.asset_destroy_restore_date
+                                                    ? '파기 복원'
                                                     : '-'}
                                             </td>
                                             <td>
@@ -97,6 +101,8 @@ const HistoryMainPage = ({ asset_management_number }: HistortyMainPageProps) => 
                                                     ? moment(list.asset_return_date).format('YYYY-MM-DD')
                                                     : list.asset_transfer_date
                                                     ? moment(list.asset_transfer_date).format('YYYY-MM-DD')
+                                                    : list.asset_destroy_restore_date
+                                                    ? moment(list.asset_destroy_restore_date).format('YYYY-MM-DD')
                                                     : '-'}
                                             </td>
                                             <td>
@@ -106,14 +112,16 @@ const HistoryMainPage = ({ asset_management_number }: HistortyMainPageProps) => 
                                                     ? list.asset_return_reason
                                                     : list.asset_transfer_date
                                                     ? list.asset_transfer_reason
+                                                    : list.asset_destroy_restore_date
+                                                    ? list.asset_destroy_restore_reason
                                                     : '-'}
                                             </td>
-                                            <td>
+                                            {/* <td>
                                                 {list.companyInfo_companycode
                                                     ? `${list.company_name}_${list.company_location}_${list.company_building}_${list.company_floor}`
                                                     : `-`}
-                                            </td>
-                                            <td>{list.userinfo_email ? `${list.team}_${list.name}` : '-'}</td>
+                                            </td> */}
+                                            <td>{list.name ? `${list.name}` : '-'}</td>
                                         </tr>
                                     );
                                 })

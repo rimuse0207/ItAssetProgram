@@ -26,6 +26,8 @@ import TransferMainPage from './Transfer/TransferMainPage';
 import DiscardMainPage from './Discard/DiscardMainPage';
 import RegisterUserMainPage from './RegisterUser/RegisterUserMainPage';
 import LicenseRegisterMainPage, { LicenseDataTypes } from './LicenseRegister/LicenseRegisterMainPage';
+import { useParams } from 'react-router-dom';
+import DiscardRestoreMainPage from './DiscardRestore/DiscardRestoreMainPage';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -329,7 +331,9 @@ type NewPcAssetUserDataModalProps = {
     SelectCompany: string;
     setSelectAssetData: any;
 };
-
+type paramasType = {
+    type: string;
+};
 const UpdatePcAssetUserDataModal = ({
     UserAddModalOpen,
     setUserAddModalOpen,
@@ -346,6 +350,7 @@ const UpdatePcAssetUserDataModal = ({
         { name: '폐기', AccessKey: false },
         { name: '라이선스 등록', AccessKey: false },
     ]);
+    const { type } = useParams<paramasType>();
     const [AssetDataChangeCheck, setAssetDataChangeCheck] = useState(false);
 
     const [SelectedData, setSelectedData] = useState({
@@ -374,6 +379,8 @@ const UpdatePcAssetUserDataModal = ({
                 { name: '폐기', AccessKey: false },
                 { name: '라이선스 등록', AccessKey: false },
             ]);
+        } else if (SelectAssetData?.asset_destroy_check) {
+            setCompanySelectAccessKey([{ name: '폐기 복원', AccessKey: true }]);
         } else {
             setCompanySelectAccessKey([
                 { name: '사용자 등록', AccessKey: true },
@@ -436,11 +443,11 @@ const UpdatePcAssetUserDataModal = ({
             };
             const UserAssetAdd = await AssetDelete('/Asset_app_server/AssetDeleteData', ParamasData);
             if (UserAssetAdd.data.dataSuccess) {
-                const ParamasDatas = {
-                    types: SelectAssetData?.asset_division,
-                    SelectCompany,
-                    FilteringData,
-                };
+                // const ParamasDatas = {
+                //     types: SelectAssetData?.asset_division,
+                //     SelectCompany,
+                //     FilteringData,
+                // };
                 // if (SelectAssetData?.asset_division === '데스크탑') {
                 //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
                 // } else if (SelectAssetData?.asset_division === '노트북') {
@@ -449,10 +456,16 @@ const UpdatePcAssetUserDataModal = ({
                 // else {
                 //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
                 // }
+                const paramasData = {
+                    company: SelectCompany,
+                    type,
+                    FilteringData,
+                };
+                await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
                 setSelectUsered(null);
                 closeModal();
                 toast.show({
-                    title: `자산에 유저 등록 완료.`,
+                    title: `변경 완료.`,
                     successCheck: true,
                     duration: ToastTime,
                 });
@@ -483,18 +496,24 @@ const UpdatePcAssetUserDataModal = ({
                 const Asset_Delete_Data = await AssetDelete('/Asset_app_server/Asset_Delete', ParamasData);
 
                 if (Asset_Delete_Data.data.dataSuccess) {
-                    const ParamasDatas = {
-                        types: SelectAssetData?.asset_division,
-                        SelectCompany,
+                    // const ParamasDatas = {
+                    //     types: SelectAssetData?.asset_division,
+                    //     SelectCompany,
+                    //     FilteringData,
+                    // };
+                    // if (SelectAssetData?.asset_division === '데스크탑') {
+                    //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
+                    // } else if (SelectAssetData?.asset_division === '노트북') {
+                    //     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
+                    // } else {
+                    //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
+                    // }
+                    const paramasData = {
+                        company: SelectCompany,
+                        type,
                         FilteringData,
                     };
-                    if (SelectAssetData?.asset_division === '데스크탑') {
-                        await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                    } else if (SelectAssetData?.asset_division === '노트북') {
-                        await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                    } else {
-                        await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
-                    }
+                    await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
                     toast.show({
                         title: `데이터 삭제 성공`,
                         successCheck: true,
@@ -609,6 +628,16 @@ const UpdatePcAssetUserDataModal = ({
                                                                 SelectedData={SelectedData}
                                                                 setSelectedData={data => setSelectedData(data)}
                                                             ></DiscardMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '폐기 복원' ? (
+                                                            <DiscardRestoreMainPage
+                                                                SelectedData={SelectedData}
+                                                                setSelectedData={data => setSelectedData(data)}
+                                                            ></DiscardRestoreMainPage>
                                                         ) : (
                                                             ''
                                                         );
