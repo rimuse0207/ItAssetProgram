@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import { MdCancel } from 'react-icons/md';
-import Select from 'react-select/async';
+// import Select from 'react-select/async';
+import Select from 'react-select';
 import { PersonOption, CompanyOption } from '../../../LicenseMainPage/VolumeLicenseMainPage/DownloadMainPage/ModalMainPage/docs/data';
 import { CompanyInfoGet, UserInfoGet, RandomCodeDataGet } from '../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
@@ -255,13 +256,13 @@ export const MainModalContent = styled.div`
             display: block;
         }
         .PCAssetFloatLeft {
-            width: 50%;
+            width: 40%;
             float: left;
             padding-right: 50px;
             border-right: 1px solid black;
         }
         .PCAssetFloatRight {
-            width: 50%;
+            width: 60%;
             padding-left: 50px;
             float: right;
         }
@@ -278,13 +279,13 @@ export const MainModalContent = styled.div`
         }
 
         .BigBoxContentLeft {
-            width: 45%;
+            width: 48%;
             height: 100%;
 
             float: left;
         }
         .BigBoxContentRight {
-            width: 45%;
+            width: 48%;
             height: 100%;
 
             float: right;
@@ -336,7 +337,7 @@ type paramasType = {
 const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCompany }: NewAssetDataModalProps) => {
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [ChooseAssetData, setChooseAssetData] = useState('데스크탑');
-    const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
+    const [InfoUserData, setInfoUserData] = useState<any>([]);
     const [CompanyInfoData, setCompanyInfoData] = useState<CompanyOption[]>([]);
     const [UserWriteData, setUserWriteData] = useState({
         asset_management_number: '',
@@ -349,7 +350,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         asset_ram: '16GB',
         asset_disk: 'SSD_512GB',
         asset_newcode: '',
-        usercheck: false,
+        usercheck: true,
         userinfo_email: '',
         asset_distribute_date: new Date(),
         company_code: '',
@@ -374,16 +375,16 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     function closeModal() {
         setSelectClicksModals(false);
     }
-    const filterSearchedSomething = (inputValue: string) => {
-        return InfoUserData.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
-    };
-    const loadOptions = (inputValue: string, callback: (options: PersonOption[]) => void) => {
-        setTimeout(() => {
-            callback(filterSearchedSomething(inputValue));
-        }, 100);
-    };
-    const handleSelectedName = (e: any) => {
-        setUserWriteData({ ...UserWriteData, userinfo_email: e.value });
+    // const filterSearchedSomething = (inputValue: string) => {
+    //     return InfoUserData.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
+    // };
+    // const loadOptions = (inputValue: string, callback: (options: PersonOption[]) => void) => {
+    //     setTimeout(() => {
+    //         callback(filterSearchedSomething(inputValue));
+    //     }, 100);
+    // };
+    const handleSelectedName = (value: any) => {
+        setUserWriteData({ ...UserWriteData, userinfo_email: value });
     };
     useEffect(() => {
         // getCompanyInfo();
@@ -405,6 +406,8 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             console.log(error);
         }
     };
+
+    const toggleClearable = () => setUserWriteData({ ...UserWriteData, userinfo_email: '' });
 
     //사용자 정보 받기 API 호출
     const getUserInfo = async () => {
@@ -448,16 +451,18 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         //     alert('공란을 작성해주세요.');
         //     return;
         // } else
-        if (UserWriteData.usercheck && UserWriteData.userinfo_email === '') {
-            alert('사용자를 등록 해주세요.');
-            return;
-        }
+        // if (UserWriteData.usercheck && UserWriteData.userinfo_email === '') {
+        //     alert('사용자를 등록 해주세요.');
+        //     return;
+        // }
         try {
             const ParamasData = {
                 UserWriteData,
                 SelectCompany,
                 ChooseAssetData,
                 SelectedLicenseData,
+                email: sessionStorage.getItem('email'),
+                name: sessionStorage.getItem('name'),
             };
             const SaveAssetData = await AssetAdd('/Asset_app_server/AssetAdd', ParamasData);
             if (SaveAssetData.data.dataSuccess) {
@@ -504,7 +509,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     asset_ram: UserWriteData.asset_ram,
                     asset_disk: UserWriteData.asset_disk,
                     asset_newcode: UserWriteData.asset_newcode,
-                    usercheck: false,
+                    usercheck: true,
                     userinfo_email: '',
                     asset_distribute_date: new Date(),
                     company_code: '',
@@ -891,14 +896,31 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                 <dl className="inputbox">
                                                     <dt className="inputbox-title">사용자</dt>
                                                     <dd className="inputbox-content">
-                                                        <Select
-                                                            // value={UserWriteData.user_used}
+                                                        {/* <Select
+                                                            // value={UserWriteData.userinfo_email}
+                                                            // defaultValue={UserWriteData.userinfo_email}
                                                             // cacheOptions
-                                                            isClearable
+                                                            isClearable={true}
                                                             loadOptions={loadOptions}
                                                             defaultOptions
-                                                            onChange={(e: any) => handleSelectedName(e)}
-                                                        />
+                                                            onChange={(e: any) => {
+                                                                console.log(e);
+                                                                handleSelectedName(e);
+                                                            }}
+                                                            closeMenuOnSelect={false}
+                                                        /> */}
+
+                                                        <Select
+                                                            className="basic-single"
+                                                            classNamePrefix="select"
+                                                            value={UserWriteData.userinfo_email}
+                                                            onChange={(value: any) => {
+                                                                handleSelectedName(value);
+                                                            }}
+                                                            isClearable={true}
+                                                            isSearchable={true}
+                                                            options={InfoUserData}
+                                                        ></Select>
                                                     </dd>
                                                 </dl>
                                                 <dl className="inputbox">

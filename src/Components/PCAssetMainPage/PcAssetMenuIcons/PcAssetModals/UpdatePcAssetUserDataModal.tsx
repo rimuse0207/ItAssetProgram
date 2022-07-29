@@ -440,6 +440,9 @@ const UpdatePcAssetUserDataModal = ({
                 CompanySelectAccessKey: selectedpickers,
                 BasicLicenseData,
                 ChangeBasicLicenseData,
+                email: sessionStorage.getItem('email'),
+                name: sessionStorage.getItem('name'),
+                SelectCompany,
             };
             const UserAssetAdd = await AssetDelete('/Asset_app_server/AssetDeleteData', ParamasData);
             if (UserAssetAdd.data.dataSuccess) {
@@ -491,8 +494,11 @@ const UpdatePcAssetUserDataModal = ({
             const ParamasData = {
                 SelectAssetData,
                 SelectedData,
+                email: sessionStorage.getItem('email'),
+                name: sessionStorage.getItem('name'),
+                SelectCompany,
             };
-            if (window.confirm(`정말 삭제 하시겠습니까?`)) {
+            if (window.confirm(`정말 삭제 하시겠습니까? \n삭제 하시면 복원 할 수 없습니다.`)) {
                 const Asset_Delete_Data = await AssetDelete('/Asset_app_server/Asset_Delete', ParamasData);
 
                 if (Asset_Delete_Data.data.dataSuccess) {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import DeskTopMainPage from './DeskTop/DeskTopMainPage';
@@ -12,6 +12,8 @@ import { RootState } from '../../Models';
 import { ChangeAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 import { AssetFilteringReset } from '../../Models/AssetFilteringRedux/AssetFilteringRedux';
 import PCAssetAllData from './PCAssetAllData';
+import { CgArrowUpO } from 'react-icons/cg';
+import { throttle } from 'lodash';
 
 type URLParamsType = {
     type: string;
@@ -52,17 +54,55 @@ const LicenseMainPageContentMainPageDiv = styled.div`
         top: -20px;
         background-color: #fff;
     }
+    .PageUpButton {
+        position: fixed;
+        bottom: 10px;
+        right: 20px;
+        font-size: 3em;
+        text-align: center;
+        :hover {
+            cursor: pointer;
+        }
+    }
 `;
 
 const PcAssetMainPage = () => {
     let { type } = useParams<URLParamsType>();
-
     const dispatch = useDispatch();
     const CompanySelectAccessKey = useSelector((state: RootState) => state.AccessKeyMenuBarData.CompanySelectAccessKey);
 
     useEffect(() => {
         dispatch(AssetFilteringReset());
     }, []);
+
+    // const Asset_Table_Ref = useRef<any>(null);
+    // const [isTabnavOn, setIsTabnavOn] = useState(false);
+
+    // const throttledScroll = useMemo(
+    //     () =>
+    //         throttle(() => {
+    //             console.log('스크롤 이벤트');
+    //             if (!Asset_Table_Ref.current) return;
+    //             const nextTabnavOn = window.scrollY > Asset_Table_Ref.current.offsetTop + 100;
+
+    //             console.log(nextTabnavOn);
+    //             console.log('Now', window.scrollY);
+    //             console.log('User', Asset_Table_Ref.current.offsetTop);
+    //             if (nextTabnavOn !== isTabnavOn) setIsTabnavOn(nextTabnavOn);
+    //         }, 300),
+    //     [isTabnavOn]
+    // );
+
+    // useEffect(() => {
+    //     console.log(window.scrollY);
+    // });
+    // useEffect(() => {
+    //     console.log(window.scrollY);
+    //     Asset_Table_Ref.current.addEventListener('scroll', throttledScroll);
+    //     return () => {
+    //         Asset_Table_Ref.current.removeEventListener('scroll', throttledScroll);
+    //     };
+    // }, [throttledScroll]);
 
     const handleCompanyClicks = async (data: MenuAccessType) => {
         const ChangeCompany = CompanySelectAccessKey.map((list: MenuAccessType, i: number) => {
