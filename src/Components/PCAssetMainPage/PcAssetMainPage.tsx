@@ -19,12 +19,12 @@ type URLParamsType = {
     type: string;
 };
 
-type MenuAccessType = {
+export type MenuAccessType = {
     name: string;
     AccessKey: boolean;
 };
 
-const LicenseMainPageContentMainPageDiv = styled.div`
+export const LicenseMainPageContentMainPageDiv = styled.div`
     padding-left: 20px;
     height: 100vh;
     width: 100%;

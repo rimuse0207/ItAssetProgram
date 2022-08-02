@@ -44,6 +44,11 @@ const PCAssetAllDataMainDivBox = styled.div`
         position: relative;
         width: 100%;
     }
+    @media only screen and (max-width: 1700px) {
+        table.type09 {
+            font-size: 0.6em !important;
+        }
+    }
 
     table.type09 {
         border-collapse: collapse;

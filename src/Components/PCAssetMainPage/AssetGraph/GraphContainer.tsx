@@ -93,45 +93,45 @@ const GraphContainer = ({ SelectCompany }: GraphContainerPropsType) => {
                     <div className="Asset_GraphContent">
                         <h3>데스크탑 + 노트북</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
-                            {GraphCount.Asset_Count} / {GraphCount.Asset_Count_Null} /{' '}
-                            {GraphCount.Asset_Count + GraphCount.Asset_Count_Null}
+                            {GraphCount.Asset_Count - GraphCount.Asset_Count_Null} / {GraphCount.Asset_Count_Null} /{' '}
+                            {GraphCount.Asset_Count}
                         </h4>
                         <AssetGraphMainPage
                             assetType="데스크탑 + 노트북"
                             usedData={[
-                                GraphCount.Asset_Count,
+                                GraphCount.Asset_Count - GraphCount.Asset_Count_Null,
                                 GraphCount.Asset_Count_Null,
-                                GraphCount.Asset_Count + GraphCount.Asset_Count_Null,
+                                GraphCount.Asset_Count,
                             ]}
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
                         <h3>데스크탑</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
-                            {GraphCount.DeskTop_Count} / {GraphCount.DeskTop_Count_Null} /
-                            {GraphCount.DeskTop_Count + GraphCount.DeskTop_Count_Null}
+                            {GraphCount.DeskTop_Count - GraphCount.DeskTop_Count_Null} / {GraphCount.DeskTop_Count_Null} /
+                            {GraphCount.DeskTop_Count}
                         </h4>
                         <AssetGraphMainPage
                             assetType="데스크탑"
                             usedData={[
-                                GraphCount.DeskTop_Count,
+                                GraphCount.DeskTop_Count - GraphCount.DeskTop_Count_Null,
                                 GraphCount.DeskTop_Count_Null,
-                                GraphCount.DeskTop_Count + GraphCount.DeskTop_Count_Null,
+                                GraphCount.DeskTop_Count,
                             ]}
                         ></AssetGraphMainPage>
                     </div>
                     <div className="Asset_GraphContent">
                         <h3>노트북</h3>
                         <h4 style={{ position: 'absolute', left: '20px' }}>
-                            {GraphCount.NoteBook_Count} / {GraphCount.NoteBook_Count_Null} /
-                            {GraphCount.NoteBook_Count + GraphCount.NoteBook_Count_Null}
+                            {GraphCount.NoteBook_Count - GraphCount.NoteBook_Count_Null} / {GraphCount.NoteBook_Count_Null} /
+                            {GraphCount.NoteBook_Count}
                         </h4>
                         <AssetGraphMainPage
                             assetType="노트북"
                             usedData={[
-                                GraphCount.NoteBook_Count,
+                                GraphCount.NoteBook_Count - GraphCount.NoteBook_Count_Null,
                                 GraphCount.NoteBook_Count_Null,
-                                GraphCount.NoteBook_Count + GraphCount.NoteBook_Count_Null,
+                                GraphCount.NoteBook_Count,
                             ]}
                         ></AssetGraphMainPage>
                     </div>

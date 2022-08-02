@@ -11,7 +11,7 @@ import { LogoutRedux } from '../../Models/LoginCheckRedux/LoginCheckRedux';
 import { RootState } from '../../Models';
 import { ResetAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 import { useLocation } from 'react-router-dom';
-
+import { GrCatalog } from 'react-icons/gr';
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
     MenuCheckedSubLists: {};
@@ -232,6 +232,11 @@ const NavigationMenuBarMainPage = () => {
                                             <BsFillPersonLinesFill></BsFillPersonLinesFill>
                                         </li>
                                     </Link>
+                                    <Link to="/Change_log">
+                                        <li>
+                                            <GrCatalog></GrCatalog>
+                                        </li>
+                                    </Link>
                                     {/* <li>
                                         <BiServer></BiServer>
                                     </li> */}
@@ -446,6 +451,10 @@ const NavigationMenuBarMainPage = () => {
                                             <li>라이선스 설정</li>
                                         </Link>
                                         {/* <li>비밀번호 변경</li> */}
+
+                                        <Link to="/Change_log">
+                                            <li>로그 기록</li>
+                                        </Link>
 
                                         <li onClick={handleLogout}>로그아웃</li>
                                     </ul>

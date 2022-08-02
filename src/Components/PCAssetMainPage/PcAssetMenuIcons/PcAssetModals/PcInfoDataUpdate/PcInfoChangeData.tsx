@@ -15,6 +15,7 @@ import { NoteBookAsset_getNoteBookAssetDataThunk } from '../../../../../Models/A
 import { MonitorAsset_getMonitorAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetMonitorDataThunks';
 import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
+import { useParams } from 'react-router-dom';
 
 registerLocale('ko', ko);
 type PcInfoChangeDataProps = {
@@ -43,8 +44,13 @@ const PcInfoChangeDataMainDivBox = styled.div`
     }
 `;
 
+type paramasType = {
+    type: string;
+};
+
 const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectAssetData, SelectCompany }: PcInfoChangeDataProps) => {
     const dispatch = useDispatch();
+    const { type } = useParams<paramasType>();
     const FilteringData = useSelector((state: RootState) => state.FilteringData.FilteringData);
     const [ChangeAssetData, setChangeAssetData] = useState({
         asset_management_number: SelectAssetData?.asset_management_number,
@@ -78,6 +84,7 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                     asset_ram,
                     asset_pride,
                     asset_newcode,
+                    asset_notepad,
                 } = ChangeAssetData;
 
                 setSelectAssetData({
@@ -91,37 +98,56 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                     asset_ram,
                     asset_disk,
                     asset_newcode,
+                    asset_notepad,
                 });
 
-                const ParamasDatasDesktop = {
-                    types: '데스크탑',
-                    SelectCompany,
+                // const ParamasDatasDesktop = {
+                //     types: '데스크탑',
+                //     SelectCompany,
+                //     FilteringData,
+                // };
+                // const ParamasDatasNoteBook = {
+                //     types: '노트북',
+                //     SelectCompany,
+                //     FilteringData,
+                // };
+                // const ParamasDatasMonitor = {
+                //     types: '모니터',
+                //     SelectCompany,
+                //     FilteringData,
+                // };
+                // await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatasDesktop));
+                // await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatasNoteBook));
+                // await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatasMonitor));
+                const paramasData = {
+                    company: SelectCompany,
+                    type,
                     FilteringData,
                 };
-                const ParamasDatasNoteBook = {
-                    types: '노트북',
-                    SelectCompany,
-                    FilteringData,
-                };
-                const ParamasDatasMonitor = {
-                    types: '모니터',
-                    SelectCompany,
-                    FilteringData,
-                };
-                await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatasDesktop));
-                await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatasNoteBook));
-                await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatasMonitor));
+                if (ChangeAssetDatass.data.dataSuccess) {
+                    await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+                    toast.show({
+                        title: `자산 정보 수정을 완료하였습니다.`,
+                        successCheck: true,
+                        duration: ToastTime,
+                    });
 
-                toast.show({
-                    title: `자산 정보 수정을 완료하였습니다.`,
-                    successCheck: true,
-                    duration: ToastTime,
-                });
-
-                setAssetDataChangeCheck();
+                    setAssetDataChangeCheck();
+                } else {
+                    toast.show({
+                        title: `자산 정보 수정을 실패하였습니다.`,
+                        successCheck: false,
+                        duration: ToastTime,
+                    });
+                }
             }
         } catch (error) {
             console.log(error);
+            toast.show({
+                title: `에러 발생 IT팀에 문의 바랍니다.`,
+                successCheck: false,
+                duration: ToastTime,
+            });
         }
     };
 

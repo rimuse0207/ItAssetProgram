@@ -14,6 +14,7 @@ import PersonnelAdminDashBoardMainPage from './Components/PersonnelAdminDashBoar
 import TotalDashBoardMainPage from './Components/TotalDashBoard/TotalDashBoardMainPage';
 import LicenseSettingMainPage from './Components/LicenseSetting/LicenseSettingMainPage';
 import LicenseSettingSelect from './Components/LicenseSetting/LicenseSettingSelect';
+import LogMainPage from './Components/LicenseSetting/LogMainPage/LogMainPage';
 
 const RouterPage = () => {
     const LoginCheckData = useSelector((state: RootState) => state.LoginCheck);
@@ -37,6 +38,7 @@ const RouterPage = () => {
                             <Route path="/TotalDashBoard" component={TotalDashBoardMainPage}></Route>
                             <Route path="/LicenseSettingAdd" component={LicenseSettingMainPage}></Route>
                             <Route path="/LicenseSettingSelect" component={LicenseSettingSelect}></Route>
+                            <Route path="/Change_log" component={LogMainPage}></Route>
                         </div>
                     ) : (
                         <div>
