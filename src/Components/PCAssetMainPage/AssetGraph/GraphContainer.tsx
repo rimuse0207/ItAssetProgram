@@ -74,7 +74,6 @@ const GraphContainer = ({ SelectCompany }: GraphContainerPropsType) => {
             );
 
             if (getAllCountAssetDataFromServer.data.dataSuccess) {
-                console.log(getAllCountAssetDataFromServer);
                 setGraphCount(getAllCountAssetDataFromServer.data.datas);
                 setLoading(false);
             } else {

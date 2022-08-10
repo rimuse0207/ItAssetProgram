@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import App from './App';
 import LicenseMainPage from './Components/LicenseMainPage/LicenseMainPage';
@@ -15,9 +15,25 @@ import TotalDashBoardMainPage from './Components/TotalDashBoard/TotalDashBoardMa
 import LicenseSettingMainPage from './Components/LicenseSetting/LicenseSettingMainPage';
 import LicenseSettingSelect from './Components/LicenseSetting/LicenseSettingSelect';
 import LogMainPage from './Components/LicenseSetting/LogMainPage/LogMainPage';
+import axios from 'axios';
 
 const RouterPage = () => {
     const LoginCheckData = useSelector((state: RootState) => state.LoginCheck);
+
+    useEffect(() => {
+        BrityData();
+    }, []);
+    const BrityData = async () => {
+        const BrityApi = await axios.post(`https://openapi.stage.britymail.com/employee`, {
+            params: {},
+            headers: {
+                'System-ID': 'A34REST00001',
+                Authorization: 'Bearer 42ec2517-50d8-3ee6-8cef-71dca23091f2',
+            },
+        });
+
+        console.log(BrityApi);
+    };
 
     return (
         <BrowserRouter>

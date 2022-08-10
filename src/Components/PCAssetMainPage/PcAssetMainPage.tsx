@@ -12,7 +12,7 @@ import { RootState } from '../../Models';
 import { ChangeAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 import { AssetFilteringReset } from '../../Models/AssetFilteringRedux/AssetFilteringRedux';
 import PCAssetAllData from './PCAssetAllData';
-import { CgArrowUpO } from 'react-icons/cg';
+import { IoIosArrowUp } from 'react-icons/io';
 import { throttle } from 'lodash';
 
 type URLParamsType = {
@@ -54,14 +54,35 @@ export const LicenseMainPageContentMainPageDiv = styled.div`
         top: -20px;
         background-color: #fff;
     }
-    .PageUpButton {
+    .Arrow_Window_Up {
         position: fixed;
         bottom: 10px;
         right: 20px;
         font-size: 3em;
         text-align: center;
+        z-index: 1;
+        background-color: #fff;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+
+        animation: motion 0.8s /* 속도 */ linear 0s /* 처음부터 끝까지 일정 속도로 진행 */ infinite alternate; /* 무한 반복 */
+        @keyframes motion {
+            0% {
+                bottom: 20px;
+            } /* 처음 위치 */
+            100% {
+                bottom: 10px;
+            } /* 마지막 위치 */
+        }
+
         :hover {
             cursor: pointer;
+        }
+        .Arrow_icons {
+            position: absolute;
+            top: -5px;
+            right: 1px;
         }
     }
 `;
@@ -115,9 +136,44 @@ const PcAssetMainPage = () => {
         });
         await dispatch(ChangeAccessKeyMenuBarRedux(ChangeCompany));
     };
+    /// 올라가기 아이콘
+
+    const HandleRefTable = useRef<any>(null);
+    const [isTabnavOn, setIsTabnavOn] = useState(false);
+
+    const throttledScroll = useMemo(
+        () =>
+            throttle((event: any) => {
+                if (!event.currentTarget) return;
+                if (event.currentTarget.scrollTop > event.currentTarget.offsetHeight - 200) {
+                    setIsTabnavOn(true);
+                } else {
+                    setIsTabnavOn(false);
+                }
+            }, 100),
+        []
+    );
+
+    const handleClicksUp = () => {
+        HandleRefTable.current.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+        setIsTabnavOn(false);
+    };
 
     return (
-        <LicenseMainPageContentMainPageDiv>
+        <LicenseMainPageContentMainPageDiv onScroll={throttledScroll} ref={HandleRefTable}>
+            {isTabnavOn ? (
+                <div className="Arrow_Window_Up" onClick={handleClicksUp}>
+                    <div className="Arrow_icons">
+                        <IoIosArrowUp></IoIosArrowUp>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
+
             <CompanySelectMenuBar
                 CompanySelectAccessKey={CompanySelectAccessKey}
                 handleCompanyClicks={handleCompanyClicks}

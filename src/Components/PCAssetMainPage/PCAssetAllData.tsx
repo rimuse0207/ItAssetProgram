@@ -292,7 +292,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                                         <tr
                                             className={i % 2 === 0 ? '' : 'table_color_on'}
                                             style={j === 0 ? { borderTop: '2px solid black' } : {}}
-                                            key={item.asset_management_number}
+                                            key={`${list.show_team}_${item.asset_management_number}_${j}`}
                                         >
                                             {j === 0 ? (
                                                 <td rowSpan={list.rows2.length} style={{ fontWeight: 'bold' }}>

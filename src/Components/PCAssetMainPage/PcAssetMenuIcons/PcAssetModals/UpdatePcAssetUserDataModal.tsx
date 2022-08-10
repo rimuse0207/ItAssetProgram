@@ -610,6 +610,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '반납' ? (
                                                             <PCReturnMainPage
+                                                                key={list.name}
                                                                 SelectedData={SelectedData}
                                                                 setSelectedData={data => setSelectedData(data)}
                                                             ></PCReturnMainPage>
@@ -620,6 +621,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '이관' ? (
                                                             <TransferMainPage
+                                                                key={list.name}
                                                                 SelectedData={SelectedData}
                                                                 setSelectedData={data => setSelectedData(data)}
                                                                 SelectCompany={SelectCompany}
@@ -631,6 +633,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '폐기' ? (
                                                             <DiscardMainPage
+                                                                key={list.name}
                                                                 SelectedData={SelectedData}
                                                                 setSelectedData={data => setSelectedData(data)}
                                                             ></DiscardMainPage>
@@ -641,6 +644,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '폐기 복원' ? (
                                                             <DiscardRestoreMainPage
+                                                                key={list.name}
                                                                 SelectedData={SelectedData}
                                                                 setSelectedData={data => setSelectedData(data)}
                                                             ></DiscardRestoreMainPage>
@@ -651,6 +655,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '사용자 등록' ? (
                                                             <RegisterUserMainPage
+                                                                key={list.name}
                                                                 SelectedData={SelectedData}
                                                                 setSelectedData={data => setSelectedData(data)}
                                                                 SelectCompany={SelectCompany}
@@ -662,6 +667,7 @@ const UpdatePcAssetUserDataModal = ({
                                                     {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '라이선스 등록' ? (
                                                             <LicenseRegisterMainPage
+                                                                key={list.name}
                                                                 SelectAssetData={SelectAssetData}
                                                                 SelectCompany={SelectCompany}
                                                                 setBasicLicenseData={(data: LicenseDataTypes[]) =>
