@@ -355,6 +355,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         asset_distribute_date: new Date(),
         company_code: '',
         asset_notepad: '',
+        asset_person_number: '',
     });
 
     useEffect(() => {
@@ -514,6 +515,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     asset_distribute_date: new Date(),
                     company_code: '',
                     asset_notepad: '',
+                    asset_person_number: '',
                 });
                 // hadldeRandomCodeData();
                 closeModal();
@@ -655,7 +657,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                 <div className="PCAssetFloatContainer">
                                     <div className="PCAssetFloatLeft">
                                         <div className="input-content-wrap">
-                                            {/* <dl className="inputbox">
+                                            <dl className="inputbox">
                                                 <dt className="inputbox-title">
                                                     관리번호<span style={{ color: 'red' }}>*</span>
                                                 </dt>
@@ -663,20 +665,20 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     <input
                                                         id="input0"
                                                         type="text"
-                                                        value={UserWriteData.asset_management_number}
+                                                        value={UserWriteData.asset_person_number}
                                                         onChange={e =>
-                                                            setUserWriteData({ ...UserWriteData, asset_management_number: e.target.value })
+                                                            setUserWriteData({ ...UserWriteData, asset_person_number: e.target.value })
                                                         }
-                                                        placeholder={`${SelectCompany}-22001`}
+                                                        placeholder={`${SelectCompany}-OOOOO`}
                                                         required
                                                     />
 
                                                     <span className="underline"></span>
-                                                    <div className="RandomButtonIcons" onClick={hadldeRandomCodeData}>
+                                                    {/* <div className="RandomButtonIcons" onClick={hadldeRandomCodeData}>
                                                         <GiPerspectiveDiceSixFacesRandom></GiPerspectiveDiceSixFacesRandom>
-                                                    </div>
+                                                    </div> */}
                                                 </dd>
-                                            </dl> */}
+                                            </dl>
 
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">
@@ -840,6 +842,9 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         onChange={e => setUserWriteData({ ...UserWriteData, asset_disk: e.target.value })}
                                                         value={UserWriteData.asset_disk}
                                                     >
+                                                        <option defaultValue="SSD_128GB" value={'SSD_128GB'}>
+                                                            SSD_128GB
+                                                        </option>
                                                         <option defaultValue="SSD_256GB" value={'SSD_256GB'}>
                                                             SSD_256GB
                                                         </option>
@@ -848,6 +853,9 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         </option>
                                                         <option defaultValue="SSD_1TB" value={'SSD_1TB'}>
                                                             SSD_1TB
+                                                        </option>
+                                                        <option defaultValue="HDD_256GB" value={'HDD_256GB'}>
+                                                            HDD_256GB
                                                         </option>
                                                         <option defaultValue="HDD_512GB" value={'HDD_512GB'}>
                                                             HDD_512GB
@@ -934,7 +942,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             withPortal
                                                             locale={ko}
                                                             dateFormat="yyy-MM-dd"
-                                                            minDate={UserWriteData.asset_purchase_date}
                                                         />
                                                         <span className="underline"></span>
                                                     </dd>

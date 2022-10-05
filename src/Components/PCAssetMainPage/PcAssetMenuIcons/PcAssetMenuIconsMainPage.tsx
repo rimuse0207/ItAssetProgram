@@ -190,6 +190,7 @@ type FilteringDataTypes = {
     asset_newcode: string;
     asset_model: string;
     asset_not_used_user: boolean;
+    asset_notepad: string;
 };
 
 const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainPageProps) => {
@@ -211,6 +212,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
         asset_newcode: '',
         asset_model: '',
         asset_not_used_user: false,
+        asset_notepad: '',
     });
 
     const dispatch = useDispatch();
@@ -231,6 +233,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                 asset_newcode: '',
                 asset_model: '',
                 asset_not_used_user: false,
+                asset_notepad: '',
             });
         } catch (error) {
             console.log(error);
@@ -585,6 +588,32 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                                         placeholder="Ex) G00000...."
                                                         onChange={e =>
                                                             setFilteringData({ ...FilteringData, asset_newcode: e.target.value })
+                                                        }
+                                                    ></input>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="SearchInputContainer">
+                                    <div className="SearchInputContainerTitle">
+                                        <h4>비고.</h4>
+                                    </div>
+                                    <div className="SearchInputContainerSubTitle">
+                                        <div className="SearchInputContainerSubTitleFlexDivBox">
+                                            <div className="IconsDivBox">
+                                                <label>
+                                                    <BsFillPencilFill></BsFillPencilFill>
+                                                </label>
+                                            </div>
+                                            <div className="InputDivBox">
+                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
+                                                    <input
+                                                        value={FilteringData.asset_notepad}
+                                                        type="text"
+                                                        placeholder="Ex) 공용...."
+                                                        onChange={e =>
+                                                            setFilteringData({ ...FilteringData, asset_notepad: e.target.value })
                                                         }
                                                     ></input>
                                                 </form>

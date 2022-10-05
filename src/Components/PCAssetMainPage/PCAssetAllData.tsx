@@ -8,6 +8,7 @@ import { RootState } from '../../Models';
 import { Link, useParams } from 'react-router-dom';
 import UpdatePcAssetUserDataModal from './PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
 import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
+import LoaderMainPage from '../Loader/LoaderMainPage';
 
 const PCAssetAllDataMainDivBox = styled.div`
     background-color: #fff;
@@ -218,7 +219,10 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                 FilteringData,
             };
             await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
-            setLoading(false);
+
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
             // const getData = await axios.post(`${process.env.REACT_APP_API_URL}/Asset_app_server/Asset_Data_Getting`, {
             //     company: SelectCompany,
             //     type,
@@ -231,13 +235,16 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
             // }
         } catch (error) {
             console.log(error);
-            setLoading(false);
+
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 
     const handleMinusUsered = async (data: DeskTopInfoDataType) => {
         try {
-            console.log(data);
+            
             setSelectAssetData(data);
             setUserUpdateModalOpen(true);
         } catch (error) {
@@ -346,6 +353,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
             ) : (
                 ''
             )}
+            <LoaderMainPage loading={Loading}></LoaderMainPage>
         </PCAssetAllDataMainDivBox>
     );
 };

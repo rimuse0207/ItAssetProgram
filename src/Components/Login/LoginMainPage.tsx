@@ -235,7 +235,7 @@ const LoginMainPage = ({ history }: any) => {
                         <div className="login-form-right-side">
                             <div className="top-logo-wrap"></div>
                             <h1>IT 자산 프로그램</h1>
-                            <p>* 스마트 IT팀에 허가 되지 않은 소프트웨어 프로그램 사용 시에는 책임은 본인에게 있습니다.</p>
+                            <p>* 회사에 허가 되지 않은 소프트웨어 프로그램 사용 시에는 책임은 본인에게 있습니다.</p>
                         </div>
                         <div className="login-form-left-side">
                             {/* <div className="login-top-wrap">
