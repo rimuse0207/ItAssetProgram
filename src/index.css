@@ -14,6 +14,8 @@ code {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: Pretendard-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans';
 }
 
 li {
@@ -78,4 +80,11 @@ a {
     border: 7px solid transparent;
     background-clip: content-box;
     background-color: gray;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }

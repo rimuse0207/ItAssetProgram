@@ -28,6 +28,7 @@ export type DeskTopInfoDataType = {
     inservice: string | null;
     updatedate: string | null;
     companyInfo_companycode: string | null;
+    asset_mac_address: string | null;
 };
 
 export type DeskTopMainPageProps = {

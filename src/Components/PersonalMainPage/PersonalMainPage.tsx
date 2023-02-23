@@ -156,6 +156,18 @@ type UserInfoTypes = {
     team: string | null;
 };
 
+export type DLP_LicenseTypes = {
+    InName: string;
+    Ip: string;
+    LoginTime: string;
+    MID: number;
+    Mac: string;
+    Name: string;
+    UserName: string;
+    Company: string;
+    Type: number;
+};
+
 type LicenseTypes = {
     asset_info_asset_management_number: string | null;
     license_company_name: string | null;
@@ -184,12 +196,20 @@ type PersonalMainPageProps = {
     names: string | null;
 };
 
+type UserInfoShowDataType = {
+    Asset_Data: UserAssetTypes;
+    SoftWare_Data: DLP_LicenseTypes[];
+};
+
 const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
     const [userInfoDatas, setUserInfoDatas] = useState<UserInfoTypes[]>([]);
     const [userAssetDatas, setAssetDatas] = useState<UserAssetTypes[]>([]);
     const [userLicenseDatas, setUserLicenseDatas] = useState<LicenseTypes[]>([]);
-    const [LicenseExistLicense, setLicneseExistLicense] = useState<LicenseTypes[]>([]);
+    const [LicenseExistLicense, setLicneseExistLicense] = useState<DLP_LicenseTypes[]>([]);
     const [LicenseNoneExistLicense, setLicneseNoneExistLicense] = useState<LicenseTypes[]>([]);
+
+    const [UserInfoShowData, setUserInfoShowData] = useState<UserInfoShowDataType[]>([]);
+
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     useEffect(() => {
         GetInfoDataPersonal();
@@ -202,31 +222,36 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
             };
             const PersonalDatas = await PersonalInfoGet('/UserInfo_app_server/getPersonalDatas', Paramas);
 
+            console.log(PersonalDatas);
             if (PersonalDatas.data.dataSuccess) {
-                const datas = PersonalDatas.data.datas.License.filter(
-                    (arr: any, index: any, callback: any) =>
-                        index === callback.findIndex((t: any) => t.license_product_name === arr.license_product_name)
-                );
+                // const datas = PersonalDatas.data.datas.License.filter(
+                //     (arr: any, index: any, callback: any) =>
+                //         index === callback.findIndex((t: any) => t.license_product_name === arr.license_product_name)
+                // );
+
                 setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
-                setAssetDatas(PersonalDatas.data.datas.Asset);
-                setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
-                setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
+                // setAssetDatas(PersonalDatas.data.datas.Asset);
+                // setLicneseExistLicense(PersonalDatas.data.datas.SoftWare);
+                setUserInfoShowData(PersonalDatas.data.datas.Datas);
 
-                var arr = datas;
-                arr.sort(function (a: any, b: any) {
-                    var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
-                    var nameB = b.userinfo_email ? b.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
-                        return 1;
-                    }
+                // setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
+                // setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
 
-                    // 이름이 같을 경우
-                    return 0;
-                });
-                setUserLicenseDatas(arr);
+                // var arr = datas;
+                // arr.sort(function (a: any, b: any) {
+                //     var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
+                //     var nameB = b.userinfo_email ? b.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
+                //     if (nameA < nameB) {
+                //         return -1;
+                //     }
+                //     if (nameA > nameB) {
+                //         return 1;
+                //     }
+
+                //     // 이름이 같을 경우
+                //     return 0;
+                // });
+                // setUserLicenseDatas(arr);
             }
         } catch (error) {
             console.log(error);
@@ -284,18 +309,20 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {userAssetDatas.map((list, i) => {
+                            {UserInfoShowData.map((list, i) => {
                                 return (
-                                    <tr key={list.asset_management_number}>
+                                    <tr key={list.Asset_Data.asset_management_number}>
                                         <td>{i + 1}</td>
                                         <td>
-                                            {list.asset_division} ({list.asset_maker})
+                                            {list.Asset_Data.asset_division} ({list.Asset_Data.asset_maker})
                                         </td>
                                         <td>
-                                            {list.asset_cpu}_{list.asset_ram}_{list.asset_disk}
+                                            {list.Asset_Data.asset_cpu}_{list.Asset_Data.asset_ram}_{list.Asset_Data.asset_disk}
                                         </td>
                                         <td>
-                                            {list.asset_distribute_date ? moment(list.asset_distribute_date).format('YYYY-MM-DD') : '-'}
+                                            {list.Asset_Data.asset_distribute_date
+                                                ? moment(list.Asset_Data.asset_distribute_date).format('YYYY-MM-DD')
+                                                : '-'}
                                         </td>
                                     </tr>
                                 );
@@ -307,7 +334,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
             <div className="AssetPersonalInfo">
                 <div>
                     <div>
-                        <h3>등록 소프트웨어</h3>
+                        <h3>설치된 소프트웨어</h3>
                     </div>
                 </div>
                 <div className="AssetTableContainer">
@@ -315,10 +342,10 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                         <thead>
                             <tr>
                                 <th scope="cols">인덱스</th>
-                                <th scope="cols">등록 PC</th>
+                                <th scope="cols">소프트웨어</th>
+                                <th scope="cols">제조사</th>
                                 <th scope="cols">구분</th>
-                                <th scope="cols">사용 가능 여부</th>
-                                <th scope="cols">지급 일자</th>
+                                <th scope="cols">라이선스 필요 여부</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -339,28 +366,24 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                                     </tr>
                                 );
                             })} */}
-                            {LicenseExistLicense.map((list, i) => {
-                                return (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>
-                                            {list.asset_info_asset_management_number
-                                                ? `${list?.asset_division}_${moment(list.asset_purchase_date).format('YYYY-MM-DD')}`
-                                                : '-'}
-                                        </td>
-                                        <td>{list.license_product_name}</td>
-                                        <td>{list.asset_info_asset_management_number ? 'O' : 'X'}</td>
-                                        <td>
-                                            {list.license_register_date ? moment(list.license_register_date).format('YYYY-MM-DD') : '-'}
-                                        </td>
-                                    </tr>
-                                );
+                            {UserInfoShowData.map((item, j) => {
+                                return item.SoftWare_Data.map((list, i) => {
+                                    return (
+                                        <tr key={list.InName} style={list.Type === 1 ? { background: 'lightgray' } : {}}>
+                                            <td>{i + 1}</td>
+                                            <td>{list.InName}</td>
+                                            <td>{list.Company}</td>
+                                            <td>{list.Name}</td>
+                                            <td>{list.Type === 1 ? 'IT팀 승인 후 사용 가능' : 'X'}</td>
+                                        </tr>
+                                    );
+                                });
                             })}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div className="AssetPersonalInfo">
+            {/* <div className="AssetPersonalInfo">
                 <div>
                     <div>
                         <h3>미등록 소프트웨어</h3>
@@ -398,7 +421,7 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> */}
         </PersonalMainPageDivBox>
     );
 };

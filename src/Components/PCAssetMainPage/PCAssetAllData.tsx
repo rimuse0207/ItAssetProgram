@@ -180,6 +180,10 @@ export type DeskTopInfoDataType = {
     team_lists_team_id: string;
     team_lists_team_name: string;
     asset_notepad: string;
+    asset_mac_address: string | null;
+    asset_mac_indexs: number | null;
+    asset_mac_info: string | null;
+    asset_mac_random_key: string | null;
 };
 export type getDatasProps = {
     show_team: string;
@@ -218,7 +222,7 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                 type,
                 FilteringData,
             };
-            await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+            dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
 
             setTimeout(() => {
                 setLoading(false);
@@ -244,13 +248,14 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
 
     const handleMinusUsered = async (data: DeskTopInfoDataType) => {
         try {
-            
             setSelectAssetData(data);
             setUserUpdateModalOpen(true);
         } catch (error) {
             console.log(error);
         }
     };
+
+    console.log(DeskTopAssetData);
 
     return (
         <PCAssetAllDataMainDivBox>
@@ -282,10 +287,11 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                         <th>모델명</th>
                         <th>구입일</th>
                         <th>취득가</th>
-                        <th>CPU</th>
+                        {/* <th>CPU</th>
                         <th>RAM</th>
-                        <th>DISK</th>
+                        <th>DISK</th> */}
                         <th>자산코드</th>
+                        <th>DLP_정보</th>
                         <th>비고</th>
                         <th>정보조회</th>
                     </tr>
@@ -316,10 +322,11 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                                             <td>{item.asset_model}</td>
                                             <td>{moment(item.asset_purchase_date).format('YYYY-MM-DD')}</td>
                                             <td>{item.asset_pride ? Number(item.asset_pride).toLocaleString('ko-KR') : '-'}</td>
-                                            <td>{item.asset_cpu}</td>
+                                            {/* <td>{item.asset_cpu}</td>
                                             <td>{item.asset_ram}</td>
-                                            <td>{item.asset_disk}</td>
+                                            <td>{item.asset_disk}</td> */}
                                             <td>{item.asset_newcode}</td>
+                                            <td>{item.asset_mac_address ? item.asset_mac_address : '-'}</td>
                                             <td>{item.asset_notepad}</td>
                                             <td style={{ textAlign: 'center' }}>
                                                 <div className="UserPlusIcons" onClick={() => handleMinusUsered(item)}>

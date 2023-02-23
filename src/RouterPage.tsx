@@ -16,6 +16,9 @@ import LicenseSettingMainPage from './Components/LicenseSetting/LicenseSettingMa
 import LicenseSettingSelect from './Components/LicenseSetting/LicenseSettingSelect';
 import LogMainPage from './Components/LicenseSetting/LogMainPage/LogMainPage';
 import axios from 'axios';
+import PrinterLogMonitoringMainPage from './Components/PrinterLogMonitoring/PrinterLogMonitoringMainPage';
+import ConsumableMainPage from './Components/Consumable/ConsumableMainPage';
+import ConsumableDetailMainPage from './Components/Consumable/ConsumableLists/ConsumableDetail/ConsumableDetailMainPage';
 
 const RouterPage = () => {
     const LoginCheckData = useSelector((state: RootState) => state.LoginCheck);
@@ -44,17 +47,23 @@ const RouterPage = () => {
                             <div>
                                 <NavigationMenuBarMainPage></NavigationMenuBarMainPage>
                             </div>
+                            {/* 사용자 용 및 관리자 메뉴 */}
                             <Route exact path="/" component={App}></Route>
+                            <Route path="/Personal" component={PersonalMainPage}></Route>
+
+                            {/*  관리자 메뉴 */}
                             <Route exact path="/license/:type" component={LicenseMainPage}></Route>
                             <Route path="/PCAsset/:type" component={PcAssetMainPage}></Route>
                             <Route path="/Test" component={TestPage}></Route>
-                            <Route path="/Personal" component={PersonalMainPage}></Route>
                             <Route path="/settingChange" component={SettingChangeMainPage}></Route>
                             <Route exact path="/PersonnelDashBoard/:type" component={PersonnelAdminDashBoardMainPage}></Route>
                             <Route path="/TotalDashBoard" component={TotalDashBoardMainPage}></Route>
                             <Route path="/LicenseSettingAdd" component={LicenseSettingMainPage}></Route>
                             <Route path="/LicenseSettingSelect" component={LicenseSettingSelect}></Route>
                             <Route path="/Change_log" component={LogMainPage}></Route>
+                            <Route exact path="/ITConsumable" component={ConsumableMainPage}></Route>
+                            <Route path="/ITConsumable/Detail/:It_Code/:Select_Company" component={ConsumableDetailMainPage}></Route>
+                            {/* <Route path="/PrinterLogMonitoring" component={PrinterLogMonitoringMainPage}></Route> */}
                         </div>
                     ) : (
                         <div>

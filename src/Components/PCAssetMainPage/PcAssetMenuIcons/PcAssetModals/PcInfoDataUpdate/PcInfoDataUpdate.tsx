@@ -37,6 +37,16 @@ const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDa
                         <td>{SelectAssetData?.asset_management_number}</td>
                     </tr>
                     <tr>
+                        <th scope="row">사용자</th>
+                        <td>
+                            {SelectAssetData?.team}_{SelectAssetData?.name}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">MAC 주소</th>
+                        <td>{SelectAssetData?.asset_mac_address}</td>
+                    </tr>
+                    <tr>
                         <th scope="row">종류</th>
                         <td>{SelectAssetData?.asset_division}</td>
                     </tr>
@@ -81,12 +91,6 @@ const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDa
                     <tr>
                         <th scope="row">메모</th>
                         <td>{SelectAssetData?.asset_notepad}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">사용자</th>
-                        <td>
-                            {SelectAssetData?.team}_{SelectAssetData?.name}
-                        </td>
                     </tr>
                 </table>
             </div>

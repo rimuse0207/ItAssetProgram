@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useParams } from 'react-router-dom';
 import { BiServer } from 'react-icons/bi';
-import { BsCircleSquare, BsFillPersonFill, BsFillCartFill, BsPieChartFill, BsFillPersonLinesFill } from 'react-icons/bs';
+import { BsCircleSquare, BsFillPersonFill, BsFillCartFill, BsPieChartFill, BsFillPersonLinesFill, BsMouseFill } from 'react-icons/bs';
 import { AiFillSetting } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
@@ -287,49 +287,6 @@ const NavigationMenuBarMainPage = () => {
                                         </Link>
                                     </li>
 
-                                    {/* 
-                                    <li>
-                                        <Link to="/TotalDashBoard">
-                                            <div className="listStyleDivBox">
-                                                <div>
-                                                    <BsPieChartFill></BsPieChartFill>
-                                                </div>
-                                                <div className="listStyleSubLists">통합사용현황</div>
-                                            </div>
-                                        </Link>
-                                    </li> */}
-                                    {/* <li>
-                                        <div className="listStyleDivBox">
-                                            <div>
-                                                <BsFillCartFill></BsFillCartFill>
-                                            </div>
-                                            <div className="listStyleSubLists">
-                                                <div
-                                                    className="listsSubListsDivBox"
-                                                    onClick={e =>
-                                                        setMenuCheckedSubLists({
-                                                            ...MenuCheckedSubLists,
-                                                            license: !MenuCheckedSubLists.license,
-                                                        })
-                                                    }
-                                                >
-                                                    <Link to="/license/volume_license">
-                                                        <li className={type === 'volume_license' ? 'NowPageSelect' : ''}>Volume License</li>
-                                                    </Link>
-                                                    {MenuCheckedSubLists.license ? (
-                                                        <div className="HiddenOff">
-                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="HiddenOn">
-                                                            <MdKeyboardArrowDown></MdKeyboardArrowDown>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li> */}
-
                                     <li className={window.location.pathname === '/license/volume_license' ? 'NowPageSelect' : ''}>
                                         <Link to="/license/volume_license">
                                             <div className="listStyleDivBox">
@@ -340,27 +297,27 @@ const NavigationMenuBarMainPage = () => {
                                             </div>
                                         </Link>
                                     </li>
+                                    {/* <li className={window.location.pathname === '/PrinterLogMonitoring' ? 'NowPageSelect' : ''}>
+                                        <Link to="/PrinterLogMonitoring">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <BsCircleSquare></BsCircleSquare>
+                                                </div>
+                                                <div className="listStyleSubLists">프린터 로그 확인</div>
+                                            </div>
+                                        </Link>
+                                    </li> */}
+                                    <li className={window.location.pathname === '/PrinterLogMonitoring' ? 'NowPageSelect' : ''}>
+                                        <Link to="/ITConsumable">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <BsMouseFill></BsMouseFill>
+                                                </div>
+                                                <div className="listStyleSubLists">IT 소모품</div>
+                                            </div>
+                                        </Link>
+                                    </li>
 
-                                    {/* <div className="SubHiddenListsMenu">
-                                        {MenuCheckedSubLists.license ? (
-                                            <ul className="settingClassNamesOn">
-                                                <Link to="/license/volume_license">
-                                                    <li className={type === 'volume_license' ? 'NowPageSelect' : ''}>Volume License</li>
-                                                </Link>
-                                                <Link to="/license/package_license">
-                                                    <li className={type === 'package_license' ? 'NowPageSelect' : ''}>Package License</li>
-                                                </Link>
-                                                <Link to="/license/usbtype_license">
-                                                    <li className={type === 'usbtype_license' ? 'NowPageSelect' : ''}>USBType License</li>
-                                                </Link>
-                                                <Link to="/license/network_license">
-                                                    <li className={type === 'network_license' ? 'NowPageSelect' : ''}>Network License</li>
-                                                </Link>
-                                            </ul>
-                                        ) : (
-                                            ''
-                                        )}
-                                    </div> */}
                                     <li>
                                         <div className="listStyleDivBox">
                                             <div>
@@ -404,14 +361,6 @@ const NavigationMenuBarMainPage = () => {
                                             ''
                                         )}
                                     </div>
-                                    {/* <li>
-                                        <div className="listStyleDivBox">
-                                            <div>
-                                                <BiServer></BiServer>
-                                            </div>
-                                            <div className="listStyleSubLists">Server</div>
-                                        </div>
-                                    </li> */}
                                 </>
                             ) : (
                                 <div></div>

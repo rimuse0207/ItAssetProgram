@@ -10,7 +10,8 @@ import { GoSearch } from 'react-icons/go';
 import { useDispatch } from 'react-redux';
 import { AssetFilteringAdd, AssetFilteringReset } from '../../../Models/AssetFilteringRedux/AssetFilteringRedux';
 import { UserInfoGet } from '../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
-const PcAssetMenuIconsMainPageDivBox = styled.div`
+
+export const PcAssetMenuIconsMainPageDivBox = styled.div`
     width: 100%;
     margin-top: 30px;
     margin-bottom: 30px;

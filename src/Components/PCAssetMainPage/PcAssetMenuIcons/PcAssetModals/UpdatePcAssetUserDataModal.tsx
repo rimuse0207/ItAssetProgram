@@ -28,6 +28,8 @@ import RegisterUserMainPage from './RegisterUser/RegisterUserMainPage';
 import LicenseRegisterMainPage, { LicenseDataTypes } from './LicenseRegister/LicenseRegisterMainPage';
 import { useParams } from 'react-router-dom';
 import DiscardRestoreMainPage from './DiscardRestore/DiscardRestoreMainPage';
+import SoftWareSelectMainPage from './SoftWareSelcet/SoftWareSelectMainPage';
+import PrinterSelectMainPage from './PrinterSelect/PrinterSelectMainPage';
 registerLocale('ko', ko);
 const customStyles = {
     content: {
@@ -348,7 +350,8 @@ const UpdatePcAssetUserDataModal = ({
         { name: '반납', AccessKey: false },
         { name: '이관', AccessKey: false },
         { name: '폐기', AccessKey: false },
-        { name: '라이선스 등록', AccessKey: false },
+        { name: '소프트웨어 조회', AccessKey: false },
+        { name: '프린트 이력 조회', AccessKey: false },
     ]);
     const { type } = useParams<paramasType>();
     const [AssetDataChangeCheck, setAssetDataChangeCheck] = useState(false);
@@ -374,18 +377,20 @@ const UpdatePcAssetUserDataModal = ({
     useEffect(() => {
         if (SelectAssetData?.userinfo_email) {
             setCompanySelectAccessKey([
-                { name: '반납', AccessKey: true },
+                { name: '소프트웨어 조회', AccessKey: true },
+                { name: '프린트 이력조회', AccessKey: false },
+                { name: '반납', AccessKey: false },
                 { name: '이관', AccessKey: false },
                 { name: '폐기', AccessKey: false },
-                { name: '라이선스 등록', AccessKey: false },
             ]);
         } else if (SelectAssetData?.asset_destroy_check) {
             setCompanySelectAccessKey([{ name: '폐기 복원', AccessKey: true }]);
         } else {
             setCompanySelectAccessKey([
-                { name: '사용자 등록', AccessKey: true },
+                { name: '소프트웨어 조회', AccessKey: true },
+                { name: '프린트 이력조회', AccessKey: false },
+                { name: '사용자 등록', AccessKey: false },
                 { name: '폐기', AccessKey: false },
-                { name: '라이선스 등록', AccessKey: false },
             ]);
         }
     }, [SelectAssetData?.asset_management_number]);
@@ -665,6 +670,41 @@ const UpdatePcAssetUserDataModal = ({
                                                         );
                                                     })}
                                                     {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '소프트웨어 조회' ? (
+                                                            <SoftWareSelectMainPage
+                                                                key={list.name}
+                                                                SelectAssetData={SelectAssetData}
+                                                                SelectCompany={SelectCompany}
+                                                                setBasicLicenseData={(data: LicenseDataTypes[]) =>
+                                                                    setBasicLicenseData(data)
+                                                                }
+                                                                setChangeBasicLicenseData={(data: LicenseDataTypes[]) =>
+                                                                    setChangeBasicLicenseData(data)
+                                                                }
+                                                            ></SoftWareSelectMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                        return list.AccessKey && list.name === '프린트 이력조회' ? (
+                                                            <PrinterSelectMainPage
+                                                                key={list.name}
+                                                                SelectAssetData={SelectAssetData}
+                                                                SelectCompany={SelectCompany}
+                                                                setBasicLicenseData={(data: LicenseDataTypes[]) =>
+                                                                    setBasicLicenseData(data)
+                                                                }
+                                                                setChangeBasicLicenseData={(data: LicenseDataTypes[]) =>
+                                                                    setChangeBasicLicenseData(data)
+                                                                }
+                                                            ></PrinterSelectMainPage>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+
+                                                    {/* {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '라이선스 등록' ? (
                                                             <LicenseRegisterMainPage
                                                                 key={list.name}
@@ -680,7 +720,7 @@ const UpdatePcAssetUserDataModal = ({
                                                         ) : (
                                                             ''
                                                         );
-                                                    })}
+                                                    })} */}
 
                                                     {/* {CompanySelectAccessKey.map((list, i) => {
                                                     return list.AccessKey && list.name === '사용자 등록' ? (
