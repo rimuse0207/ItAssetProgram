@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import { MdCancel } from 'react-icons/md';
-// import Select from 'react-select/async';
 import Select from 'react-select';
 import { PersonOption, CompanyOption } from '../../../LicenseMainPage/VolumeLicenseMainPage/DownloadMainPage/ModalMainPage/docs/data';
 import { CompanyInfoGet, UserInfoGet, RandomCodeDataGet } from '../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
@@ -35,9 +34,9 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
         animation: 'smoothAppear 0.5s ease',
         zIndex: '105',
-        width: '90%',
+        width: '95%',
         padding: '20px',
-        height: '90%',
+        height: '95%',
     },
 };
 
@@ -95,8 +94,7 @@ export const MainModalContent = styled.div`
             z-index: 10;
 
             h2 {
-                padding-bottom: 45px;
-                font-size: 1.625em;
+                padding-bottom: 25px;
                 font-weight: bold;
                 vertical-align: middle;
                 select {
@@ -112,7 +110,7 @@ export const MainModalContent = styled.div`
             }
             .inputbox {
                 position: relative;
-                padding: 15px 0 28px 150px;
+                padding: 15px 0 10px 100px;
                 &-title {
                     position: absolute;
                     top: 15px;
@@ -334,12 +332,42 @@ type NewAssetDataModalProps = {
 type paramasType = {
     type: string;
 };
+
+type SelectOptionsTypes = {
+    label: string;
+    value: string;
+};
+type userEmailTypes = {
+    name: string;
+};
+
+type UserWriteDataTypes = {
+    asset_management_number: string;
+    asset_division: string;
+    asset_maker: string;
+    asset_model: string;
+    asset_purchase_date: Date;
+    asset_pride: number;
+    asset_cpu: string;
+    asset_ram: string;
+    asset_disk: SelectOptionsTypes[];
+    asset_newcode: string;
+    usercheck: boolean;
+    userinfo_email: userEmailTypes[];
+    asset_distribute_date: Date;
+    company_code: string;
+    asset_notepad: string;
+    asset_person_number: string;
+    asset_mac_info: string;
+    asset_ip_info: string;
+};
+
 const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCompany }: NewAssetDataModalProps) => {
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [ChooseAssetData, setChooseAssetData] = useState('데스크탑');
     const [InfoUserData, setInfoUserData] = useState<any>([]);
     const [CompanyInfoData, setCompanyInfoData] = useState<CompanyOption[]>([]);
-    const [UserWriteData, setUserWriteData] = useState({
+    const [UserWriteData, setUserWriteData] = useState<UserWriteDataTypes>({
         asset_management_number: '',
         asset_division: '데스크탑',
         asset_maker: '삼성',
@@ -348,16 +376,27 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         asset_pride: 0,
         asset_cpu: '',
         asset_ram: '16GB',
-        asset_disk: 'SSD_512GB',
+        asset_disk: [{ label: 'SSD 512GB', value: 'SSD_512GB' }],
         asset_newcode: '',
         usercheck: true,
-        userinfo_email: '',
+        userinfo_email: [],
         asset_distribute_date: new Date(),
         company_code: '',
         asset_notepad: '',
         asset_person_number: '',
+        asset_mac_info: '',
+        asset_ip_info: '',
     });
 
+    const NowDiskState = [
+        { label: 'SSD 128GB', value: 'SSD_128GB' },
+        { label: 'SSD 512GB', value: 'SSD_512GB' },
+        { label: 'SSD 1TB', value: 'SSD_1TB' },
+        { label: 'HDD 256GB', value: 'HDD_256GB' },
+        { label: 'HDD 512GB', value: 'HDD_512GB' },
+        { label: 'HDD 1TB', value: 'HDD_1TB' },
+        { label: 'HDD 2TB', value: 'HDD_2TB' },
+    ];
     useEffect(() => {
         hadldeRandomCodeData();
     }, []);
@@ -376,14 +415,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     function closeModal() {
         setSelectClicksModals(false);
     }
-    // const filterSearchedSomething = (inputValue: string) => {
-    //     return InfoUserData.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
-    // };
-    // const loadOptions = (inputValue: string, callback: (options: PersonOption[]) => void) => {
-    //     setTimeout(() => {
-    //         callback(filterSearchedSomething(inputValue));
-    //     }, 100);
-    // };
+
     const handleSelectedName = (value: any) => {
         setUserWriteData({ ...UserWriteData, userinfo_email: value });
     };
@@ -408,7 +440,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         }
     };
 
-    const toggleClearable = () => setUserWriteData({ ...UserWriteData, userinfo_email: '' });
+    const toggleClearable = (e: any) => setUserWriteData({ ...UserWriteData, userinfo_email: e });
 
     //사용자 정보 받기 API 호출
     const getUserInfo = async () => {
@@ -448,14 +480,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
 
     //저장시
     const saveData = async () => {
-        // if ( UserWriteData.company_code === '') {
-        //     alert('공란을 작성해주세요.');
-        //     return;
-        // } else
-        // if (UserWriteData.usercheck && UserWriteData.userinfo_email === '') {
-        //     alert('사용자를 등록 해주세요.');
-        //     return;
-        // }
         try {
             const ParamasData = {
                 UserWriteData,
@@ -467,37 +491,12 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             };
             const SaveAssetData = await AssetAdd('/Asset_app_server/AssetAdd', ParamasData);
             if (SaveAssetData.data.dataSuccess) {
-                // if (UserWriteData.asset_division === '데스크탑') {
-                //     const ParamasDatas = {
-                //         types: '데스크탑',
-                //         SelectCompany,
-                //         FilteringData,
-                //         UserWriteData,
-                //     };
-                //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                // } else if (UserWriteData.asset_division === '노트북') {
-                //     const ParamasDatas = {
-                //         types: '노트북',
-                //         SelectCompany,
-                //         FilteringData,
-                //     };
-                //     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                // }
-                // else {
-                //     const ParamasDatas = {
-                //         types: '모니터',
-                //         SelectCompany,
-                //         FilteringData,
-                //     };
-                //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
-                // }
-
                 const paramasData = {
                     company: SelectCompany,
                     type,
                     FilteringData,
                 };
-                await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+                dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
 
                 setUserWriteData({
                     asset_management_number: '',
@@ -511,13 +510,15 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                     asset_disk: UserWriteData.asset_disk,
                     asset_newcode: UserWriteData.asset_newcode,
                     usercheck: true,
-                    userinfo_email: '',
+                    userinfo_email: [],
                     asset_distribute_date: new Date(),
                     company_code: '',
                     asset_notepad: '',
                     asset_person_number: '',
+                    asset_mac_info: '',
+                    asset_ip_info: '',
                 });
-                // hadldeRandomCodeData();
+
                 closeModal();
 
                 toast.show({ title: `자산 등록 완료.`, successCheck: true, duration: ToastTime });
@@ -639,6 +640,14 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         }
     };
 
+    const handleChanges = (e: any) => {
+        try {
+            setUserWriteData({ ...UserWriteData, asset_disk: e });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div>
             <Modal isOpen={SelectClicksModals.NewDataModal} style={customStyles} contentLabel="데이터 입력 Modal">
@@ -658,9 +667,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                     <div className="PCAssetFloatLeft">
                                         <div className="input-content-wrap">
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">
-                                                    관리번호<span style={{ color: 'red' }}>*</span>
-                                                </dt>
+                                                <dt className="inputbox-title">관리번호</dt>
                                                 <dd className="inputbox-content">
                                                     <input
                                                         id="input0"
@@ -669,60 +676,32 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         onChange={e =>
                                                             setUserWriteData({ ...UserWriteData, asset_person_number: e.target.value })
                                                         }
-                                                        placeholder={`${SelectCompany}-OOOOO`}
+                                                        placeholder={`공란으로 저장 시 자동으로 생성됩니다.`}
                                                         required
                                                     />
 
                                                     <span className="underline"></span>
-                                                    {/* <div className="RandomButtonIcons" onClick={hadldeRandomCodeData}>
-                                                        <GiPerspectiveDiceSixFacesRandom></GiPerspectiveDiceSixFacesRandom>
-                                                    </div> */}
                                                 </dd>
                                             </dl>
 
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">
-                                                    구매날짜<span style={{ color: 'red' }}>*</span>
-                                                </dt>
+                                                <dt className="inputbox-title">구매날짜</dt>
                                                 <dd className="inputbox-content">
                                                     <DatePicker
                                                         selected={UserWriteData.asset_purchase_date}
                                                         onChange={(date: any) =>
                                                             setUserWriteData({ ...UserWriteData, asset_purchase_date: date })
                                                         }
-                                                        withPortal
                                                         locale={ko}
-                                                        dateFormat="yyy-MM-dd"
+                                                        dateFormat="yyyy-MM-dd"
+                                                        maxDate={new Date()}
+                                                        showMonthDropdown
+                                                        useShortMonthInDropdown
                                                     />
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
-                                            {/* <dl className="inputbox">
-                                                <dt className="inputbox-title">
-                                                    사용처<span style={{ color: 'red' }}>*</span>
-                                                </dt>
-                                                <dd className="inputbox-content">
-                                                    <div className="selectBox">
-                                                        <select
-                                                            className="select"
-                                                            onChange={e =>
-                                                                setUserWriteData({ ...UserWriteData, company_code: e.target.value })
-                                                            }
-                                                            value={UserWriteData.company_code}
-                                                        >
-                                                            <option value="">사용처 선택</option>
-                                                            {CompanyInfoData.map((list, i) => {
-                                                                return (
-                                                                    <option key={list.value} defaultValue={list.value} value={list.value}>
-                                                                        {list.label}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </select>
-                                                        <span className="icoArrow"></span>
-                                                    </div>
-                                                </dd>
-                                            </dl> */}
+
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">구분</dt>
                                                 <dd className="inputbox-content">
@@ -803,14 +782,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">RAM</dt>
                                                 <dd className="inputbox-content">
-                                                    {/* <input
-                                                        id="input5"
-                                                        value={UserWriteData.asset_ram}
-                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_ram: e.target.value })}
-                                                        placeholder="8G,16G ..."
-                                                    /> 
-                                                    <span className="underline"></span>
-                                                    */}
                                                     <select
                                                         className="select"
                                                         onChange={e => setUserWriteData({ ...UserWriteData, asset_ram: e.target.value })}
@@ -837,33 +808,15 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">디스크</dt>
                                                 <dd className="inputbox-content">
-                                                    <select
-                                                        className="select"
-                                                        onChange={e => setUserWriteData({ ...UserWriteData, asset_disk: e.target.value })}
+                                                    <Select
                                                         value={UserWriteData.asset_disk}
-                                                    >
-                                                        <option defaultValue="SSD_128GB" value={'SSD_128GB'}>
-                                                            SSD_128GB
-                                                        </option>
-                                                        <option defaultValue="SSD_256GB" value={'SSD_256GB'}>
-                                                            SSD_256GB
-                                                        </option>
-                                                        <option defaultValue="SSD_512GB" value={'SSD_512GB'}>
-                                                            SSD_512GB
-                                                        </option>
-                                                        <option defaultValue="SSD_1TB" value={'SSD_1TB'}>
-                                                            SSD_1TB
-                                                        </option>
-                                                        <option defaultValue="HDD_256GB" value={'HDD_256GB'}>
-                                                            HDD_256GB
-                                                        </option>
-                                                        <option defaultValue="HDD_512GB" value={'HDD_512GB'}>
-                                                            HDD_512GB
-                                                        </option>
-                                                        <option defaultValue="HDD_1TB" value={'HDD_1TB'}>
-                                                            HDD_1TB
-                                                        </option>
-                                                    </select>
+                                                        onChange={(e: any) => handleChanges(e)}
+                                                        isMulti
+                                                        name="colors"
+                                                        options={NowDiskState}
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="select"
+                                                    />
                                                 </dd>
                                             </dl>
 
@@ -881,6 +834,34 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
+                                            {/* <dl className="inputbox">
+                                                <dt className="inputbox-title">MAC 주소</dt>
+                                                <dd className="inputbox-content">
+                                                    <input
+                                                        id="input10"
+                                                        value={UserWriteData.asset_mac_info}
+                                                        onChange={e =>
+                                                            setUserWriteData({ ...UserWriteData, asset_mac_info: e.target.value })
+                                                        }
+                                                        placeholder="XX:XX:XX:XX:XX 등등.."
+                                                    />
+                                                    <span className="underline"></span>
+                                                </dd>
+                                            </dl>
+                                            <dl className="inputbox">
+                                                <dt className="inputbox-title">IP 주소</dt>
+                                                <dd className="inputbox-content">
+                                                    <input
+                                                        id="input10"
+                                                        value={UserWriteData.asset_ip_info}
+                                                        onChange={e =>
+                                                            setUserWriteData({ ...UserWriteData, asset_ip_info: e.target.value })
+                                                        }
+                                                        placeholder="192.168.x.x 등등.."
+                                                    />
+                                                    <span className="underline"></span>
+                                                </dd>
+                                            </dl> */}
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">비고</dt>
                                                 <dd className="inputbox-content">
@@ -904,20 +885,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                 <dl className="inputbox">
                                                     <dt className="inputbox-title">사용자</dt>
                                                     <dd className="inputbox-content">
-                                                        {/* <Select
-                                                            // value={UserWriteData.userinfo_email}
-                                                            // defaultValue={UserWriteData.userinfo_email}
-                                                            // cacheOptions
-                                                            isClearable={true}
-                                                            loadOptions={loadOptions}
-                                                            defaultOptions
-                                                            onChange={(e: any) => {
-                                                                console.log(e);
-                                                                handleSelectedName(e);
-                                                            }}
-                                                            closeMenuOnSelect={false}
-                                                        /> */}
-
                                                         <Select
                                                             className="basic-single"
                                                             classNamePrefix="select"
@@ -925,6 +892,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             onChange={(value: any) => {
                                                                 handleSelectedName(value);
                                                             }}
+                                                            isMulti
                                                             isClearable={true}
                                                             isSearchable={true}
                                                             options={InfoUserData}
@@ -941,7 +909,10 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             }
                                                             withPortal
                                                             locale={ko}
-                                                            dateFormat="yyy-MM-dd"
+                                                            dateFormat="yyyy-MM-dd"
+                                                            maxDate={new Date()}
+                                                            showMonthDropdown
+                                                            useShortMonthInDropdown
                                                         />
                                                         <span className="underline"></span>
                                                     </dd>

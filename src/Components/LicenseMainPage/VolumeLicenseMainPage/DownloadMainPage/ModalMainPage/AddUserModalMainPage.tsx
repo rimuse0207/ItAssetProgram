@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
-import { LicenseDataType } from '../../VolumeLicenseDataTypes';
+import { basic_License_Type, LicenseDataType } from '../../VolumeLicenseDataTypes';
 import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
 import AsyncSelect from 'react-select/async';
@@ -17,6 +17,10 @@ import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
 import axios from 'axios';
 import moment from 'moment';
 import { AssetDeleteLicense, GetDataFromServerLicenseInfos } from '../../../../../Apis/core/api/AuthNeedApi/LicenseApi';
+import { LicenseDataTypes } from '../../../../PCAssetMainPage/PcAssetMenuIcons/PcAssetModals/LicenseRegister/LicenseRegisterMainPage';
+import { request } from '../../../../../Apis/core';
+import Select from 'react-select';
+import { BsNodeMinusFill, BsNodePlusFill } from 'react-icons/bs';
 
 const ModalMainDivBox = styled.div`
     padding: 10px;
@@ -248,8 +252,7 @@ const TableMainDivBox = styled.div`
         }
         .license_Float_left {
             float: left;
-            width: 50%;
-            border-right: 1px solid lightgray;
+            width: 90%;
             padding-right: 30px;
         }
         .license_Float_right {
@@ -309,16 +312,43 @@ const TableMainDivBox = styled.div`
     }
 `;
 
+const UserSelectContainer = styled.div`
+    ::after {
+        clear: both;
+        display: block;
+        content: '';
+    }
+    .Float_Left_Container {
+        width: 45%;
+        float: left;
+    }
+    .Float_Right_Container {
+        width: 45%;
+        float: right;
+    }
+    .UserSelect_Container {
+        max-height: 30vh;
+        overflow: auto;
+        padding: 10px;
+        text-align: center;
+        .User_Container {
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+            border: 1px dashed gray;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    }
+`;
+
 Modal.setAppElement('#ModalMainDiv');
 
 type NewDataInsertMainPageProps = {
-    setSelectClicksModals: (data: boolean) => void;
+    setSelectClicksModals: () => void;
     SelectClicksModals: boolean;
-    UserClickLicenseData: LicenseDataType | null;
+    SelectClickData: basic_License_Type | null;
     SelectCompany: string;
-    type: string;
-    SortTable: any;
-    windowScrollss: any;
 };
 
 type selectUserInfoDataType = {
@@ -329,183 +359,42 @@ type selectUserInfoDataType = {
     asset_management_number: string;
 };
 
+type UserSelectType = {
+    value: string;
+    label: string;
+    name: string;
+    team: string;
+    asset_personal_code: string;
+    division: string;
+};
+
 const AddUserModalMainPage = ({
     setSelectClicksModals,
     SelectClicksModals,
-    UserClickLicenseData,
+    SelectClickData,
     SelectCompany,
-    type,
-    windowScrollss,
-    SortTable,
 }: NewDataInsertMainPageProps) => {
-    const [SelectedLicenseData, setSelectedLicenseData] = useState<LicenseDataType[]>([]);
-    const [SearchSomething, setSearchSomething] = useState<string | null>('');
-    const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
-    const [SearchNames, setSearchNames] = useState('');
-    const [SelectedInfoUserData, setSelectedInfoUserData] = useState<selectUserInfoDataType[]>([]);
-    const [ScrollPosition, setScrollPosition] = useState(0);
+    console.log(SelectClickData);
+    const [NowSelectUser, setNowSelectUser] = useState<UserSelectType[]>([]);
+    const [ImposableSelectUser, setImposableSelectUser] = useState<UserSelectType[]>([]);
 
-    useEffect(() => {
-        console.log(ScrollPosition);
-    }, [ScrollPosition]);
-
-    const dispatch = useDispatch();
     function closeModal() {
-        setSelectedInfoUserData([]);
-        setInfoUserData([]);
-        setSelectClicksModals(false);
+        setSelectClicksModals();
     }
-
-    const filterSearchedSomething = (inputValue: string) => {
-        return InfoUserData.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
-    };
-    const loadOptions = (inputValue: string, callback: (options: PersonOption[]) => void) => {
-        setTimeout(() => {
-            callback(filterSearchedSomething(inputValue));
-        }, 100);
-    };
-
-    useEffect(() => {
-        if (UserClickLicenseData?.license_manage_code) {
-            getInfoDataLicenseInfo();
-        }
-    }, [UserClickLicenseData?.license_manage_code]);
-    const getInfoDataLicenseInfo = async () => {
-        const ParamasData = {
-            license_manage_code: UserClickLicenseData?.license_manage_code,
-            type,
-        };
-        try {
-            const getDataFromServerLicenseInfo = await GetDataFromServerLicenseInfos(
-                `/license_app_server/getDataFromServerLicenseInfo`,
-                ParamasData
-            );
-            setSelectedLicenseData(getDataFromServerLicenseInfo.data.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    useEffect(() => {
-        UserInfoGetApi();
-    }, []);
-
-    //사용자 조회 API
-    const UserInfoGetApi = async () => {
-        const ParamasData = {
-            code: UserClickLicenseData?.license_manage_code,
-            type,
-            SelectCompany,
-        };
-        try {
-            const personOptionsData = await UserInfoGet('/license_app_server/UserSelect', ParamasData);
-            if (personOptionsData.data.dataSuccess) {
-                setInfoUserData(personOptionsData.data.data);
-            } else {
-                alert('error');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    //Select로 유저 추가시.
-    const handleSelectedName = (e: any) => {
-        setSearchSomething(e.value);
-        const getChoiceData = {
-            name: e.name,
-            team: e.team,
-            email: e.email,
-            asset_division: e.asset_division,
-            asset_management_number: e.asset_management_number,
-        };
-        for (var i = 0; i < SelectedInfoUserData.length; i++) {
-            if (SelectedInfoUserData[i].asset_management_number === e.asset_management_number) {
-                alert('중복되어 추가가 불가합니다.');
-                return;
-            }
-        }
-
-        const DeleteUserData = InfoUserData.filter((item, j) => (item.asset_management_number === e.asset_management_number ? '' : item));
-        setInfoUserData(DeleteUserData);
-        const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
-        setSelectedInfoUserData(SortData);
-    };
-
-    //선택된 유저 추가
-    const handleSelectClickIconsUserAadd = (userData: PersonOption) => {
-        const assetCount =
-            SelectedLicenseData[0].license_permit_count -
-            (SelectedLicenseData[0].license_license_manage_code ? SelectedLicenseData.length : 0);
-
-        if (SelectedInfoUserData.length >= assetCount) {
-            const permissionCheck = window.confirm('라이선스 사용자가 많습니다. 그래도 추가 하시 겠습니까?');
-            if (!permissionCheck) {
-                return;
-            }
-        }
-        const getChoiceData = {
-            name: userData.name,
-            team: userData.team,
-            email: userData.email,
-            asset_division: userData.asset_division,
-            asset_management_number: userData.asset_management_number,
-        };
-        const DeleteUserData = InfoUserData.filter((item, j) =>
-            item.asset_management_number === userData.asset_management_number ? '' : item
-        );
-        setInfoUserData(DeleteUserData);
-
-        const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
-        setSelectedInfoUserData(SortData);
-    };
-
-    //선택된 유저 삭제
-    const handleSelectClickIconsUserDelete = (userData: selectUserInfoDataType) => {
-        const getChoiceData = {
-            name: userData.name,
-            team: userData.team,
-            email: userData.email,
-            value: userData.email,
-            asset_division: userData.asset_division,
-            asset_management_number: userData.asset_management_number,
-            label: `${userData.asset_management_number} || ${userData.asset_division} || ${userData.email} || ${userData.name} || ${userData.team} `,
-        };
-        const DeleteUserData = SelectedInfoUserData.filter((item, j) =>
-            item.asset_management_number === userData.asset_management_number ? '' : item
-        );
-        setSelectedInfoUserData(DeleteUserData);
-        const SortData = ObjectNameSortData(InfoUserData.concat(getChoiceData));
-        setInfoUserData(SortData);
-    };
 
     //유저 등록 API
     const handleSaveUser = async () => {
-        const nowHieht = windowScrollss.current.offsetHeight;
-        const ParamasData = {
-            code: UserClickLicenseData?.license_manage_code,
-            type,
-            SelectCompany,
-            SelectedInfoUserData,
-        };
         try {
-            const UserDataOn = await LicenseUserAdd('/license_app_server/AddUserLicense', ParamasData);
+            const UserDataOn = await LicenseUserAdd('/license_app_server/AddUserLicense', {
+                SelectClicksModals,
+            });
             if (UserDataOn.data.dataSuccess) {
-                var y = window.scrollY;
-                setScrollPosition(y);
-                const ParamasData = {
-                    company: SelectCompany,
-                    license: type,
-                    SortTable,
-                };
-                dispatch(License_getLicenseDataThunk(ParamasData));
-                closeModal();
                 toast.show({
-                    title: `${type}에 유저 등록 성공`,
+                    title: `${SelectClickData?.asset_license_list_info_name}에 유저 등록 성공`,
                     successCheck: true,
                     duration: ToastTime,
                 });
-
-                window.scrollTo(0, nowHieht);
+                closeModal();
             } else {
                 alert('에러발생');
             }
@@ -514,185 +403,70 @@ const AddUserModalMainPage = ({
         }
     };
 
-    //등록된 유저 삭제 API
-    const handleDeleteDataLicense = async (data: LicenseDataType) => {
-        console.log(windowScrollss);
-        const nowHieht = windowScrollss.current.offsetHeight;
-        const checkDelete = window.confirm('정말 삭제할까요?');
-        if (!checkDelete) {
-            return;
-        }
+    const User_Getting_Show = async () => {
         try {
-            const ParamasData = {
-                company: SelectCompany,
-                license: type,
-                data,
-                SortTable,
-            };
-
-            const deleteData = await AssetDeleteLicense('/license_app_server/license_delete_data', {
-                ParamasData,
+            const User_Getting_Show_Axios = await request.get(`/license_app_server/license_User_Data_Getting`, {
+                params: {
+                    company: SelectCompany,
+                    license_code: SelectClickData?.asset_license_list_info_code,
+                },
             });
-            if (deleteData.data.dataSuccess) {
-                await dispatch(License_getLicenseDataThunk(ParamasData));
-                getInfoDataLicenseInfo();
-                toast.show({
-                    title: `${type}에 라이선스 해제 성공`,
-                    successCheck: true,
-                    duration: ToastTime,
-                });
-                console.log('asdasdasdasdad', nowHieht);
-                setTimeout(() => {
-                    window.scrollTo(0, nowHieht);
-                }, 6000);
-            } else {
-                toast.show({
-                    title: `${type}에 라이선스 해제 실패`,
-                    successCheck: false,
-                    duration: ToastTime,
-                });
+
+            if (User_Getting_Show_Axios.data.dataSuccess) {
+                setNowSelectUser(User_Getting_Show_Axios.data.Regi_User_Data);
+                setImposableSelectUser(User_Getting_Show_Axios.data.Not_Regi_User_Data);
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-    const DeleteData = async () => {
-        const checkDelete = window.confirm('해당 라이선스를 정말 삭제할까요? \n삭제하시면 등록된 모든 사용자가 삭제 됩니다.');
-        if (!checkDelete) {
-            return;
-        }
-        try {
-            const ParamasData = {
-                company: SelectCompany,
-                license: type,
-                UserClickLicenseData,
-                SortTable,
-            };
-            const DeleteDataFromLicense = await AssetDeleteLicense('/license_app_server/DeleteLicenseDetails', {
-                ParamasData,
-            });
-            if (DeleteDataFromLicense.data.dataSuccess) {
-                dispatch(License_getLicenseDataThunk(ParamasData));
-                closeModal();
-                toast.show({
-                    title: ` 라이선스 삭제 성공`,
-                    successCheck: true,
-                    duration: ToastTime,
-                });
-            } else {
-                toast.show({
-                    title: ` 라이선스 삭제 실패`,
-                    successCheck: false,
-                    duration: ToastTime,
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    useEffect(() => {
+        User_Getting_Show();
+    }, []);
 
     return (
         <div>
             <Modal isOpen={SelectClicksModals} style={customStyles} contentLabel="데이터 입력 Modal">
                 <ModalMainDivBox>
                     <div style={{ textAlign: 'end' }}>
-                        <button className="ModalCloseButton" onClick={closeModal}>
+                        <button className="ModalCloseButton" onClick={setSelectClicksModals}>
                             <MdCancel></MdCancel>
                         </button>
                     </div>
-                    <h2>라이선스 유저 추가</h2>
+                    <h2>라이선스 유저 등록</h2>
                     <div>
-                        {SelectedLicenseData.length > 0 ? (
+                        {SelectClickData ? (
                             <TableMainDivBox>
                                 <div className="license_Float_Main_div">
                                     <div className="license_Float_left">
                                         <table className="type03">
                                             <tr>
                                                 <th scope="row">코드</th>
-                                                <td>{SelectedLicenseData[0].license_manage_code}</td>
+                                                <td>{SelectClickData?.asset_license_list_info_code}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">이름</th>
-                                                <td>{SelectedLicenseData[0].license_product_name}</td>
+                                                <td>{SelectClickData?.asset_license_list_info_name}</td>
                                             </tr>
-                                            <tr>
-                                                <th scope="row">구매 날짜</th>
-                                                <td>{moment(SelectedLicenseData[0].license_purchase_date).format('YYYY-MM-DD')}</td>
-                                            </tr>
+
                                             <tr>
                                                 <th scope="row">허용 인원</th>
-                                                <td>{SelectedLicenseData[0].license_permit_count}명</td>
+                                                <td>{SelectClickData?.license_permit_count_sum}명</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">사용 인원</th>
-                                                <td>
-                                                    {SelectedLicenseData[0].license_license_manage_code ? SelectedLicenseData.length : 0}명
-                                                </td>
+                                                <td>{SelectClickData?.license_user_used_count_sum}명</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">사용 가능 인원 수</th>
                                                 <td>
-                                                    {SelectedLicenseData[0].license_permit_count -
-                                                        (SelectedLicenseData[0].license_license_manage_code
-                                                            ? SelectedLicenseData.length
-                                                            : 0)}
+                                                    {SelectClickData?.license_permit_count_sum -
+                                                        SelectClickData?.license_user_used_count_sum}
                                                     명
                                                 </td>
                                             </tr>
                                         </table>
-                                    </div>
-                                    <div className="license_Float_right">
-                                        <input
-                                            type="text"
-                                            placeholder="이름 또는 팀명 검색..."
-                                            className="InputSearchUsers"
-                                            value={SearchNames}
-                                            onChange={e => setSearchNames(e.target.value)}
-                                        ></input>
-                                        <div className="License_descktop_user_float_container">
-                                            <div className="License_descktop_user_float_left">
-                                                <h4>데스크탑</h4>
-                                                {SelectedLicenseData.filter(
-                                                    list =>
-                                                        list.name?.toLowerCase().includes(SearchNames) ||
-                                                        list.team?.toLowerCase().includes(SearchNames) ||
-                                                        list.email?.toLowerCase().includes(SearchNames)
-                                                ).map((list, i) => {
-                                                    return list.asset_division === '데스크탑' ? (
-                                                        <div className="license_asset_delete" key={list.asset_management_number}>
-                                                            <div>
-                                                                {list.asset_management_number ? list.asset_management_number : ''}_
-                                                                {list.team ? list.team : '사용자'}_{list.name ? list.name : '없음'}
-                                                            </div>
-                                                            <div className="IconsClickMinus" onClick={() => handleDeleteDataLicense(list)}>
-                                                                <AiOutlineMinusCircle></AiOutlineMinusCircle>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="License_descktop_user_float_left">
-                                                <h4>노트북</h4>
-                                                {SelectedLicenseData.map((list, i) => {
-                                                    return list.asset_division === '노트북' ? (
-                                                        <div className="license_asset_delete" key={list.asset_management_number}>
-                                                            <div>
-                                                                {list.asset_management_number ? list.asset_management_number : ''}_
-                                                                {list.team ? list.team : '사용자'}_{list.name ? list.name : '없음'}
-                                                            </div>
-                                                            <div className="IconsClickMinus" onClick={() => handleDeleteDataLicense(list)}>
-                                                                <AiOutlineMinusCircle></AiOutlineMinusCircle>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </TableMainDivBox>
@@ -701,58 +475,67 @@ const AddUserModalMainPage = ({
                         )}
                     </div>
                 </ModalMainDivBox>
-                <SelectUserInfoMainDivBox>
-                    <div style={{ marginBottom: '10px' }}>
-                        <div>
+                <UserSelectContainer>
+                    <h2>사용자</h2>
+                    <div>
+                        <div className="Float_Left_Container">
+                            <h5>사용등록 가능인원</h5>
                             <div>
-                                <AsyncSelect
-                                    cacheOptions
-                                    loadOptions={loadOptions}
-                                    defaultOptions
-                                    onChange={(e: any) => handleSelectedName(e)}
-                                />
+                                <div>
+                                    <Select
+                                        options={ImposableSelectUser}
+                                        // onChange={(value: any) => setUserInsertData({ ...UserInsertData, Consumable_User_ID: value.value })}
+                                    ></Select>
+                                </div>
+                                <div className="UserSelect_Container">
+                                    <div>
+                                        {ImposableSelectUser.map(list => {
+                                            return (
+                                                <div className="User_Container">
+                                                    <div>
+                                                        {list.team} {list.name} {list.asset_personal_code} {list.division}
+                                                    </div>
+                                                    <div style={{ color: 'green' }}>
+                                                        <BsNodePlusFill></BsNodePlusFill>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="Float_Right_Container">
+                            <h5>현재등록 인원</h5>
+                            <div>
+                                <div>
+                                    <Select
+                                        options={NowSelectUser}
+                                        // onChange={(value: any) => setUserInsertData({ ...UserInsertData, Consumable_User_ID: value.value })}
+                                    ></Select>
+                                </div>
+                                <div className="UserSelect_Container">
+                                    <div>
+                                        {NowSelectUser.map(list => {
+                                            return (
+                                                <div className="User_Container">
+                                                    <div>
+                                                        {list.team} {list.name} {list.asset_personal_code} {list.division}
+                                                    </div>
+                                                    <div style={{ color: 'red' }}>
+                                                        <BsNodeMinusFill></BsNodeMinusFill>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="FloatMainDivBox">
-                        <div className="FloatLeftDivBox">
-                            <h4>선택 가능 인원</h4>
-                            <ul>
-                                {InfoUserData.map((list, i) => {
-                                    return (
-                                        <li key={list.asset_management_number}>
-                                            <div>
-                                                {list.asset_management_number} || {list.asset_division} || {list.name} || {list.team}
-                                            </div>
-                                            <div className="IconsClickPlus" onClick={() => handleSelectClickIconsUserAadd(list)}>
-                                                <IoMdAddCircle></IoMdAddCircle>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                        <div className="FloatRightDivBox">
-                            <h4>선택 인원</h4>
-                            <ul>
-                                {SelectedInfoUserData.map((list, i) => {
-                                    return (
-                                        <li key={list.asset_management_number}>
-                                            <div>
-                                                {list.asset_management_number} || {list.asset_division} || {list.name} || {list.team}
-                                            </div>
-                                            <div className="IconsClickMinus" onClick={() => handleSelectClickIconsUserDelete(list)}>
-                                                <AiOutlineMinusCircle></AiOutlineMinusCircle>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </div>
-                </SelectUserInfoMainDivBox>
+                </UserSelectContainer>
+
                 <ModalButtonMainDivBox>
-                    <button onClick={() => DeleteData()}>삭제</button>
                     <div>
                         <button onClick={() => handleSaveUser()}>저장</button>
                     </div>

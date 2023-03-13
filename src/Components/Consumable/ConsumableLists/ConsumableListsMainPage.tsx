@@ -120,7 +120,9 @@ const ConsumableListsMainPage = ({ SelectCompany }: ConsumableListsMainPageProps
                                     <div>{j + 1} </div>
                                     <div>
                                         <img
-                                            src={`${process.env.REACT_APP_API_URL}/license/${list.consumable_lists_info_image_src}`}
+                                            src={`${process.env.REACT_APP_API_URL}/license/${
+                                                list.consumable_lists_info_image_src.split('.')[0]
+                                            }_resize.jpg`}
                                             width="150px"
                                             alt={list.consumable_lists_info_name}
                                         ></img>

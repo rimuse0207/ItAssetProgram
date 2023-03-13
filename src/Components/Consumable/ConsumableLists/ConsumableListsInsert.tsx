@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import Modal from 'react-modal';
 import { CgClose } from 'react-icons/cg';
 import styled from 'styled-components';
-
+import DatePicker from 'react-datepicker';
 import { BiMinusCircle, BiPlusCircle } from 'react-icons/bi';
+import { request } from '../../../Apis/core';
+import { toast } from '../../../PublicComponents/ToastMessage/ToastManager';
+import { ko } from 'date-fns/esm/locale';
+import uuid from 'react-uuid';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../Models';
 
 const ConsumableListsInsertMainDivBox = styled.div`
     .Close_button_container {
@@ -15,6 +21,101 @@ const ConsumableListsInsertMainDivBox = styled.div`
         font-size: 1.3em;
         :hover {
             cursor: pointer;
+        }
+    }
+    .Menu_Title {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        font-weight: bolder;
+    }
+    input {
+        border: 1px solid lightgray;
+        width: 90%;
+        padding-left: 15px;
+        min-height: 40px;
+    }
+    .Count_Select_Container {
+        display: flex;
+        align-items: center;
+
+        button {
+            height: 30px;
+            width: 50px;
+            border: none;
+            border-radius: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+            :hover {
+                cursor: pointer;
+            }
+        }
+        input {
+            width: 100px;
+            margin: 0px;
+            text-align: center;
+            font-weight: bolder;
+            font-size: 1em;
+            padding: 0px;
+        }
+    }
+
+    .Button_Cotainer {
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        button {
+            width: 120px;
+            height: 40px;
+            border: none;
+            font-weight: bolder;
+            font-size: 1.1em;
+            border-radius: 5px;
+            :hover {
+                cursor: pointer;
+            }
+            @media only screen and (max-width: 800px) {
+                width: 90px !important;
+                font-size: 0.9em;
+            }
+        }
+        .Cancle {
+            background-color: orange;
+            margin-right: 30px;
+            color: #fff;
+            :hover {
+                background-color: #efefef;
+                color: orange;
+            }
+            @media only screen and (max-width: 800px) {
+                margin-right: 10px;
+            }
+        }
+        .Delete {
+            background-color: red;
+            margin-left: 30px;
+            color: #fff;
+            :hover {
+                background-color: #efefef;
+                color: red;
+            }
+            @media only screen and (max-width: 800px) {
+                margin-left: 10px;
+            }
+        }
+        .Submit {
+            background-color: green;
+            margin-right: 30px;
+            color: #fff;
+            :hover {
+                background-color: #efefef;
+                color: green;
+            }
+            @media only screen and (max-width: 800px) {
+                margin-right: 10px;
+            }
         }
     }
 `;
@@ -42,44 +143,53 @@ type ConsumableListsInsertPropsTypes = {
     setModalisOpen: () => void;
 };
 
+type FileStateDataTypes = {
+    filename: string;
+};
+
 const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsInsertPropsTypes) => {
-    const [FileStateData, setFileStateData] = useState(null);
-    const [BreakFast_Data, setBreakFast_Data] = useState({
-        Food_Name: '',
-        Food_Count: 1,
+    const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
+    const [FileStateData, setFileStateData] = useState<FileStateDataTypes | null>(null);
+    const [ConsumableList_Data, setConsumableList_Data] = useState({
+        ConsumableList_Code: uuid(),
+        ConsumableList_Name: '',
+        ConsumableList_Count: 1,
+        ConsumableList_Compnay: 'DHKS',
+        ConsumableList_Date: new Date(),
+        ID: LoginInfoData.email,
     });
 
-    const CountMinus = () => {
-        setBreakFast_Data({ ...BreakFast_Data, Food_Count: Number(BreakFast_Data.Food_Count) - 1 });
+    const plusCount = () => {
+        setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Count: ConsumableList_Data.ConsumableList_Count + 1 });
     };
-
-    const CountPlus = () => {
-        setBreakFast_Data({ ...BreakFast_Data, Food_Count: Number(BreakFast_Data.Food_Count) + 1 });
+    const minusCount = () => {
+        if (ConsumableList_Data.ConsumableList_Count - 1 < 0) {
+        } else {
+            setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Count: ConsumableList_Data.ConsumableList_Count - 1 });
+        }
     };
 
     const HandleDataAdd = async () => {
         try {
-            if (!FileStateData || !BreakFast_Data.Food_Name || BreakFast_Data.Food_Count <= 0) {
+            if (!FileStateData || !ConsumableList_Data.ConsumableList_Name || ConsumableList_Data.ConsumableList_Count < 0) {
                 alert('정확하게 공란을 적어 주세요.');
                 return;
             }
 
-            const BreakFast_Stock_Data_Insert_Axios = await request.post(`/FoodApp/BreakFast_Stock_Data_Insert`, {
+            const Add_Insert_ConsumableList_Data_Axios = await request.post(`/IT_Consumable_app_server/Consumable_Stock_Data_Insert`, {
                 FileStateData,
-                BreakFast_Data,
+                ConsumableList_Data,
             });
 
-            if (BreakFast_Stock_Data_Insert_Axios.data.dataSuccess) {
-                Get_NowDates_Apply_User_Select();
-                OnClose();
+            if (Add_Insert_ConsumableList_Data_Axios.data.dataSuccess) {
                 toast.show({
-                    title: `조식물품을 성공적으로 등록 완료하였습니다.`,
+                    title: `소모품 등록을 완료하였습니다.`,
                     successCheck: true,
                     duration: 6000,
                 });
             } else {
                 toast.show({
-                    title: `상품명이 중복됩니다. 확인 후 다시 시도해주세요.`,
+                    title: `확인 후 다시 시도해주세요.`,
                     successCheck: false,
                     duration: 4000,
                 });
@@ -89,28 +199,26 @@ const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsI
         }
     };
 
+    // 이미지 파일 업로드
     const onUploadImage = useCallback(async e => {
-        dispatch(Loader_Check_For_False());
         if (!e.target.files) {
-            dispatch(Loader_Check_For_False());
             return;
         }
-        dispatch(Loader_Check_For_True());
+
         const formData = new FormData();
         formData.append('image', e.target.files[0]);
 
-        const dataSendImageFromServer = await request.post(`/FoodApp/BreakFast_Image_Upload`, formData, {
+        const dataSendImageFromServer = await request.post(`/IT_Consumable_app_server/Consumable_Image_Upload`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
         if (dataSendImageFromServer.data.dataSuccess) {
+            console.log(dataSendImageFromServer);
             setTimeout(() => {
                 setFileStateData(dataSendImageFromServer.data.Image_data);
-                dispatch(Loader_Check_For_False());
-            }, [2000]);
+            }, 2000);
         } else {
-            dispatch(Loader_Check_For_False());
         }
     }, []);
     return (
@@ -120,14 +228,14 @@ const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsI
                     <div className="Close_button_container">
                         <CgClose onClick={() => setModalisOpen()}></CgClose>
                     </div>
-                    <h3>조식 물품 등록</h3>
+                    <h3>소모품 물품 등록</h3>
                     <div>
-                        <div className="Menu_Title">메뉴 사진 : </div>
+                        <div className="Menu_Title">소모품 등록 사진 : </div>
                         {FileStateData ? (
                             <div style={{ marginBottom: '50px' }}>
                                 <div></div>
                                 <img
-                                    src={`${process.env.REACT_APP_DB_HOST}/FoodImages/${FileStateData.filename.split('.')[0]}_resize.jpg`}
+                                    src={`${process.env.REACT_APP_API_URL}/license/${FileStateData?.filename.split('.')[0]}_resize.jpg`}
                                     width="300px"
                                     alt="사진업로드"
                                 ></img>
@@ -137,39 +245,76 @@ const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsI
                                 <input type="file" accept="image/*" name="thumbnail" onChange={onUploadImage}></input>
                             </div>
                         )}
-
-                        <div>
-                            <div className="Menu_Title">메뉴명 : </div>
+                        {/* <div>
+                            <div className="Menu_Title">소모품 코드 : </div>
                             <input
-                                value={BreakFast_Data.Food_Name}
-                                placeholder="조식 메뉴명을 입력 해주세요."
-                                onChange={e => setBreakFast_Data({ ...BreakFast_Data, Food_Name: e.target.value })}
+                                value={ConsumableList_Data.ConsumableList_Code}
+                                placeholder="소모품 코드명을 입력 해주세요. 미 입력 시 자동으로 생성 됩니다."
+                                onChange={e => setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Code: e.target.value })}
                             ></input>
+                        </div> */}
+                        <div>
+                            <div className="Menu_Title">소모품 메뉴명 : </div>
+                            <input
+                                value={ConsumableList_Data.ConsumableList_Name}
+                                placeholder="소모품 메뉴명을 입력 해주세요."
+                                onChange={e => setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Name: e.target.value })}
+                            ></input>
+                        </div>
+                        <div>
+                            <div className="Menu_Title">소모품 구매날짜 : </div>
+                            <DatePicker
+                                selected={ConsumableList_Data.ConsumableList_Date}
+                                onChange={(date: Date) => setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Date: date })}
+                                locale={ko}
+                                dateFormat="yyy-MM-dd"
+                                maxDate={new Date()}
+                            />
+                        </div>
+                        <div>
+                            <div className="Menu_Title">등록 회사명 : </div>
+                            <input value={ConsumableList_Data.ConsumableList_Compnay} placeholder="조식 메뉴명을 입력 해주세요."></input>
                         </div>
                         <div>
                             <div className="Menu_Title">수량 : </div>
                             <div className="Count_Select_Container">
-                                <button onClick={() => CountMinus()}>
+                                <button
+                                    onClick={() => {
+                                        minusCount();
+                                    }}
+                                >
                                     <BiMinusCircle></BiMinusCircle>
                                 </button>
                                 <input
-                                    style={{ width: '50px' }}
+                                    style={{ width: '80px', textAlign: 'center' }}
                                     type="number"
-                                    value={BreakFast_Data.Food_Count}
-                                    onChange={e => setBreakFast_Data({ ...BreakFast_Data, Food_Count: e.target.value })}
+                                    value={ConsumableList_Data.ConsumableList_Count}
+                                    onChange={e =>
+                                        setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Count: Number(e.target.value) })
+                                    }
                                 ></input>
-                                <button onClick={() => CountPlus()}>
+                                <button
+                                    onClick={() => {
+                                        plusCount();
+                                    }}
+                                >
                                     <BiPlusCircle></BiPlusCircle>
                                 </button>
                             </div>
                         </div>
                     </div>
+
                     <div className="Button_Cotainer">
                         <button className="Submit" onClick={() => HandleDataAdd()}>
                             물품 등록
                         </button>
 
-                        <button className="Cancle" onClick={() => OnClose()}>
+                        <button
+                            className="Cancle"
+                            onClick={() => {
+                                setModalisOpen();
+                            }}
+                        >
                             취소
                         </button>
                     </div>

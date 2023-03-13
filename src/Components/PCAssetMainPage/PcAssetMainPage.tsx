@@ -96,34 +96,7 @@ const PcAssetMainPage = () => {
         dispatch(AssetFilteringReset());
     }, []);
 
-    // const Asset_Table_Ref = useRef<any>(null);
-    // const [isTabnavOn, setIsTabnavOn] = useState(false);
-
-    // const throttledScroll = useMemo(
-    //     () =>
-    //         throttle(() => {
-    //             console.log('스크롤 이벤트');
-    //             if (!Asset_Table_Ref.current) return;
-    //             const nextTabnavOn = window.scrollY > Asset_Table_Ref.current.offsetTop + 100;
-
-    //             console.log(nextTabnavOn);
-    //             console.log('Now', window.scrollY);
-    //             console.log('User', Asset_Table_Ref.current.offsetTop);
-    //             if (nextTabnavOn !== isTabnavOn) setIsTabnavOn(nextTabnavOn);
-    //         }, 300),
-    //     [isTabnavOn]
-    // );
-
-    // useEffect(() => {
-    //     console.log(window.scrollY);
-    // });
-    // useEffect(() => {
-    //     console.log(window.scrollY);
-    //     Asset_Table_Ref.current.addEventListener('scroll', throttledScroll);
-    //     return () => {
-    //         Asset_Table_Ref.current.removeEventListener('scroll', throttledScroll);
-    //     };
-    // }, [throttledScroll]);
+    
 
     const handleCompanyClicks = async (data: MenuAccessType) => {
         const ChangeCompany = CompanySelectAccessKey.map((list: MenuAccessType, i: number) => {
@@ -134,7 +107,7 @@ const PcAssetMainPage = () => {
             }
             return list;
         });
-        await dispatch(ChangeAccessKeyMenuBarRedux(ChangeCompany));
+         dispatch(ChangeAccessKeyMenuBarRedux(ChangeCompany));
     };
     /// 올라가기 아이콘
 

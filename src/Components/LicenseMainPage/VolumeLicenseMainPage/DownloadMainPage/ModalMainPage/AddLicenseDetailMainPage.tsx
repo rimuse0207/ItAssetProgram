@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
-import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
 import { MainModalContent } from '../../../../PCAssetMainPage/PcAssetMenuIcons/PcAssetModals/NewPcAssetDataModal';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-import { GrCheckbox, GrCheckboxSelected } from 'react-icons/gr';
-import { FileDrop } from 'react-file-drop';
-import { TiDelete } from 'react-icons/ti';
 import axios from 'axios';
 import moment from 'moment';
 import { PersonOption } from './docs/data';
-import AsyncSelect from 'react-select/async';
-import { IoMdAddCircle } from 'react-icons/io';
 import { ObjectNameSortData } from '../../../../../PublicFunc/ObjectNameSort';
 import { UserInfoGet } from '../../../../../Apis/core/api/AuthUnNeedApi/UserInfoApi';
 import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
@@ -22,6 +16,7 @@ import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../Models';
 import { License_getLicenseDataThunk } from '../../../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
+import { LicenseDataType } from '../../VolumeLicenseDataTypes';
 
 registerLocale('ko', ko);
 
@@ -226,10 +221,11 @@ Modal.setAppElement('#ModalMainDiv');
 type NewDataInsertMainPageProps = {
     setSelectClicksModals: (data: boolean) => void;
     SelectClicksModals: boolean;
-    DetailLicenseClicksData: any;
+    DetailLicenseClicksData: LicenseDataType | null;
     SelectCompany: string;
     type: string;
     SortTable: any;
+    GetInfoLicensData: () => void;
 };
 type selectUserInfoDataType = {
     name: string;
@@ -246,81 +242,55 @@ const AddLicenseDetailMainPage = ({
     SelectCompany,
     type,
     SortTable,
+    GetInfoLicensData,
 }: NewDataInsertMainPageProps) => {
     function closeModal() {
         setSelectClicksModals(false);
     }
     const dispatch = useDispatch();
     const LicenseFilteringData = useSelector((state: RootState) => state.LicenseFilteringData);
-    const [SearchNames, setSearchNames] = useState('');
-    const [SearchSomething, setSearchSomething] = useState<string | null>('');
-    const [InfoUserData, setInfoUserData] = useState<PersonOption[]>([]);
-    const [SelectedInfoUserData, setSelectedInfoUserData] = useState<selectUserInfoDataType[]>([]);
+    const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [DetailLicenseInputData, setDetailLicenseInputData] = useState({
-        license_product_code: DetailLicenseClicksData.license_product_code,
-        license_product_name: DetailLicenseClicksData.license_product_name,
+        license_product_code: DetailLicenseClicksData?.basic_License.asset_license_list_info_code,
+        license_product_name: DetailLicenseClicksData?.basic_License.asset_license_list_info_name,
         license_purchase_date: new Date(),
         license_purchase_finish_date: new Date(),
         license_purchase_company: '',
         license_permit_count: 0,
         license_purchase_pride: 0,
-        license_prove_code: {
-            nothing: true,
-            URL: false,
-            URL_Address: '',
-            Files: false,
-        },
         license_newcode: '',
+        ID: LoginInfoData.email,
+        license_notepad: '',
     });
-    const [file, setFile] = useState<any>([]);
+
     const saveData = async () => {
         if (DetailLicenseInputData.license_permit_count === 0) {
             alert('허용 가능한 인원을 작성 부탁드립니다.');
         }
         try {
-            const formData = new FormData();
-            file.map((list: any, i: number) => {
-                formData.append(`file`, list);
+            const AddLicenseData = await axios.post(`${process.env.REACT_APP_API_URL}/license_app_server/license_detail_data`, {
+                DetailLicenseInputData,
             });
-            formData.append('license_product_code', String(DetailLicenseInputData.license_product_code));
-            formData.append('license_product_name', String(DetailLicenseInputData.license_product_name));
-            formData.append('license_purchase_date', String(moment(DetailLicenseInputData.license_purchase_date).format('YYYY-MM-DD')));
-            formData.append(
-                'license_purchase_finish_date',
-                String(moment(DetailLicenseInputData.license_purchase_finish_date).format('YYYY-MM-DD'))
-            );
-            formData.append('license_purchase_company', String(DetailLicenseInputData.license_purchase_company));
-            formData.append('license_permit_count', String(DetailLicenseInputData.license_permit_count));
-            formData.append('license_purchase_pride', String(DetailLicenseInputData.license_purchase_pride));
-            formData.append('license_newcode', String(DetailLicenseInputData.license_newcode));
-            formData.append('license_prove_code_URL', String(DetailLicenseInputData.license_prove_code.URL));
-            formData.append('license_prove_code_URL_Address', String(DetailLicenseInputData.license_prove_code.URL_Address));
-            formData.append('license_prove_code_Files', String(DetailLicenseInputData.license_prove_code.Files));
-            formData.append('license_prove_code_nothing', String(DetailLicenseInputData.license_prove_code.nothing));
-            formData.append('license_types', String(type));
-            formData.append('SelectCompany', String(SelectCompany));
-
-            SelectedInfoUserData.map((list, i) => {
-                formData.append('SelectUsers', list.asset_management_number);
-            });
-
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data',
-                },
-            };
-            const AddLicenseData = await axios.post(
-                `${process.env.REACT_APP_API_URL}/license_app_server/license_detail_data`,
-                formData,
-                config
-            );
             if (AddLicenseData.data.dataSuccess) {
                 const ParamasData = {
                     company: SelectCompany,
                     license: type,
                     SortTable: LicenseFilteringData,
                 };
-                await dispatch(License_getLicenseDataThunk(ParamasData));
+                dispatch(License_getLicenseDataThunk(ParamasData));
+                setDetailLicenseInputData({
+                    license_product_code: DetailLicenseClicksData?.basic_License.asset_license_list_info_code,
+                    license_product_name: DetailLicenseClicksData?.basic_License.asset_license_list_info_name,
+                    license_purchase_date: new Date(),
+                    license_purchase_finish_date: new Date(),
+                    license_purchase_company: '',
+                    license_permit_count: 0,
+                    license_purchase_pride: 0,
+                    license_newcode: '',
+                    ID: LoginInfoData.email,
+                    license_notepad: '',
+                });
+                GetInfoLicensData();
                 toast.show({
                     title: `라이선스 수량 등록 완료.`,
                     successCheck: true,
@@ -332,105 +302,6 @@ const AddLicenseDetailMainPage = ({
         } catch (error) {
             console.log(error);
         }
-    };
-
-    const handle = (files: any) => {
-        let arr = Object.values(files);
-        const dd = file.concat(arr);
-        setFile(dd);
-    };
-
-    const handleDeleteFromFiles = (xData: any) => {
-        const deleteFileData = file.filter((item: { name: string }) => {
-            return item.name === xData.name ? '' : item;
-        });
-        setFile(deleteFileData);
-    };
-
-    useEffect(() => {
-        UserInfoGetApi();
-    }, []);
-
-    const UserInfoGetApi = async () => {
-        const ParamasData = {
-            type,
-            SelectCompany,
-        };
-        try {
-            const personOptionsData = await UserInfoGet('/UserInfo_app_server/Asset_User_Data', ParamasData);
-            if (personOptionsData.data.dataSuccess) {
-                console.log(personOptionsData);
-                setInfoUserData(personOptionsData.data.data);
-            } else {
-                alert('error');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const handleSelectedName = (e: any) => {
-        setSearchSomething(e.value);
-        const getChoiceData = {
-            name: e.name,
-            team: e.team,
-            email: e.email,
-            asset_division: e.asset_division,
-            asset_management_number: e.asset_management_number,
-        };
-        for (var i = 0; i < SelectedInfoUserData.length; i++) {
-            if (SelectedInfoUserData[i].email === e.email) {
-                alert('중복되어 추가가 불가합니다.');
-                return;
-            }
-        }
-
-        const DeleteUserData = InfoUserData.filter((item, j) => (item.email === e.email ? '' : item));
-        setInfoUserData(DeleteUserData);
-        const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
-        setSelectedInfoUserData(SortData);
-    };
-
-    const handleSelectClickIconsUserAadd = (userData: PersonOption) => {
-        const getChoiceData = {
-            name: userData.name,
-            team: userData.team,
-            email: userData.email,
-            asset_division: userData.asset_division,
-            asset_management_number: userData.asset_management_number,
-        };
-        const DeleteUserData = InfoUserData.filter((item, j) =>
-            item.asset_management_number === userData.asset_management_number ? '' : item
-        );
-        setInfoUserData(DeleteUserData);
-
-        const SortData = ObjectNameSortData(SelectedInfoUserData.concat(getChoiceData));
-        setSelectedInfoUserData(SortData);
-    };
-
-    const filterSearchedSomething = (inputValue: string) => {
-        return InfoUserData.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
-    };
-    const loadOptions = (inputValue: string, callback: (options: PersonOption[]) => void) => {
-        setTimeout(() => {
-            callback(filterSearchedSomething(inputValue));
-        }, 100);
-    };
-    const handleSelectClickIconsUserDelete = (userData: selectUserInfoDataType) => {
-        const getChoiceData = {
-            name: userData.name,
-            team: userData.team,
-            email: userData.email,
-            value: userData.email,
-            asset_division: userData.asset_division,
-            asset_management_number: userData.asset_management_number,
-            label: `${userData.asset_management_number} || ${userData.asset_division} || ${userData.email} || ${userData.name} || ${userData.team} `,
-        };
-        const DeleteUserData = SelectedInfoUserData.filter((item, j) =>
-            item.asset_management_number === userData.asset_management_number ? '' : item
-        );
-        setSelectedInfoUserData(DeleteUserData);
-        const SortData = ObjectNameSortData(InfoUserData.concat(getChoiceData));
-        setInfoUserData(SortData);
     };
 
     return (
@@ -449,7 +320,7 @@ const AddLicenseDetailMainPage = ({
                                 <h2>구매 이력 추가</h2>
 
                                 <div className="PCAssetFloatContainer">
-                                    <div className="PCAssetFloatLeft">
+                                    <div className="PCAssetFloatLeft" style={{ width: '70%' }}>
                                         <div className="input-content-wrap">
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">라이선스 이름</dt>
@@ -477,9 +348,9 @@ const AddLicenseDetailMainPage = ({
                                                                 license_purchase_date: date,
                                                             })
                                                         }
-                                                        withPortal
+                                                        maxDate={new Date()}
                                                         locale={ko}
-                                                        dateFormat="yyy-MM-dd"
+                                                        dateFormat="yyyy-MM-dd"
                                                     />
                                                     <span className="underline"></span>
                                                 </dd>
@@ -498,9 +369,8 @@ const AddLicenseDetailMainPage = ({
                                                                 license_purchase_finish_date: date,
                                                             })
                                                         }
-                                                        withPortal
                                                         locale={ko}
-                                                        dateFormat="yyy-MM-dd"
+                                                        dateFormat="yyyy-MM-dd"
                                                         minDate={DetailLicenseInputData.license_purchase_date}
                                                     />
                                                     <span className="underline"></span>
@@ -527,7 +397,7 @@ const AddLicenseDetailMainPage = ({
                                             </dl>
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">
-                                                    라이선스 허용수<span style={{ color: 'red' }}>*</span>
+                                                    등록 허용수<span style={{ color: 'red' }}>*</span>
                                                 </dt>
                                                 <dd className="inputbox-content">
                                                     <input
@@ -537,7 +407,11 @@ const AddLicenseDetailMainPage = ({
                                                         onChange={e =>
                                                             setDetailLicenseInputData({
                                                                 ...DetailLicenseInputData,
-                                                                license_permit_count: Number(e.target.value),
+                                                                license_permit_count:
+                                                                    DetailLicenseInputData.license_permit_count + Number(e.target.value) <=
+                                                                    0
+                                                                        ? 0
+                                                                        : Number(e.target.value),
                                                             })
                                                         }
                                                         placeholder="DM500S3B/B71"
@@ -583,206 +457,23 @@ const AddLicenseDetailMainPage = ({
                                                 </dd>
                                             </dl>
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">증빙 등록</dt>
-                                                <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                    <div
-                                                        style={{ marginRight: '30px' }}
-                                                        onClick={e => {
-                                                            setFile([]);
+                                                <dt className="inputbox-title">메모</dt>
+                                                <dd className="inputbox-content">
+                                                    <input
+                                                        id="input10"
+                                                        value={DetailLicenseInputData.license_notepad}
+                                                        onChange={e =>
                                                             setDetailLicenseInputData({
                                                                 ...DetailLicenseInputData,
-                                                                license_prove_code: {
-                                                                    ...DetailLicenseInputData.license_prove_code,
-                                                                    URL: false,
-                                                                    Files: false,
-                                                                    nothing: true,
-                                                                },
-                                                            });
-                                                        }}
-                                                    >
-                                                        <span>
-                                                            {DetailLicenseInputData.license_prove_code.nothing ? (
-                                                                <GrCheckboxSelected></GrCheckboxSelected>
-                                                            ) : (
-                                                                <GrCheckbox></GrCheckbox>
-                                                            )}
-                                                        </span>
-                                                        <span>없음</span>
-                                                    </div>
-                                                    <div
-                                                        style={{ marginRight: '30px' }}
-                                                        onClick={e => {
-                                                            setFile([]);
-                                                            setDetailLicenseInputData({
-                                                                ...DetailLicenseInputData,
-                                                                license_prove_code: {
-                                                                    ...DetailLicenseInputData.license_prove_code,
-                                                                    URL: true,
-                                                                    Files: false,
-                                                                    nothing: false,
-                                                                },
-                                                            });
-                                                        }}
-                                                    >
-                                                        <span>
-                                                            {DetailLicenseInputData.license_prove_code.URL ? (
-                                                                <GrCheckboxSelected></GrCheckboxSelected>
-                                                            ) : (
-                                                                <GrCheckbox></GrCheckbox>
-                                                            )}
-                                                        </span>
-                                                        <span>URL</span>
-                                                    </div>
-                                                    <div
-                                                        onClick={e =>
-                                                            setDetailLicenseInputData({
-                                                                ...DetailLicenseInputData,
-                                                                license_prove_code: {
-                                                                    ...DetailLicenseInputData.license_prove_code,
-                                                                    URL: false,
-                                                                    Files: true,
-                                                                    nothing: false,
-                                                                },
+                                                                license_notepad: e.target.value,
                                                             })
                                                         }
-                                                    >
-                                                        <span>
-                                                            {DetailLicenseInputData.license_prove_code.Files ? (
-                                                                <GrCheckboxSelected></GrCheckboxSelected>
-                                                            ) : (
-                                                                <GrCheckbox></GrCheckbox>
-                                                            )}
-                                                        </span>
-                                                        <span>File</span>
-                                                    </div>
-                                                </div>
-                                                {DetailLicenseInputData.license_prove_code.URL ? (
-                                                    <dd className="inputbox-content">
-                                                        <input
-                                                            id="input4"
-                                                            value={DetailLicenseInputData.license_prove_code.URL_Address}
-                                                            onChange={e =>
-                                                                setDetailLicenseInputData({
-                                                                    ...DetailLicenseInputData,
-                                                                    license_prove_code: {
-                                                                        ...DetailLicenseInputData.license_prove_code,
-                                                                        URL_Address: e.target.value,
-                                                                    },
-                                                                })
-                                                            }
-                                                            placeholder="URL 주소 입력 ..."
-                                                        />
-
-                                                        <span className="underline"></span>
-                                                    </dd>
-                                                ) : (
-                                                    ''
-                                                )}
-                                                {DetailLicenseInputData.license_prove_code.Files ? (
-                                                    <TableMainDivBox>
-                                                        <h3>업로드 파일</h3>
-                                                        <div className="upload-file-wrapper">
-                                                            <FileDrop onDrop={(files, event) => handle(files)}>
-                                                                <p>업로드 하실 파일을 드래그 또는 클릭 하여 추가 </p>
-                                                                <label htmlFor="same" className="browse-btn">
-                                                                    클릭
-                                                                    <input
-                                                                        id="same"
-                                                                        type="file"
-                                                                        multiple
-                                                                        onChange={e => handle(e.target.files)}
-                                                                    ></input>
-                                                                </label>
-                                                            </FileDrop>
-                                                        </div>
-                                                    </TableMainDivBox>
-                                                ) : (
-                                                    ''
-                                                )}
+                                                        placeholder="메모 등등.."
+                                                    />
+                                                    <span className="underline"></span>
+                                                </dd>
                                             </dl>
                                         </div>
-                                        {DetailLicenseInputData.license_prove_code.Files &&
-                                        !DetailLicenseInputData.license_prove_code.nothing ? (
-                                            <div style={{ marginTop: '20px' }}>
-                                                <h4>등록된 파일</h4>
-                                                <UploadedFileDataUlBox>
-                                                    {file.map((x: any) => {
-                                                        return (
-                                                            <li key={x.name}>
-                                                                <div className="UploadedContainerDiv">
-                                                                    <div>{x.name}</div>
-                                                                    <div onClick={() => handleDeleteFromFiles(x)}>
-                                                                        <TiDelete></TiDelete>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </UploadedFileDataUlBox>
-                                            </div>
-                                        ) : (
-                                            ''
-                                        )}
-                                    </div>
-                                    <div className="PCAssetFloatRight">
-                                        <DetailLicneseSelectUserInfoMainDivBox>
-                                            <h3 style={{ marginBottom: '30px' }}>사용자 인원 추가</h3>
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <div>
-                                                    <div>
-                                                        <AsyncSelect
-                                                            cacheOptions
-                                                            loadOptions={loadOptions}
-                                                            defaultOptions
-                                                            onChange={(e: any) => handleSelectedName(e)}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="FloatMainDivBox">
-                                                <div className="FloatLeftDivBox">
-                                                    <h4>선택 가능 인원</h4>
-                                                    <ul>
-                                                        {InfoUserData.map((list, i) => {
-                                                            return (
-                                                                <li key={list.asset_management_number}>
-                                                                    <div>
-                                                                        {list.asset_management_number} || {list.name} || {list.team}
-                                                                    </div>
-                                                                    <div
-                                                                        className="IconsClickPlus"
-                                                                        onClick={() => handleSelectClickIconsUserAadd(list)}
-                                                                    >
-                                                                        <IoMdAddCircle></IoMdAddCircle>
-                                                                    </div>
-                                                                </li>
-                                                            );
-                                                        })}
-                                                    </ul>
-                                                </div>
-                                                <div className="FloatRightDivBox">
-                                                    <h4>선택 인원</h4>
-                                                    <ul>
-                                                        {SelectedInfoUserData.map((list, i) => {
-                                                            return (
-                                                                <li key={list.asset_management_number}>
-                                                                    <div>
-                                                                        {list.asset_management_number} || {list.asset_division} ||{' '}
-                                                                        {list.name} || {list.team}
-                                                                    </div>
-                                                                    <div
-                                                                        className="IconsClickMinus"
-                                                                        onClick={() => handleSelectClickIconsUserDelete(list)}
-                                                                    >
-                                                                        <AiOutlineMinusCircle></AiOutlineMinusCircle>
-                                                                    </div>
-                                                                </li>
-                                                            );
-                                                        })}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </DetailLicneseSelectUserInfoMainDivBox>
                                     </div>
                                 </div>
                                 <div className="btns">

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { BsFileEarmarkBarGraphFill, BsCalendar2PlusFill } from 'react-icons/bs';
 import styled from 'styled-components';
-import AddUserModalMainPage from './ModalMainPage/AddUserModalMainPage';
 import ExcelDowloadModalMainPage from './ModalMainPage/ExcelDowloadModalMainPage';
 import NewDataInsertMainPage from './ModalMainPage/NewDataInsertMainPage';
 import { LicenseDataType } from '../VolumeLicenseDataTypes';
@@ -222,7 +221,7 @@ const DownLoadMainPage = ({
                     ''
                 )}
             </div>
-            <div>
+            {/* <div>
                 {UserAddModals && ModalType === 'Show_info' ? (
                     <AddUserModalMainPage
                         windowScrollss={windowScrollss}
@@ -239,7 +238,7 @@ const DownLoadMainPage = ({
                 ) : (
                     <div></div>
                 )}
-            </div>
+            </div> */}
             <div>
                 {SelectClicksModals.FilterModal ? (
                     <FilterSearchMainPageDivBox>

@@ -350,8 +350,8 @@ const UpdatePcAssetUserDataModal = ({
         { name: '반납', AccessKey: false },
         { name: '이관', AccessKey: false },
         { name: '폐기', AccessKey: false },
-        { name: '소프트웨어 조회', AccessKey: false },
-        { name: '프린트 이력 조회', AccessKey: false },
+        // { name: '소프트웨어 조회', AccessKey: false },
+        // { name: '프린트 이력 조회', AccessKey: false },
     ]);
     const { type } = useParams<paramasType>();
     const [AssetDataChangeCheck, setAssetDataChangeCheck] = useState(false);
@@ -377,9 +377,9 @@ const UpdatePcAssetUserDataModal = ({
     useEffect(() => {
         if (SelectAssetData?.userinfo_email) {
             setCompanySelectAccessKey([
-                { name: '소프트웨어 조회', AccessKey: true },
-                { name: '프린트 이력조회', AccessKey: false },
-                { name: '반납', AccessKey: false },
+                // { name: '소프트웨어 조회', AccessKey: true },
+                // { name: '프린트 이력조회', AccessKey: false },
+                { name: '반납', AccessKey: true },
                 { name: '이관', AccessKey: false },
                 { name: '폐기', AccessKey: false },
             ]);
@@ -387,9 +387,9 @@ const UpdatePcAssetUserDataModal = ({
             setCompanySelectAccessKey([{ name: '폐기 복원', AccessKey: true }]);
         } else {
             setCompanySelectAccessKey([
-                { name: '소프트웨어 조회', AccessKey: true },
-                { name: '프린트 이력조회', AccessKey: false },
-                { name: '사용자 등록', AccessKey: false },
+                // { name: '소프트웨어 조회', AccessKey: true },
+                // { name: '프린트 이력조회', AccessKey: false },
+                { name: '사용자 등록', AccessKey: true },
                 { name: '폐기', AccessKey: false },
             ]);
         }
@@ -469,7 +469,7 @@ const UpdatePcAssetUserDataModal = ({
                     type,
                     FilteringData,
                 };
-                await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+                dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
                 setSelectUsered(null);
                 closeModal();
                 toast.show({
@@ -524,7 +524,7 @@ const UpdatePcAssetUserDataModal = ({
                         type,
                         FilteringData,
                     };
-                    await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+                    dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
                     toast.show({
                         title: `데이터 삭제 성공`,
                         successCheck: true,
@@ -669,7 +669,7 @@ const UpdatePcAssetUserDataModal = ({
                                                             ''
                                                         );
                                                     })}
-                                                    {CompanySelectAccessKey.map((list, i) => {
+                                                    {/* {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '소프트웨어 조회' ? (
                                                             <SoftWareSelectMainPage
                                                                 key={list.name}
@@ -702,7 +702,7 @@ const UpdatePcAssetUserDataModal = ({
                                                         ) : (
                                                             ''
                                                         );
-                                                    })}
+                                                    })} */}
 
                                                     {/* {CompanySelectAccessKey.map((list, i) => {
                                                         return list.AccessKey && list.name === '라이선스 등록' ? (

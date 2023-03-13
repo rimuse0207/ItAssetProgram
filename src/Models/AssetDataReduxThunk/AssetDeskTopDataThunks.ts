@@ -21,6 +21,7 @@ const DeskTopAsset_getDeskTopAssetDataAsync = createAsyncAction(
 const TeamLeader_getDataDeskTopAssetApply = async (ParamsData: {}) => {
     try {
         const getInfoLicenseData = await AssetDesktopInfoGet('/Asset_app_server/Asset_Data_Getting', ParamsData);
+        console.log(getInfoLicenseData);
         return getInfoLicenseData.data.datas;
     } catch (error) {
         console.log(error);

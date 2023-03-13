@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DeskTopInfoDataType } from '../../../PCAssetDataType';
 import moment from 'moment';
 import { BsPencilSquare } from 'react-icons/bs';
 import styled from 'styled-components';
+import { request } from '../../../../../Apis/core';
 type PcInfoDataUpdateProps = {
     SelectAssetData: DeskTopInfoDataType | null;
     setAssetDataChangeCheck: () => void;
@@ -18,8 +19,68 @@ const PcInfoDataUpdateMainDivBox = styled.div`
         }
     }
 `;
+type asset_Disk_Type = {
+    label: string;
+    value: string;
+};
+
+export type DetailDataTypes = {
+    asset_cpu: string;
+    asset_destroy_check: number;
+    asset_disk: asset_Disk_Type[];
+    asset_disk_info: null | string;
+    asset_disk_info_code: null | string;
+    asset_disk_info_name: null | string;
+    asset_distribute_date: string;
+    asset_division: string;
+    asset_ip_address: null | string;
+    asset_mac_address: null | string;
+    asset_mac_indexs: null | string;
+    asset_mac_info: string;
+    asset_mac_random_key: null | string;
+    asset_maker: string;
+    asset_management_number: string;
+    asset_model: string;
+    asset_newcode: string;
+    asset_notepad: null | string;
+    asset_personal_code: string;
+    asset_pride: string;
+    asset_purchase_date: string;
+    asset_ram: string;
+    company_info_company_code: string;
+    companyinfo_companycode: string;
+    email: string;
+    inservice: number;
+    name: string;
+    position: string;
+    team: string;
+    updatedate: string;
+    userinfo_email: string;
+    userinfo_ip: null | string;
+    userinfo_mac: null | string;
+};
 
 const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDataUpdateProps) => {
+    const [DetailData, setDetailData] = useState<DetailDataTypes | any>();
+    const [DiskInfoData, setDiskInfoData] = useState<asset_Disk_Type[]>();
+
+    const Sending_Detail_Data = async () => {
+        try {
+            const Sending_Detail_Data_Axios = await request.post(`/Asset_app_server/Detail_Asset_Data`, { SelectAssetData });
+
+            if (Sending_Detail_Data_Axios.data.dataSuccess) {
+                setDetailData(Sending_Detail_Data_Axios.data.Select_Asset_Detail_Data_Rows[0]);
+                setDiskInfoData(Sending_Detail_Data_Axios.data.Select_Asset_Detail_Disk_Data_Rows);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        Sending_Detail_Data();
+    }, []);
+
     return (
         <PcInfoDataUpdateMainDivBox>
             <div>
@@ -34,63 +95,62 @@ const PcInfoDataUpdate = ({ SelectAssetData, setAssetDataChangeCheck }: PcInfoDa
                     </div>
                     <tr>
                         <th scope="row">관리 번호</th>
-                        <td>{SelectAssetData?.asset_management_number}</td>
+                        <td>{DetailData ? DetailData.asset_personal_code : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">사용자</th>
-                        <td>
-                            {SelectAssetData?.team}_{SelectAssetData?.name}
-                        </td>
+                        <td>{DetailData ? `${DetailData.team}_${DetailData.name}` : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">MAC 주소</th>
-                        <td>{SelectAssetData?.asset_mac_address}</td>
+                        <td>{DetailData ? DetailData?.asset_mac_address : ''}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">IP 주소</th>
+                        <td>{DetailData ? DetailData?.asset_ip_address : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">종류</th>
-                        <td>{SelectAssetData?.asset_division}</td>
+                        <td>{DetailData ? DetailData?.asset_division : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">제조사</th>
-                        <td>{SelectAssetData?.asset_maker}</td>
+                        <td>{DetailData ? DetailData?.asset_maker : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">모델명</th>
-                        <td>{SelectAssetData?.asset_model}</td>
+                        <td>{DetailData ? DetailData?.asset_model : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">구매날짜</th>
-                        <td>{moment(SelectAssetData?.asset_purchase_date).format('YYYY-MM-DD')}</td>
+                        <td>{DetailData ? moment(DetailData?.asset_purchase_date).format('YYYY-MM-DD') : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">구입 금액</th>
-                        <td>{SelectAssetData?.asset_pride ? Number(SelectAssetData.asset_pride).toLocaleString('ko-KR') : '-'}</td>
+                        <td>
+                            {DetailData ? (DetailData?.asset_pride ? Number(DetailData.asset_pride).toLocaleString('ko-KR') : '-') : ''}
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">CPU</th>
-                        <td>{SelectAssetData?.asset_cpu}</td>
+                        <td>{DetailData ? DetailData?.asset_cpu : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">RAM</th>
-                        <td>{SelectAssetData?.asset_ram}</td>
+                        <td>{DetailData ? DetailData?.asset_ram : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">DISK</th>
-                        <td>{SelectAssetData?.asset_disk}</td>
+                        <td>{DiskInfoData ? DiskInfoData?.map(list => list.value + ' , ') : ''}</td>
                     </tr>
                     <tr>
                         <th scope="row">자산코드</th>
-                        <td>{SelectAssetData?.asset_newcode ? SelectAssetData?.asset_newcode : '-'}</td>
+                        <td>{DetailData?.asset_newcode ? DetailData?.asset_newcode : '-'}</td>
                     </tr>
-                    {/* <tr>
-                        <th scope="row">사용처</th>
-                        <td>
-                            {SelectAssetData?.company_name}_{SelectAssetData?.company_location}
-                        </td>
-                    </tr> */}
+
                     <tr>
-                        <th scope="row">메모</th>
-                        <td>{SelectAssetData?.asset_notepad}</td>
+                        <th scope="row">비고</th>
+                        <td>{DetailData ? DetailData?.asset_notepad : ''}</td>
                     </tr>
                 </table>
             </div>

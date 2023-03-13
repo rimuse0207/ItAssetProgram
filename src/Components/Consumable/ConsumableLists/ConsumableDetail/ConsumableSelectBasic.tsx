@@ -36,7 +36,9 @@ const ConsumableSelectBasic = ({ Detail_Consumable }: ConsumableSelectBasicProps
                     >
                         <div>
                             <img
-                                src={`${process.env.REACT_APP_API_URL}/license/${Detail_Consumable?.Consumable_list_Data_Rows.consumable_lists_info_image_src}`}
+                                src={`${process.env.REACT_APP_API_URL}/license/${
+                                    Detail_Consumable?.Consumable_list_Data_Rows.consumable_lists_info_image_src.split('.')[0]
+                                }_resize.jpg`}
                                 width="150px"
                                 alt={Detail_Consumable?.Consumable_list_Data_Rows.consumable_lists_info_name}
                             ></img>

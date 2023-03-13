@@ -9,7 +9,6 @@ import ConsumableUserInsert from './ConsumableDisplay/ConsumableUserInsert';
 import ConsumableInsert from './ConsumableDisplay/ConsumableInsert';
 
 const ConsumableDetailMainPageMainDivBox = styled.div`
-    border: 1px solid black;
     width: 100%;
     padding: 10px;
 

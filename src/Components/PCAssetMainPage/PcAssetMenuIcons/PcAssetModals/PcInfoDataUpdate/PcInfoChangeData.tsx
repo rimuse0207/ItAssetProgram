@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DeskTopInfoDataType } from '../../../PCAssetDataType';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
@@ -6,16 +6,16 @@ import styled from 'styled-components';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
-
 import { AssetUserAdd } from '../../../../../Apis/core/api/AuthUnNeedApi/AssetUserAdd/AssetAdd';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../Models/index';
 import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
-import { NoteBookAsset_getNoteBookAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetNotBookDataThunks';
-import { MonitorAsset_getMonitorAssetDataThunk } from '../../../../../Models/AssetDataReduxThunk/AssetMonitorDataThunks';
 import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
 import { useParams } from 'react-router-dom';
+import { DetailDataTypes } from './PcInfoDataUpdate';
+import { request } from '../../../../../Apis/core';
+import Select from 'react-select';
 
 registerLocale('ko', ko);
 type PcInfoChangeDataProps = {
@@ -48,6 +48,11 @@ type paramasType = {
     type: string;
 };
 
+type Detail_Disk_Data_Types = {
+    value: string;
+    label: string;
+};
+
 const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectAssetData, SelectCompany }: PcInfoChangeDataProps) => {
     const dispatch = useDispatch();
     const { type } = useParams<paramasType>();
@@ -68,11 +73,48 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
         asset_distribute_date: new Date(),
         company_code: '',
         asset_notepad: '',
+        asset_mac_info: SelectAssetData?.asset_mac_address ? SelectAssetData?.asset_mac_address : '',
+        asset_ip_info: SelectAssetData?.asset_ip_address ? SelectAssetData?.asset_ip_address : '',
     });
+
+    const [DetailData, setDetailData] = useState<DetailDataTypes | any>(null);
+    const [Detail_Disk_Data, setDetail_Disk_Data] = useState<Detail_Disk_Data_Types[]>([]);
+
+    const NowDiskState = [
+        { label: 'SSD 128GB', value: 'SSD_128GB' },
+        { label: 'SSD 512GB', value: 'SSD_512GB' },
+        { label: 'SSD 1TB', value: 'SSD_1TB' },
+        { label: 'HDD 256GB', value: 'HDD_256GB' },
+        { label: 'HDD 512GB', value: 'HDD_512GB' },
+        { label: 'HDD 1TB', value: 'HDD_1TB' },
+        { label: 'HDD 2TB', value: 'HDD_2TB' },
+    ];
+
+    const Sending_Detail_Data = async () => {
+        try {
+            const Sending_Detail_Data_Axios = await request.post(`/Asset_app_server/Detail_Asset_Data`, { SelectAssetData });
+
+            if (Sending_Detail_Data_Axios.data.dataSuccess) {
+                setDetailData(Sending_Detail_Data_Axios.data.Select_Asset_Detail_Data_Rows[0]);
+                setDetail_Disk_Data(Sending_Detail_Data_Axios.data.Select_Asset_Detail_Disk_Data_Rows);
+                console.log(Sending_Detail_Data_Axios);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleChanges = (e: any) => {
+        setDetail_Disk_Data(e);
+    };
+
+    useEffect(() => {
+        Sending_Detail_Data();
+    }, []);
 
     const handleChangeAssetData = async () => {
         try {
-            const ChangeAssetDatass = await AssetUserAdd('/Asset_app_server/Asset_data_update', { ChangeAssetData });
+            const ChangeAssetDatass = await AssetUserAdd('/Asset_app_server/Asset_data_update', { DetailData, Detail_Disk_Data });
             if (ChangeAssetDatass.data.dataSuccess) {
                 const {
                     asset_cpu,
@@ -101,31 +143,13 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                     asset_notepad,
                 });
 
-                // const ParamasDatasDesktop = {
-                //     types: '데스크탑',
-                //     SelectCompany,
-                //     FilteringData,
-                // };
-                // const ParamasDatasNoteBook = {
-                //     types: '노트북',
-                //     SelectCompany,
-                //     FilteringData,
-                // };
-                // const ParamasDatasMonitor = {
-                //     types: '모니터',
-                //     SelectCompany,
-                //     FilteringData,
-                // };
-                // await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatasDesktop));
-                // await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatasNoteBook));
-                // await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatasMonitor));
                 const paramasData = {
                     company: SelectCompany,
                     type,
                     FilteringData,
                 };
                 if (ChangeAssetDatass.data.dataSuccess) {
-                    await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
+                    dispatch(DeskTopAsset_getDeskTopAssetDataThunk(paramasData));
                     toast.show({
                         title: `자산 정보 수정을 완료하였습니다.`,
                         successCheck: true,
@@ -159,20 +183,49 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
             <div>
                 <table className="type03">
                     <div className="UpdateButton">
-                        <button onClick={handleChangeAssetData}>
-                            <BsPencilSquare></BsPencilSquare>자산 정보 저장 하기
+                        <button style={{ color: 'red', fontWeight: 'bolder' }} onClick={() => setAssetDataChangeCheck()}>
+                            <BsPencilSquare></BsPencilSquare>취소하기
+                        </button>
+                        <button onClick={handleChangeAssetData} style={{ marginLeft: '30px', color: 'green', fontWeight: 'bolder' }}>
+                            <BsPencilSquare></BsPencilSquare>자산 정보 수정 하기
                         </button>
                     </div>
                     <tr>
                         <th scope="row">관리 번호</th>
-                        <td>{ChangeAssetData.asset_management_number}</td>
+                        <td>
+                            <input
+                                placeholder="관리번호를 입력해주세요."
+                                value={DetailData ? DetailData.asset_personal_code : ''}
+                                onChange={e => setDetailData({ ...DetailData, asset_personal_code: e.target.value })}
+                            ></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">MAC 주소</th>
+                        <td>
+                            <input
+                                placeholder="MAC 주소를 입력해주세요."
+                                value={DetailData ? DetailData.asset_mac_address : ''}
+                                onChange={e => setDetailData({ ...DetailData, asset_mac_address: e.target.value })}
+                            ></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">IP 주소</th>
+                        <td>
+                            <input
+                                placeholder="IP 주소를 입력해주세요."
+                                value={DetailData?.asset_ip_address ? DetailData.asset_ip_address : ''}
+                                onChange={e => setDetailData({ ...DetailData, asset_ip_address: e.target.value })}
+                            ></input>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">종류</th>
                         <td>
                             <select
-                                defaultValue={ChangeAssetData.asset_division}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_division: e.target.value })}
+                                defaultValue={DetailData?.asset_division}
+                                onChange={e => setDetailData({ ...DetailData, asset_division: e.target.value })}
                             >
                                 <option value="데스크탑">데스크탑</option>
                                 <option value="노트북">노트북</option>
@@ -183,8 +236,8 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                         <th scope="row">제조사</th>
                         <td>
                             <input
-                                defaultValue={ChangeAssetData.asset_maker}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_maker: e.target.value })}
+                                defaultValue={DetailData?.asset_maker}
+                                onChange={e => setDetailData({ ...DetailData, asset_maker: e.target.value })}
                             ></input>
                         </td>
                     </tr>
@@ -192,8 +245,8 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                         <th scope="row">모델명</th>
                         <td>
                             <input
-                                defaultValue={ChangeAssetData.asset_model}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_model: e.target.value })}
+                                defaultValue={DetailData?.asset_model}
+                                onChange={e => setDetailData({ ...DetailData, asset_model: e.target.value })}
                             ></input>
                         </td>
                     </tr>
@@ -201,11 +254,13 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                         <th scope="row">구매날짜</th>
                         <td>
                             <DatePicker
-                                selected={new Date(ChangeAssetData.asset_purchase_date)}
-                                onChange={(date: any) => setChangeAssetData({ ...ChangeAssetData, asset_purchase_date: date })}
-                                withPortal
+                                selected={new Date(DetailData ? DetailData.asset_purchase_date : new Date())}
+                                onChange={(date: any) => setDetailData({ ...DetailData, asset_purchase_date: date })}
                                 locale={ko}
-                                dateFormat="yyy-MM-dd"
+                                dateFormat="yyyy-MM-dd"
+                                maxDate={new Date()}
+                                showMonthDropdown
+                                useShortMonthInDropdown
                             />
                         </td>
                     </tr>
@@ -213,8 +268,8 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                         <th scope="row">구입 금액</th>
                         <td>
                             <input
-                                defaultValue={ChangeAssetData.asset_pride}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_pride: e.target.value })}
+                                defaultValue={DetailData?.asset_pride}
+                                onChange={e => setDetailData({ ...DetailData, asset_pride: e.target.value })}
                             ></input>
                         </td>
                     </tr>
@@ -222,22 +277,18 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                         <th scope="row">CPU</th>
                         <td>
                             <input
-                                defaultValue={ChangeAssetData.asset_cpu}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_cpu: e.target.value })}
+                                defaultValue={DetailData?.asset_cpu}
+                                onChange={e => setDetailData({ ...DetailData, asset_cpu: e.target.value })}
                             ></input>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">RAM</th>
                         <td>
-                            {/* <input
-                                defaultValue={ChangeAssetData.asset_ram}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_ram: e.target.value })}
-                            ></input> */}
                             <select
                                 className="select"
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_ram: e.target.value })}
-                                value={ChangeAssetData.asset_ram}
+                                onChange={e => setDetailData({ ...DetailData, asset_ram: e.target.value })}
+                                value={DetailData?.asset_ram}
                             >
                                 <option defaultValue="4GB" value={'4GB'}>
                                     4GB
@@ -260,39 +311,23 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                     <tr>
                         <th scope="row">DISK</th>
                         <td>
-                            {/* <input
-                                defaultValue={ChangeAssetData.asset_disk}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_disk: e.target.value })}
-                            ></input> */}
-                            <select
-                                className="select"
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_disk: e.target.value })}
-                                value={ChangeAssetData.asset_disk}
-                            >
-                                <option defaultValue="SSD_256GB" value={'SSD_256GB'}>
-                                    SSD_256GB
-                                </option>
-                                <option defaultValue="SSD_512GB" value={'SSD_512GB'}>
-                                    SSD_512GB
-                                </option>
-                                <option defaultValue="SSD_1TB" value={'SSD_1TB'}>
-                                    SSD_1TB
-                                </option>
-                                <option defaultValue="HDD_512GB" value={'HDD_512GB'}>
-                                    HDD_512GB
-                                </option>
-                                <option defaultValue="HDD_1TB" value={'HDD_1TB'}>
-                                    HDD_1TB
-                                </option>
-                            </select>
+                            <Select
+                                value={Detail_Disk_Data}
+                                onChange={(e: any) => handleChanges(e)}
+                                isMulti
+                                name="colors"
+                                options={NowDiskState}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">자산코드</th>
                         <td>
                             <input
-                                defaultValue={ChangeAssetData.asset_newcode}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_newcode: e.target.value })}
+                                defaultValue={DetailData?.asset_newcode}
+                                onChange={e => setDetailData({ ...DetailData, asset_newcode: e.target.value })}
                             ></input>
                         </td>
                     </tr>
@@ -301,21 +336,16 @@ const PcInfoChangeData = ({ SelectAssetData, setAssetDataChangeCheck, setSelectA
                         <td>
                             <input
                                 placeholder="비고사항을 입력 해 주세요."
-                                defaultValue={ChangeAssetData.asset_notepad}
-                                onChange={e => setChangeAssetData({ ...ChangeAssetData, asset_notepad: e.target.value })}
+                                value={DetailData ? DetailData.asset_notepad : ''}
+                                onChange={e => setDetailData({ ...DetailData, asset_notepad: e.target.value })}
                             ></input>
                         </td>
                     </tr>
-                    {/* <tr>
-                        <th scope="row">사용처</th>
-                        <td>
-                            {SelectAssetData?.company_name}_{SelectAssetData?.company_location}
-                        </td>
-                    </tr> */}
+
                     <tr>
                         <th scope="row">사용자</th>
                         <td>
-                            {SelectAssetData?.team}_{SelectAssetData?.name}
+                            {DetailData?.team}_{DetailData?.name}
                         </td>
                     </tr>
                 </table>

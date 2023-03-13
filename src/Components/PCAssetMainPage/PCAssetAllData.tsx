@@ -184,6 +184,8 @@ export type DeskTopInfoDataType = {
     asset_mac_indexs: number | null;
     asset_mac_info: string | null;
     asset_mac_random_key: string | null;
+    asset_personal_code: string | null;
+    asset_ip_address: string | null;
 };
 export type getDatasProps = {
     show_team: string;
@@ -227,16 +229,6 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
             setTimeout(() => {
                 setLoading(false);
             }, 1000);
-            // const getData = await axios.post(`${process.env.REACT_APP_API_URL}/Asset_app_server/Asset_Data_Getting`, {
-            //     company: SelectCompany,
-            //     type,
-            //     FilteringData,
-            // });
-            // if (getData.data.dataSuccess) {
-            //     setLoading(false);
-            //     console.log(getData);
-            //     setGetData(getData.data.datas);
-            // }
         } catch (error) {
             console.log(error);
 
@@ -254,8 +246,6 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
             console.log(error);
         }
     };
-
-    console.log(DeskTopAssetData);
 
     return (
         <PCAssetAllDataMainDivBox>
@@ -281,19 +271,17 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                         <th>부서</th>
                         <th>인덱스</th>
                         <th>이름</th>
-                        <th>구분</th>
                         <th>관리번호</th>
+                        <th>구분</th>
                         <th>제조사</th>
                         <th>모델명</th>
                         <th>구입일</th>
                         <th>취득가</th>
-                        {/* <th>CPU</th>
-                        <th>RAM</th>
-                        <th>DISK</th> */}
+                        <th>MAC</th>
+                        <th>IP</th>
                         <th>자산코드</th>
-                        <th>DLP_정보</th>
                         <th>비고</th>
-                        <th>정보조회</th>
+                        <th>조회</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -316,17 +304,15 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                                             )}
                                             <td>{j + 1}</td>
                                             <td>{item.name}</td>
+                                            <td>{item.asset_personal_code}</td>
                                             <td>{item.asset_division}</td>
-                                            <td>{item.asset_management_number}</td>
                                             <td>{item.asset_maker}</td>
                                             <td>{item.asset_model}</td>
                                             <td>{moment(item.asset_purchase_date).format('YYYY-MM-DD')}</td>
                                             <td>{item.asset_pride ? Number(item.asset_pride).toLocaleString('ko-KR') : '-'}</td>
-                                            {/* <td>{item.asset_cpu}</td>
-                                            <td>{item.asset_ram}</td>
-                                            <td>{item.asset_disk}</td> */}
-                                            <td>{item.asset_newcode}</td>
                                             <td>{item.asset_mac_address ? item.asset_mac_address : '-'}</td>
+                                            <td>{item.asset_ip_address ? item.asset_ip_address : '-'}</td>
+                                            <td>{item.asset_newcode}</td>
                                             <td>{item.asset_notepad}</td>
                                             <td style={{ textAlign: 'center' }}>
                                                 <div className="UserPlusIcons" onClick={() => handleMinusUsered(item)}>

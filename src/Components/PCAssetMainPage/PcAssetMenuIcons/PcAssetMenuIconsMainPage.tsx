@@ -426,30 +426,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="SearchInputContainer">
-                                    <div className="SearchInputContainerTitle">
-                                        <h4>사용장소.</h4>
-                                    </div>
-                                    <div className="SearchInputContainerSubTitle">
-                                        <div className="SearchInputContainerSubTitleFlexDivBox">
-                                            <div className="IconsDivBox">
-                                                <label>
-                                                    <BsFillPencilFill></BsFillPencilFill>
-                                                </label>
-                                            </div>
-                                            <div className="InputDivBox">
-                                                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleEnterButton(e)}>
-                                                    <input
-                                                        type="text"
-                                                        value={FilteringData.companyInfo}
-                                                        placeholder="Ex) 판교, 아산.."
-                                                        onChange={e => setFilteringData({ ...FilteringData, companyInfo: e.target.value })}
-                                                    ></input>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
+
                                 <div className="SearchInputContainer">
                                     <div className="SearchInputContainerTitle">
                                         <h4>사용자.</h4>

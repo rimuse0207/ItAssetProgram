@@ -8,8 +8,9 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { GetLicenseInfoNumber, AddDetailBigLicense } from '../../../../../Apis/core/api/AuthNeedApi/LicenseApi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { License_getLicenseDataThunk } from '../../../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
+import { RootState } from '../../../../../Models';
 
 const customStyles = {
     content: {
@@ -43,6 +44,8 @@ const NewDataInsertMainPage = ({
     type,
     SortTable,
 }: NewDataInsertMainPageProps) => {
+    const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
+
     function closeModal() {
         setSelectClicksModals(false);
     }
@@ -52,6 +55,8 @@ const NewDataInsertMainPage = ({
     const [LicenseInputData, setLicenseInputData] = useState({
         license_product_code: '',
         license_product_name: '',
+        license_product_company: SelectCompany,
+        license_product_user_id: LoginInfoData.email,
     });
 
     const getRandomCode = async () => {
@@ -113,20 +118,13 @@ const NewDataInsertMainPage = ({
                                     <div className="PCAssetFloatLeft2">
                                         <div className="input-content-wrap">
                                             <dl className="inputbox">
-                                                <dt className="inputbox-title">
-                                                    관리번호<span style={{ color: 'red' }}>*</span>
-                                                </dt>
+                                                <dt className="inputbox-title">회사명</dt>
                                                 <dd className="inputbox-content">
                                                     <input
                                                         id="input0"
                                                         type="text"
-                                                        value={LicenseInputData.license_product_code}
-                                                        onChange={e =>
-                                                            setLicenseInputData({
-                                                                ...LicenseInputData,
-                                                                license_product_code: e.target.value,
-                                                            })
-                                                        }
+                                                        value={LicenseInputData.license_product_company}
+                                                        readOnly
                                                     />
 
                                                     <span className="underline"></span>

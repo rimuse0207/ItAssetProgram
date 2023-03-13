@@ -11,7 +11,10 @@ import { LogoutRedux } from '../../Models/LoginCheckRedux/LoginCheckRedux';
 import { RootState } from '../../Models';
 import { ResetAccessKeyMenuBarRedux } from '../../Models/AccessKeyMenuBarRedux/AccessKeyMenuBarRedux';
 import { useLocation } from 'react-router-dom';
-import { GrCatalog } from 'react-icons/gr';
+import { GrCatalog, GrLicense } from 'react-icons/gr';
+import { VscKey } from 'react-icons/vsc';
+import { FaLaptopCode } from 'react-icons/fa';
+
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
     MenuCheckedSubLists: {};
@@ -22,7 +25,7 @@ type URLParams = {
 const NavigationMenuBarMainPageMainDivBox = styled.nav<NavigationMenuBarMainPageMainDivBoxProps>`
     min-height: 100vh;
     position: sticky;
-
+    top: 0px;
     background-color: #368;
     /* background-color: rgb(51, 63, 80); */
 
@@ -224,7 +227,7 @@ const NavigationMenuBarMainPage = () => {
                                     </li> */}
                                     <Link to="/license/volume_license">
                                         <li>
-                                            <BsFillCartFill></BsFillCartFill>
+                                            <GrLicense></GrLicense>
                                         </li>
                                     </Link>
                                     <Link to="/PersonnelDashBoard/Select">
@@ -280,7 +283,7 @@ const NavigationMenuBarMainPage = () => {
                                         <Link to="/PCAsset/All">
                                             <div className="listStyleDivBox">
                                                 <div>
-                                                    <BsCircleSquare></BsCircleSquare>
+                                                    <FaLaptopCode></FaLaptopCode>
                                                 </div>
                                                 <div className="listStyleSubLists">PC</div>
                                             </div>
@@ -290,8 +293,8 @@ const NavigationMenuBarMainPage = () => {
                                     <li className={window.location.pathname === '/license/volume_license' ? 'NowPageSelect' : ''}>
                                         <Link to="/license/volume_license">
                                             <div className="listStyleDivBox">
-                                                <div>
-                                                    <BsCircleSquare></BsCircleSquare>
+                                                <div style={{ color: 'white' }}>
+                                                    <VscKey></VscKey>
                                                 </div>
                                                 <div className="listStyleSubLists">라이선스</div>
                                             </div>

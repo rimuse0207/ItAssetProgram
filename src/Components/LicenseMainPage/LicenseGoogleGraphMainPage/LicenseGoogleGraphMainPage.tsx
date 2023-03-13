@@ -19,7 +19,7 @@ export const options = {
     plugins: {
         title: {
             display: true,
-            text: 'License 그래프',
+            text: '라이선스 그래프',
         },
     },
     responsive: true,
@@ -39,7 +39,7 @@ export const options = {
 };
 
 const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPageProps) => {
-    const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData);
+    const LicenseData = useSelector((state: RootState) => state.LicenseData.LicenseData.data);
     const [datas, setdata] = useState({
         labels: ['nothing'],
         datasets: [
@@ -59,17 +59,19 @@ const LicenseGoogleGraphMainPage = ({ SelectCompany, type }: VolumeLicenseMainPa
     });
     useEffect(() => {
         getada();
-    }, [SelectCompany, type, LicenseData.data]);
+    }, [SelectCompany, type, LicenseData]);
 
     const getada = async () => {
         const labels = [];
         const usedNumber = [];
         const notUsedNumber = [];
-        if (!LicenseData.data) return;
-        for (var i = 0; i < LicenseData.data.length; i++) {
-            labels.push(LicenseData.data[i].license_product_name);
-            usedNumber.push(LicenseData.data[i].all_user_used_count);
-            notUsedNumber.push(LicenseData.data[i].sumpermit - LicenseData.data[i].all_user_used_count);
+        if (!LicenseData) return;
+        for (var i = 0; i < LicenseData.length; i++) {
+            labels.push(LicenseData[i].basic_License.asset_license_list_info_name);
+            usedNumber.push(LicenseData[i].basic_License.license_user_used_count_sum);
+            notUsedNumber.push(
+                LicenseData[i].basic_License.license_permit_count_sum - LicenseData[i].basic_License.license_user_used_count_sum
+            );
         }
         const datasets = [
             {
