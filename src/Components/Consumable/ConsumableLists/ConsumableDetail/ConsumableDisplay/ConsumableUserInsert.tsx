@@ -127,7 +127,7 @@ const ConsumableUserInsert = ({ Detail_Consumable, Select_Company, Consumable_De
             <h3>
                 사용자 지급<RiUserShared2Fill></RiUserShared2Fill>
             </h3>
-            <FilterSearchMainPageDivBox>
+            <FilterSearchMainPageDivBox Select_Menu={'ConsumableFiltering'}>
                 <div className="FilteringContainer">
                     <div className="SearchInputContainer">
                         <div className="SearchInputContainerTitle">

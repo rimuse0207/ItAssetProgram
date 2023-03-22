@@ -9,6 +9,7 @@ import { Link, useParams } from 'react-router-dom';
 import UpdatePcAssetUserDataModal from './PcAssetMenuIcons/PcAssetModals/UpdatePcAssetUserDataModal';
 import { DeskTopAsset_getDeskTopAssetDataThunk } from '../../Models/AssetDataReduxThunk/AssetDeskTopDataThunks';
 import LoaderMainPage from '../Loader/LoaderMainPage';
+import ExcelUploadMainPage from './ExcelUpload/ExcelUploadMainPage';
 
 const PCAssetAllDataMainDivBox = styled.div`
     background-color: #fff;
@@ -212,7 +213,10 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
     const { type } = useParams<paramasType>();
 
     useEffect(() => {
-        GetAllData();
+        if (type === 'ExcellUpload') {
+        } else {
+            GetAllData();
+        }
     }, [type, FilteringData]);
 
     const GetAllData = async () => {
@@ -263,78 +267,86 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                     <Link to="/PCAsset/Discard">
                         <li className={type === 'Discard' ? 'Select_Menus' : ''}>폐기</li>
                     </Link>
+                    <Link to="/PCAsset/ExcellUpload">
+                        <li className={type === 'ExcellUpload' ? 'Select_Menus' : ''}>엑셀 업로드 및 수정</li>
+                    </Link>
                 </ul>
             </div>
-            <table className="type09">
-                <thead>
-                    <tr className="Thead_tr_table">
-                        <th>부서</th>
-                        <th>인덱스</th>
-                        <th>이름</th>
-                        <th>관리번호</th>
-                        <th>구분</th>
-                        <th>제조사</th>
-                        <th>모델명</th>
-                        <th>구입일</th>
-                        <th>취득가</th>
-                        <th>MAC</th>
-                        <th>IP</th>
-                        <th>자산코드</th>
-                        <th>비고</th>
-                        <th>조회</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {!Loading ? (
-                        DeskTopAssetData.map((list, i) => {
-                            return list.rows2.length > 0 ? (
-                                list.rows2.map((item, j) => {
-                                    return (
-                                        <tr
-                                            className={i % 2 === 0 ? '' : 'table_color_on'}
-                                            style={j === 0 ? { borderTop: '2px solid black' } : {}}
-                                            key={`${list.show_team}_${item.asset_management_number}_${j}`}
-                                        >
-                                            {j === 0 ? (
-                                                <td rowSpan={list.rows2.length} style={{ fontWeight: 'bold' }}>
-                                                    {list.show_team} <br /> ( {list.rows2.length}명 )
+            {type !== 'ExcellUpload' ? (
+                <table className="type09">
+                    <thead>
+                        <tr className="Thead_tr_table">
+                            <th>부서</th>
+                            <th>인덱스</th>
+                            <th>이름</th>
+                            <th>관리번호</th>
+                            <th>구분</th>
+                            <th>제조사</th>
+                            <th>모델명</th>
+                            <th>구입일</th>
+                            <th>취득가</th>
+                            <th>MAC</th>
+                            <th>IP</th>
+                            <th>자산코드</th>
+                            <th>비고</th>
+                            <th>조회</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {!Loading ? (
+                            DeskTopAssetData.map((list, i) => {
+                                return list.rows2.length > 0 ? (
+                                    list.rows2.map((item, j) => {
+                                        return (
+                                            <tr
+                                                className={i % 2 === 0 ? '' : 'table_color_on'}
+                                                style={j === 0 ? { borderTop: '2px solid black' } : {}}
+                                                key={`${list.show_team}_${item.asset_management_number}_${j}`}
+                                            >
+                                                {j === 0 ? (
+                                                    <td rowSpan={list.rows2.length} style={{ fontWeight: 'bold' }}>
+                                                        {list.show_team} <br /> ( {list.rows2.length}명 )
+                                                    </td>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                                <td>{j + 1}</td>
+                                                <td>{item.name}</td>
+                                                <td>{item.asset_personal_code}</td>
+                                                <td>{item.asset_division}</td>
+                                                <td>{item.asset_maker}</td>
+                                                <td>{item.asset_model}</td>
+                                                <td>{moment(item.asset_purchase_date).format('YYYY-MM-DD')}</td>
+                                                <td>{item.asset_pride ? Number(item.asset_pride).toLocaleString('ko-KR') : '-'}</td>
+                                                <td>{item.asset_mac_address ? item.asset_mac_address : '-'}</td>
+                                                <td>{item.asset_ip_address ? item.asset_ip_address : '-'}</td>
+                                                <td>{item.asset_newcode}</td>
+                                                <td>{item.asset_notepad}</td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    <div className="UserPlusIcons" onClick={() => handleMinusUsered(item)}>
+                                                        <FcInfo></FcInfo>
+                                                    </div>
                                                 </td>
-                                            ) : (
-                                                <></>
-                                            )}
-                                            <td>{j + 1}</td>
-                                            <td>{item.name}</td>
-                                            <td>{item.asset_personal_code}</td>
-                                            <td>{item.asset_division}</td>
-                                            <td>{item.asset_maker}</td>
-                                            <td>{item.asset_model}</td>
-                                            <td>{moment(item.asset_purchase_date).format('YYYY-MM-DD')}</td>
-                                            <td>{item.asset_pride ? Number(item.asset_pride).toLocaleString('ko-KR') : '-'}</td>
-                                            <td>{item.asset_mac_address ? item.asset_mac_address : '-'}</td>
-                                            <td>{item.asset_ip_address ? item.asset_ip_address : '-'}</td>
-                                            <td>{item.asset_newcode}</td>
-                                            <td>{item.asset_notepad}</td>
-                                            <td style={{ textAlign: 'center' }}>
-                                                <div className="UserPlusIcons" onClick={() => handleMinusUsered(item)}>
-                                                    <FcInfo></FcInfo>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td style={{ fontWeight: 'bold' }}>{list.show_team}</td>
-                                    <td colSpan={13}>데이터 없음</td>
-                                </tr>
-                            );
-                        })
-                    ) : (
-                        <div>Loading....</div>
-                    )}
-                    <tr></tr>
-                </tbody>
-            </table>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <tr>
+                                        <td style={{ fontWeight: 'bold' }}>{list.show_team}</td>
+                                        <td colSpan={13}>데이터 없음</td>
+                                    </tr>
+                                );
+                            })
+                        ) : (
+                            <div>Loading....</div>
+                        )}
+                        <tr></tr>
+                    </tbody>
+                </table>
+            ) : (
+                <ExcelUploadMainPage></ExcelUploadMainPage>
+            )}
+
             {UserUpdateModalOpen ? (
                 <UpdatePcAssetUserDataModal
                     UserAddModalOpen={UserUpdateModalOpen}

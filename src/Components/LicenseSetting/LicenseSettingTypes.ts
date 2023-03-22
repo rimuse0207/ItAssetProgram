@@ -1,8 +1,7 @@
 export type LicenseSettingProps = {
-    license_company_name: string;
-    license_info_indexs: number;
-    license_product_code: string;
-    license_product_name: string;
-    license_types: string;
-    setting_title: string;
+    asset_license_list_info_code: string;
+    asset_license_list_info_company: string;
+    asset_license_list_info_indexs: number;
+    asset_license_list_info_name: string;
+    asset_license_list_info_write_id: string;
 };

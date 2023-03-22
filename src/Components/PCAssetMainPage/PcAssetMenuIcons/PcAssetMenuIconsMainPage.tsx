@@ -56,8 +56,14 @@ export const PcAssetMenuIconsMainPageDivBox = styled.div`
     }
 `;
 
-export const FilterSearchMainPageDivBox = styled.div`
-    height: 400px;
+type FilterSearchMainPageDivBoxProps = {
+    Select_Menu: string;
+};
+
+export const FilterSearchMainPageDivBox = styled.div<FilterSearchMainPageDivBoxProps>`
+    width: 95%;
+    margin: 0 auto;
+    height: ${props => (props.Select_Menu === 'LicenseFiltering' ? '200px' : '400px')};
     padding: 10px;
     margin-right: 30px;
     padding-right: 40px;
@@ -66,6 +72,7 @@ export const FilterSearchMainPageDivBox = styled.div`
     border-radius: 10px;
     animation-name: SlideUpDown;
     animation-duration: 0.5s;
+    margin-bottom: 20px;
     @keyframes SlideUpDown {
         from {
             height: 0vh;
@@ -73,7 +80,7 @@ export const FilterSearchMainPageDivBox = styled.div`
         }
 
         to {
-            height: 400px;
+            height: ${props => (props.Select_Menu === 'LicenseFiltering' ? '200px' : '400px')};
             opacity: 1;
         }
     }
@@ -329,7 +336,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
             )}
 
             {SelectClicksModals.FilterSearch ? (
-                <FilterSearchMainPageDivBox>
+                <FilterSearchMainPageDivBox Select_Menu={'PCFiltering'}>
                     <div>
                         <div>
                             <div>

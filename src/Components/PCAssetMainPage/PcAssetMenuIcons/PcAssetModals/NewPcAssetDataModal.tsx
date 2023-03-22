@@ -419,11 +419,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     const handleSelectedName = (value: any) => {
         setUserWriteData({ ...UserWriteData, userinfo_email: value });
     };
-    useEffect(() => {
-        // getCompanyInfo();
-        getUserInfo();
-        getSettingData();
-    }, [SelectCompany]);
 
     //회사 정보 받기 API 호출
     const getCompanyInfo = async () => {
@@ -532,25 +527,25 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
 
     // 라이선스 설정 관련
 
-    const getSettingData = async () => {
-        try {
-            const email = LoginInfoData.email;
-            const getLicenseDatas = await CompanyInfoGet('/UserInfo_app_server/LicenseSettingInfo', {
-                email,
-            });
-            if (getLicenseDatas.data.dataSuccess) {
-                setLicenseSelectResult(getLicenseDatas.data.data);
-                setBasicSelectResult(getLicenseDatas.data.data);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const getSettingData = async () => {
+    //     try {
+    //         const getLicenseDatas = await CompanyInfoGet('/UserInfo_app_server/LicenseSettingInfo', {
+    //             SelectCompany,
+    //         });
+    //         if (getLicenseDatas.data.dataSuccess) {
+    //             console.log('asdasjdlkkl', getLicenseDatas);
+    //             setLicenseSelectResult(getLicenseDatas.data.data);
+    //             setBasicSelectResult(getLicenseDatas.data.data);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     const handleClicksLicense = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
         const DeleteLicenseData = LicenseSelectResult.filter((item, j) =>
-            item.license_product_code === licenseData.license_product_code ? '' : item
+            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
         );
         setLicenseSelectResult(DeleteLicenseData);
 
@@ -562,7 +557,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
     const handleClicksLicenseDelete = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
         const DeleteLicenseData = SelectedLicenseData.filter((item, j) =>
-            item.license_product_code === licenseData.license_product_code ? '' : item
+            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
         );
         setSelectedLicenseData(DeleteLicenseData);
 
@@ -583,21 +578,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         }
     };
 
-    useEffect(() => {
-        getLicenseSettingLists();
-        getLicneseData();
-    }, []);
-
-    useEffect(() => {
-        if (!SelectLists) {
-            setSelectedLicenseData([]);
-            getLicneseData();
-            return;
-        } else {
-            getLicenseSettingDatas();
-        }
-    }, [SelectLists]);
-
     const getLicenseSettingDatas = async () => {
         try {
             const email = LoginInfoData.email ? LoginInfoData.email : '';
@@ -607,13 +587,13 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                 let datas = BasicSeletResult;
 
                 for (var i = 0; i < LicenseDatas.data.data.length; i++) {
-                    datas = datas.filter((item: { license_product_code: string }) =>
-                        item.license_product_code === LicenseDatas.data.data[i].license_product_code ? '' : item
+                    datas = datas.filter((item: { asset_license_list_info_code: string }) =>
+                        item.asset_license_list_info_code === LicenseDatas.data.data[i].asset_license_list_info_code ? '' : item
                     );
                 }
 
-                setLicenseSelectResult(datas);
-                setSelectedLicenseData(LicenseDatas.data.data);
+                // setLicenseSelectResult(datas);
+                // setSelectedLicenseData(LicenseDatas.data.data);
             }
         } catch (error) {
             console.log(error);
@@ -622,9 +602,8 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
 
     const getLicneseData = async () => {
         try {
-            const email = LoginInfoData.email;
             const getLicenseDatas = await CompanyInfoGet('/UserInfo_app_server/LicenseSettingInfo', {
-                email,
+                SelectCompany,
             });
             if (getLicenseDatas.data.dataSuccess) {
                 setLicenseSelectResult(getLicenseDatas.data.data);
@@ -647,6 +626,25 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        getLicenseSettingLists();
+        getLicneseData();
+    }, []);
+    useEffect(() => {
+        // getCompanyInfo();
+        getUserInfo();
+        //  getSettingData();
+    }, [SelectCompany]);
+    useEffect(() => {
+        if (!SelectLists) {
+            setSelectedLicenseData([]);
+            getLicneseData();
+            return;
+        } else {
+            getLicenseSettingDatas();
+        }
+    }, [SelectLists]);
 
     return (
         <div>
@@ -834,34 +832,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                     <span className="underline"></span>
                                                 </dd>
                                             </dl>
-                                            {/* <dl className="inputbox">
-                                                <dt className="inputbox-title">MAC 주소</dt>
-                                                <dd className="inputbox-content">
-                                                    <input
-                                                        id="input10"
-                                                        value={UserWriteData.asset_mac_info}
-                                                        onChange={e =>
-                                                            setUserWriteData({ ...UserWriteData, asset_mac_info: e.target.value })
-                                                        }
-                                                        placeholder="XX:XX:XX:XX:XX 등등.."
-                                                    />
-                                                    <span className="underline"></span>
-                                                </dd>
-                                            </dl>
-                                            <dl className="inputbox">
-                                                <dt className="inputbox-title">IP 주소</dt>
-                                                <dd className="inputbox-content">
-                                                    <input
-                                                        id="input10"
-                                                        value={UserWriteData.asset_ip_info}
-                                                        onChange={e =>
-                                                            setUserWriteData({ ...UserWriteData, asset_ip_info: e.target.value })
-                                                        }
-                                                        placeholder="192.168.x.x 등등.."
-                                                    />
-                                                    <span className="underline"></span>
-                                                </dd>
-                                            </dl> */}
+
                                             <dl className="inputbox">
                                                 <dt className="inputbox-title">비고</dt>
                                                 <dd className="inputbox-content">
@@ -924,8 +895,11 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                         <option value="">조회 할 라이선스 목록 선택</option>
                                                         {SettingLicenstLists.map(list => {
                                                             return (
-                                                                <option value={list.setting_title} key={list.setting_title}>
-                                                                    {list.setting_title}
+                                                                <option
+                                                                    value={list.asset_license_list_info_code}
+                                                                    key={list.asset_license_list_info_code}
+                                                                >
+                                                                    {list.asset_license_list_info_name}
                                                                 </option>
                                                             );
                                                         })}
@@ -940,10 +914,8 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                                 <ul>
                                                                     {LicenseSelectResult.map(list => {
                                                                         return (
-                                                                            <li key={list.license_product_code}>
-                                                                                <div>
-                                                                                    {list.license_types}_{list.license_product_name}
-                                                                                </div>
+                                                                            <li key={list.asset_license_list_info_code}>
+                                                                                <div>{list.asset_license_list_info_name}</div>
                                                                                 <div
                                                                                     className="IconsClickPlus"
                                                                                     onClick={() => handleClicksLicense(list)}
@@ -962,10 +934,8 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                                 <ul>
                                                                     {SelectedLicenseData.map(list => {
                                                                         return (
-                                                                            <li key={list.license_product_code}>
-                                                                                <div>
-                                                                                    {list.license_types}_{list.license_product_name}
-                                                                                </div>
+                                                                            <li key={list.asset_license_list_info_code}>
+                                                                                <div>{list.asset_license_list_info_name}</div>
                                                                                 <div
                                                                                     className="IconsClickMinus"
                                                                                     onClick={() => handleClicksLicenseDelete(list)}

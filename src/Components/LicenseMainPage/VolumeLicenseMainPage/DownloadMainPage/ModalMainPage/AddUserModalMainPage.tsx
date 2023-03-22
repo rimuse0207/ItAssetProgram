@@ -10,7 +10,7 @@ import { UserInfoGet } from '../../../../../Apis/core/api/AuthUnNeedApi/UserInfo
 import { IoMdAddCircle } from 'react-icons/io';
 import { ObjectNameSortData } from '../../../../../PublicFunc/ObjectNameSort';
 import { LicenseUserAdd } from '../../../../../Apis/core/api/AuthUnNeedApi/LicenseUserAdd/LicenseUserAdd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { License_getLicenseDataThunk } from '../../../../../Models/LicenseDataReduxThunk/LicenseDataThunks';
 import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
 import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
@@ -21,6 +21,7 @@ import { LicenseDataTypes } from '../../../../PCAssetMainPage/PcAssetMenuIcons/P
 import { request } from '../../../../../Apis/core';
 import Select from 'react-select';
 import { BsNodeMinusFill, BsNodePlusFill } from 'react-icons/bs';
+import { RootState } from '../../../../../Models';
 
 const ModalMainDivBox = styled.div`
     padding: 10px;
@@ -331,6 +332,8 @@ const UserSelectContainer = styled.div`
         overflow: auto;
         padding: 10px;
         text-align: center;
+        border: 1px dashed lightgray;
+        margin-top: 10px;
         .User_Container {
             display: flex;
             justify-content: space-between;
@@ -338,6 +341,10 @@ const UserSelectContainer = styled.div`
             border: 1px dashed gray;
             padding: 10px;
             margin-bottom: 10px;
+            :hover {
+                cursor: pointer;
+                opacity: 0.8;
+            }
         }
     }
 `;
@@ -349,6 +356,7 @@ type NewDataInsertMainPageProps = {
     SelectClicksModals: boolean;
     SelectClickData: basic_License_Type | null;
     SelectCompany: string;
+    GetInfoLicensData: () => void;
 };
 
 type selectUserInfoDataType = {
@@ -365,7 +373,7 @@ type UserSelectType = {
     name: string;
     team: string;
     asset_personal_code: string;
-    division: string;
+    asset_division: string;
 };
 
 const AddUserModalMainPage = ({
@@ -373,10 +381,13 @@ const AddUserModalMainPage = ({
     SelectClicksModals,
     SelectClickData,
     SelectCompany,
+    GetInfoLicensData,
 }: NewDataInsertMainPageProps) => {
-    console.log(SelectClickData);
+    const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [NowSelectUser, setNowSelectUser] = useState<UserSelectType[]>([]);
     const [ImposableSelectUser, setImposableSelectUser] = useState<UserSelectType[]>([]);
+    const [AddUser, setAddUser] = useState<UserSelectType[]>([]);
+    const [DeleteUser, setDeleteUser] = useState<UserSelectType[]>([]);
 
     function closeModal() {
         setSelectClicksModals();
@@ -386,9 +397,14 @@ const AddUserModalMainPage = ({
     const handleSaveUser = async () => {
         try {
             const UserDataOn = await LicenseUserAdd('/license_app_server/AddUserLicense', {
-                SelectClicksModals,
+                AddUser,
+                DeleteUser,
+                SelectCompany,
+                ID: LoginInfoData.email,
+                SelectClickData,
             });
             if (UserDataOn.data.dataSuccess) {
+                GetInfoLicensData();
                 toast.show({
                     title: `${SelectClickData?.asset_license_list_info_name}에 유저 등록 성공`,
                     successCheck: true,
@@ -401,6 +417,32 @@ const AddUserModalMainPage = ({
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const handleMinusUser = async (data: UserSelectType) => {
+        const CheckingData = AddUser.filter(list => list.value !== data.value);
+
+        if (CheckingData.length === AddUser.length) {
+            //기존 등록자 삭제
+            setDeleteUser(DeleteUser.concat(data));
+            setNowSelectUser(NowSelectUser.filter(list => list.value !== data.value));
+            setImposableSelectUser(ImposableSelectUser.concat(data).sort((x, y) => x.name.localeCompare(y.name)));
+        } else {
+            //추가 등록자 삭제
+            setAddUser(CheckingData);
+            setNowSelectUser(NowSelectUser.filter(list => list.value !== data.value));
+            setImposableSelectUser(ImposableSelectUser.concat(data).sort((x, y) => x.name.localeCompare(y.name)));
+        }
+    };
+    const handlePlusUser = async (data: UserSelectType) => {
+        //추가 목록 추가
+        setAddUser(AddUser.concat(data).sort((x, y) => x.name.localeCompare(y.name)));
+        //보여주기 추가 목록 추가
+        setNowSelectUser(NowSelectUser.concat(data).sort((x, y) => x.name.localeCompare(y.name)));
+
+        //기존 가능인원 목록 추가
+        const deleteData = ImposableSelectUser.filter(list => list.value !== data.value);
+        setImposableSelectUser(deleteData);
     };
 
     const User_Getting_Show = async () => {
@@ -482,18 +524,18 @@ const AddUserModalMainPage = ({
                             <h5>사용등록 가능인원</h5>
                             <div>
                                 <div>
-                                    <Select
-                                        options={ImposableSelectUser}
-                                        // onChange={(value: any) => setUserInsertData({ ...UserInsertData, Consumable_User_ID: value.value })}
-                                    ></Select>
+                                    <Select options={ImposableSelectUser} onChange={(data: any) => handlePlusUser(data)}></Select>
                                 </div>
                                 <div className="UserSelect_Container">
                                     <div>
                                         {ImposableSelectUser.map(list => {
                                             return (
-                                                <div className="User_Container">
+                                                <div className="User_Container" key={list.value} onClick={() => handlePlusUser(list)}>
                                                     <div>
-                                                        {list.team} {list.name} {list.asset_personal_code} {list.division}
+                                                        {list.team} {list.name}{' '}
+                                                        <span style={{ fontSize: '0.7em' }}>
+                                                            ({list.asset_division}_{list.asset_personal_code})
+                                                        </span>
                                                     </div>
                                                     <div style={{ color: 'green' }}>
                                                         <BsNodePlusFill></BsNodePlusFill>
@@ -506,21 +548,21 @@ const AddUserModalMainPage = ({
                             </div>
                         </div>
                         <div className="Float_Right_Container">
-                            <h5>현재등록 인원</h5>
+                            <h5>현재등록 인원 ( {NowSelectUser.length} )</h5>
                             <div>
                                 <div>
-                                    <Select
-                                        options={NowSelectUser}
-                                        // onChange={(value: any) => setUserInsertData({ ...UserInsertData, Consumable_User_ID: value.value })}
-                                    ></Select>
+                                    <Select options={NowSelectUser} onChange={(data: any) => handleMinusUser(data)}></Select>
                                 </div>
                                 <div className="UserSelect_Container">
                                     <div>
                                         {NowSelectUser.map(list => {
                                             return (
-                                                <div className="User_Container">
+                                                <div className="User_Container" key={list.value} onClick={() => handleMinusUser(list)}>
                                                     <div>
-                                                        {list.team} {list.name} {list.asset_personal_code} {list.division}
+                                                        {list.team} {list.name}{' '}
+                                                        <span style={{ fontSize: '0.7em' }}>
+                                                            ({list.asset_division}_{list.asset_personal_code})
+                                                        </span>
                                                     </div>
                                                     <div style={{ color: 'red' }}>
                                                         <BsNodeMinusFill></BsNodeMinusFill>

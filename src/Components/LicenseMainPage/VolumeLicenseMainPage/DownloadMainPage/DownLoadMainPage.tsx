@@ -93,7 +93,6 @@ const DownLoadMainPage = ({
     });
 
     const [FilteringDatas, setFilteringDatas] = useState<LicenseFilteringState>({
-        license_product_code: '',
         license_product_name: '',
         license_manage_code: '',
         license_purchase_date: '',
@@ -168,17 +167,9 @@ const DownLoadMainPage = ({
                 <div>
                     <a
                         style={{ color: 'black' }}
-                        href={`${process.env.REACT_APP_API_URL}/ExcelDownload_app_server/volume_license_Excel?company=${SelectCompany}&license=${type}`}
+                        href={`${process.env.REACT_APP_API_URL}/ExcelDownload_app_server/license_Excel?company=${SelectCompany}&license=${type}`}
                     >
-                        <div
-                            className="DownLoadIcons"
-                            // onClick={() =>
-                            //     setSelectClicksModals({
-                            //         ...SelectClicksModals,
-                            //         ExcelDownloadModal: !SelectClicksModals.ExcelDownloadModal,
-                            //     })
-                            // }
-                        >
+                        <div className="DownLoadIcons">
                             <BsFileEarmarkBarGraphFill></BsFileEarmarkBarGraphFill>
                         </div>
                         <div className="IconText">EXCEL</div>
@@ -221,27 +212,10 @@ const DownLoadMainPage = ({
                     ''
                 )}
             </div>
-            {/* <div>
-                {UserAddModals && ModalType === 'Show_info' ? (
-                    <AddUserModalMainPage
-                        windowScrollss={windowScrollss}
-                        SelectCompany={SelectCompany}
-                        SelectClicksModals={UserAddModals}
-                        setSelectClicksModals={() => {
-                            setUserClickLicenseData(null);
-                            setUserAddModals(false);
-                        }}
-                        UserClickLicenseData={UserClickLicenseData}
-                        type={type}
-                        SortTable={SortTable}
-                    ></AddUserModalMainPage>
-                ) : (
-                    <div></div>
-                )}
-            </div> */}
+
             <div>
                 {SelectClicksModals.FilterModal ? (
-                    <FilterSearchMainPageDivBox>
+                    <FilterSearchMainPageDivBox Select_Menu={'LicenseFiltering'}>
                         <div>
                             <div>
                                 <div>
@@ -250,7 +224,7 @@ const DownLoadMainPage = ({
                                 <div className="FilteringContainer">
                                     <div className="SearchInputContainer">
                                         <div className="SearchInputContainerTitle">
-                                            <h4>코드.</h4>
+                                            <h4>라이선스 명.</h4>
                                         </div>
                                         <div className="SearchInputContainerSubTitle">
                                             <div className="SearchInputContainerSubTitleFlexDivBox">
@@ -262,79 +236,12 @@ const DownLoadMainPage = ({
                                                 <div className="InputDivBox">
                                                     <input
                                                         type="text"
-                                                        value={FilteringDatas.license_product_code}
-                                                        placeholder={`Ex) ${SelectCompany}-HW001 `}
-                                                        onChange={e =>
-                                                            setFilteringDatas({
-                                                                ...FilteringDatas,
-                                                                license_product_code: e.target.value,
-                                                            })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>설명.</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                <div className="IconsDivBox">
-                                                    <label>
-                                                        <BsFillPencilFill></BsFillPencilFill>
-                                                    </label>
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Ex) 한글"
                                                         value={FilteringDatas.license_product_name}
-                                                        onChange={e =>
-                                                            setFilteringDatas({ ...FilteringDatas, license_product_name: e.target.value })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>구입날짜</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="date"
-                                                        value={FilteringDatas.license_purchase_date}
+                                                        placeholder={`MSxxxx...`}
                                                         onChange={e =>
                                                             setFilteringDatas({
                                                                 ...FilteringDatas,
-                                                                license_purchase_date: e.target.value,
-                                                            })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                                <div
-                                                    style={{
-                                                        lineHeight: '40px',
-                                                        marginRight: '10px',
-                                                        marginLeft: '10px',
-                                                        fontSize: '1.5em',
-                                                    }}
-                                                >
-                                                    ~
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="date"
-                                                        value={FilteringDatas.license_purchase_finish_date}
-                                                        onChange={e =>
-                                                            setFilteringDatas({
-                                                                ...FilteringDatas,
-                                                                license_purchase_finish_date: e.target.value,
+                                                                license_product_name: e.target.value,
                                                             })
                                                         }
                                                     ></input>
@@ -342,148 +249,6 @@ const DownLoadMainPage = ({
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>구입가격.</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                {/* <div className="IconsDivBox">
-                                                    <label>
-                                                        <BsFillPencilFill></BsFillPencilFill>
-                                                    </label>
-                                                </div> */}
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="number"
-                                                        value={FilteringDatas.license_purchase_min_pride}
-                                                        placeholder="Ex) 최소 금액"
-                                                        onChange={e =>
-                                                            setFilteringDatas({
-                                                                ...FilteringDatas,
-                                                                license_purchase_min_pride: Number(e.target.value),
-                                                            })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                                <div
-                                                    style={{
-                                                        lineHeight: '40px',
-                                                        marginRight: '10px',
-                                                        marginLeft: '10px',
-                                                        fontSize: '1.5em',
-                                                    }}
-                                                >
-                                                    ~
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="number"
-                                                        value={FilteringDatas.license_purchase_max_pride}
-                                                        placeholder="Ex) 최대 금액"
-                                                        onChange={e =>
-                                                            setFilteringDatas({
-                                                                ...FilteringDatas,
-                                                                license_purchase_max_pride: Number(e.target.value),
-                                                            })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>관리번호.</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                <div className="IconsDivBox">
-                                                    <label>
-                                                        <BsFillPencilFill></BsFillPencilFill>
-                                                    </label>
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="text"
-                                                        placeholder={`Ex) ${SelectCompany}-SW001`}
-                                                        value={FilteringDatas.license_manage_code}
-                                                        onChange={e =>
-                                                            setFilteringDatas({ ...FilteringDatas, license_manage_code: e.target.value })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>자산코드.</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                <div className="IconsDivBox">
-                                                    <label>
-                                                        <BsFillPencilFill></BsFillPencilFill>
-                                                    </label>
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Ex) G14010005"
-                                                        value={FilteringDatas.license_newcode}
-                                                        onChange={e =>
-                                                            setFilteringDatas({ ...FilteringDatas, license_newcode: e.target.value })
-                                                        }
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>RAM.</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                <div className="IconsDivBox">
-                                                    <label>
-                                                        <BsFillPencilFill></BsFillPencilFill>
-                                                    </label>
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Ex) 32G.."
-                                                        // value={FilteringData.asset_ram}
-                                                        // onChange={e => setFilteringData({ ...FilteringData, asset_ram: e.target.value })}
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> */}
-                                    {/* <div className="SearchInputContainer">
-                                        <div className="SearchInputContainerTitle">
-                                            <h4>DISK.</h4>
-                                        </div>
-                                        <div className="SearchInputContainerSubTitle">
-                                            <div className="SearchInputContainerSubTitleFlexDivBox">
-                                                <div className="IconsDivBox">
-                                                    <label>
-                                                        <BsFillPencilFill></BsFillPencilFill>
-                                                    </label>
-                                                </div>
-                                                <div className="InputDivBox">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Ex) S_256G.."
-                                                        // value={FilteringData.asset_disk}
-                                                        // onChange={e => setFilteringData({ ...FilteringData, asset_disk: e.target.value })}
-                                                    ></input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

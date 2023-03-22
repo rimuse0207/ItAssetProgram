@@ -164,7 +164,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                     <th scope="cols">등록 허용 인원</th>
                                     <th scope="cols">자산코드</th>
                                     <th scope="cols">메모</th>
-                                    <th scope="cols">정보 보기</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -252,17 +251,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                                           .asset_license_purchase_info_notepad
                                                                     : '-'}
                                                             </td>
-
-                                                            <td
-                                                                // onClick={() =>
-                                                                //     handleClicksUserAdd(
-                                                                //         list.purchase_License[list.purchase_License.length - 1]
-                                                                //     )
-                                                                // }
-                                                                style={{ fontSize: '2em' }}
-                                                            >
-                                                                <BsInfoCircleFill></BsInfoCircleFill>
-                                                            </td>
                                                         </>
                                                     ) : (
                                                         <></>
@@ -311,13 +299,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                                           ? item.asset_license_purchase_info_notepad
                                                                           : '-'}
                                                                   </td>
-
-                                                                  <td
-                                                                      //   onClick={() => handleClicksUserAdd(item)}
-                                                                      style={{ fontSize: '2em' }}
-                                                                  >
-                                                                      <BsInfoCircleFill></BsInfoCircleFill>
-                                                                  </td>
                                                               </tr>
                                                           );
                                                       })
@@ -355,6 +336,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                         SelectClicksModals={DetailLicenseAdd}
                         SelectClickData={SelectClickData}
                         SelectCompany={SelectCompany}
+                        GetInfoLicensData={() => GetInfoLicensData()}
                     ></AddUserModalMainPage>
                 ) : (
                     ''

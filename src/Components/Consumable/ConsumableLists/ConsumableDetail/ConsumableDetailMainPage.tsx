@@ -81,7 +81,7 @@ const ConsumableDetailMainPageMainDivBox = styled.div`
     }
 `;
 
-type MenuSelectTypes = {
+export type MenuSelectTypes = {
     indexs: number;
     menu_name: string;
     menu_value: string;
@@ -223,6 +223,7 @@ const ConsumableDetailMainPage = () => {
                     <ConsumableSelectBasic
                         Detail_Consumable={Detail_Consumable}
                         Consumable_Detail_Data_Getting={() => Consumable_Detail_Data_Getting()}
+                        MenuSelect={MenuSelect.filter(list => list.Select_Check === true)}
                     ></ConsumableSelectBasic>
                 </div>
                 <div className="Consumable_Detail_Info_Float_Middle"></div>
@@ -233,6 +234,7 @@ const ConsumableDetailMainPage = () => {
                                 key={list.indexs}
                                 Detail_Consumable={Detail_Consumable}
                                 Consumable_Detail_Data_Getting={() => Consumable_Detail_Data_Getting()}
+                                MenuSelect={MenuSelect.filter(list => list.Select_Check === true)}
                             ></ConsumableHistory>
                         ) : list.menu_value === 'user_insert' && list.Select_Check ? (
                             <ConsumableUserInsert
@@ -240,6 +242,7 @@ const ConsumableDetailMainPage = () => {
                                 Detail_Consumable={Detail_Consumable}
                                 Select_Company={Select_Company}
                                 Consumable_Detail_Data_Getting={() => Consumable_Detail_Data_Getting()}
+                                MenuSelect={MenuSelect.filter(list => list.Select_Check === true)}
                             ></ConsumableUserInsert>
                         ) : list.menu_value === 'insert' && list.Select_Check ? (
                             <ConsumableInsert
@@ -247,6 +250,7 @@ const ConsumableDetailMainPage = () => {
                                 Detail_Consumable={Detail_Consumable}
                                 Select_Company={Select_Company}
                                 Consumable_Detail_Data_Getting={() => Consumable_Detail_Data_Getting()}
+                                MenuSelect={MenuSelect.filter(list => list.Select_Check === true)}
                             ></ConsumableInsert>
                         ) : (
                             <div></div>

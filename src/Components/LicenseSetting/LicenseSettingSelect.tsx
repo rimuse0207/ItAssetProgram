@@ -43,7 +43,7 @@ const LicenseSettingSelect = () => {
         }
         //데이터 삭제
         const DeleteLicenseData = LicenseSelectResult.filter((item, j) =>
-            item.license_product_code === licenseData.license_product_code ? '' : item
+            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
         );
         setLicenseSelectResult(DeleteLicenseData);
 
@@ -55,7 +55,7 @@ const LicenseSettingSelect = () => {
     const handleClicksLicenseDelete = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
         const DeleteLicenseData = SelectedLicenseData.filter((item, j) =>
-            item.license_product_code === licenseData.license_product_code ? '' : item
+            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
         );
         setSelectedLicenseData(DeleteLicenseData);
 
@@ -101,8 +101,8 @@ const LicenseSettingSelect = () => {
                 let datas = BasicSeletResult;
 
                 for (var i = 0; i < LicenseDatas.data.data.length; i++) {
-                    datas = datas.filter((item: { license_product_code: string }) =>
-                        item.license_product_code === LicenseDatas.data.data[i].license_product_code ? '' : item
+                    datas = datas.filter((item: { asset_license_list_info_code: string }) =>
+                        item.asset_license_list_info_code === LicenseDatas.data.data[i].asset_license_list_info_code ? '' : item
                     );
                 }
 
@@ -201,8 +201,8 @@ const LicenseSettingSelect = () => {
                     <option value="">조회 할 라이선스 목록 선택</option>
                     {SettingLicenstLists.map(list => {
                         return (
-                            <option value={list.setting_title} key={list.setting_title}>
-                                {list.setting_title}
+                            <option value={list.asset_license_list_info_code} key={list.asset_license_list_info_code}>
+                                {list.asset_license_list_info_name}
                             </option>
                         );
                     })}
@@ -219,10 +219,8 @@ const LicenseSettingSelect = () => {
                                 <ul>
                                     {LicenseSelectResult.map(list => {
                                         return (
-                                            <li key={list.license_product_code}>
-                                                <div>
-                                                    {list.license_types}_{list.license_product_name}
-                                                </div>
+                                            <li key={list.asset_license_list_info_code}>
+                                                <div>{list.asset_license_list_info_name}</div>
                                                 <div className="IconsClickPlus" onClick={() => handleClicksLicense(list)}>
                                                     <IoMdAddCircle></IoMdAddCircle>
                                                 </div>
@@ -242,10 +240,8 @@ const LicenseSettingSelect = () => {
                                 <ul>
                                     {SelectedLicenseData.map(list => {
                                         return (
-                                            <li key={list.license_product_code}>
-                                                <div>
-                                                    {list.license_types}_{list.license_product_name}
-                                                </div>
+                                            <li key={list.asset_license_list_info_code}>
+                                                <div>{list.asset_license_list_info_name}</div>
                                                 <div className="IconsClickMinus" onClick={() => handleClicksLicenseDelete(list)}>
                                                     <AiOutlineMinusCircle></AiOutlineMinusCircle>
                                                 </div>

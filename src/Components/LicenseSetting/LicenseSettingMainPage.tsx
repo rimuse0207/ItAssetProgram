@@ -169,7 +169,7 @@ const LicenseSettingMainPage = () => {
     const handleClicksLicense = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
         const DeleteLicenseData = LicenseSelectResult.filter((item, j) =>
-            item.license_product_code === licenseData.license_product_code ? '' : item
+            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
         );
         setLicenseSelectResult(DeleteLicenseData);
 
@@ -181,7 +181,7 @@ const LicenseSettingMainPage = () => {
     const handleClicksLicenseDelete = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
         const DeleteLicenseData = SelectedLicenseData.filter((item, j) =>
-            item.license_product_code === licenseData.license_product_code ? '' : item
+            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
         );
         setSelectedLicenseData(DeleteLicenseData);
 
@@ -305,13 +305,11 @@ const LicenseSettingMainPage = () => {
                             <div>
                                 <ul>
                                     {LicenseSelectResult.filter((item, j) =>
-                                        item.license_product_name.toLowerCase().includes(SearchLicense.toLowerCase())
+                                        item.asset_license_list_info_name.toLowerCase().includes(SearchLicense.toLowerCase())
                                     ).map(list => {
                                         return (
-                                            <li key={list.license_product_code}>
-                                                <div>
-                                                    {list.license_types}_{list.license_product_name}
-                                                </div>
+                                            <li key={list.asset_license_list_info_code}>
+                                                <div>{list.asset_license_list_info_name}</div>
                                                 <div className="IconsClickPlus" onClick={() => handleClicksLicense(list)}>
                                                     <IoMdAddCircle></IoMdAddCircle>
                                                 </div>
@@ -331,10 +329,8 @@ const LicenseSettingMainPage = () => {
                                 <ul>
                                     {SelectedLicenseData.map(list => {
                                         return (
-                                            <li key={list.license_product_code}>
-                                                <div>
-                                                    {list.license_types}_{list.license_product_name}
-                                                </div>
+                                            <li key={list.asset_license_list_info_code}>
+                                                <div>{list.asset_license_list_info_name}</div>
                                                 <div className="IconsClickMinus" onClick={() => handleClicksLicenseDelete(list)}>
                                                     <AiOutlineMinusCircle></AiOutlineMinusCircle>
                                                 </div>

@@ -11,7 +11,6 @@ export const LicenseFilteringReset = () => ({
 type LicenseFilteringAction = ReturnType<typeof LicenseFilteringAdd> | ReturnType<typeof LicenseFilteringReset>;
 
 export type LicenseFilteringState = {
-    license_product_code: string;
     license_product_name: string;
     license_manage_code: string;
     license_purchase_date: string;
@@ -22,7 +21,6 @@ export type LicenseFilteringState = {
 };
 
 const initialState: LicenseFilteringState = {
-    license_product_code: '',
     license_product_name: '',
     license_manage_code: '',
     license_purchase_date: '',
