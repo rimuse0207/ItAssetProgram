@@ -132,12 +132,12 @@ const ConsumableListsMainPage = ({ SelectCompany }: ConsumableListsMainPageProps
                                         <h4>재고 : {list.consumable_count_info_count - list.user_count} 개</h4>
                                         <div>{moment(list.consumable_count_info_update_date).format('YYYY-MM-DD')}</div>
                                     </div>
-
-                                    {/* <div className="textOn">
-                                    <CgArrowLongLeft></CgArrowLongLeft>
-                                </div> */}
                                 </div>
-                                <div className="Update_Icons" style={{ top: '0px', color: 'red' }}>
+                                <div
+                                    className="Update_Icons"
+                                    style={{ top: '0px', color: 'red' }}
+                                    onClick={() => alert('개발중에 있습니다.')}
+                                >
                                     <RiDeleteBin2Fill></RiDeleteBin2Fill>
                                 </div>
                             </div>
@@ -156,7 +156,12 @@ const ConsumableListsMainPage = ({ SelectCompany }: ConsumableListsMainPageProps
             </div>
             <div>
                 {ModalisOpen ? (
-                    <ConsumableListsInsert ModalisOpen={ModalisOpen} setModalisOpen={() => setModalisOpen(false)}></ConsumableListsInsert>
+                    <ConsumableListsInsert
+                        ModalisOpen={ModalisOpen}
+                        setModalisOpen={() => setModalisOpen(false)}
+                        Consumable_List_Data_Getting={Consumable_List_Data_Getting}
+                        SelectCompany={SelectCompany}
+                    ></ConsumableListsInsert>
                 ) : (
                     <></>
                 )}

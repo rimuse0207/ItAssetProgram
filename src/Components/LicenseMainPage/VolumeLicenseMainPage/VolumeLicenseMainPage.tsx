@@ -102,7 +102,6 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
     }, [type]);
 
     const handleClicksUserAdd = (data: LicenseDataType) => {
-        console.log(data);
         setModalType('Add_license_uers_used');
         setDetailLicenseAdd(true);
         setSelectClickData(data.basic_License);
@@ -120,6 +119,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
             setLoadingState(true);
         } catch (error) {
             console.log(error);
+            setLoadingState(true);
         }
     };
 
@@ -204,7 +204,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                     </td>
                                                     {!LicenseAllShow && list.purchase_License[list.purchase_License.length - 1] ? (
                                                         <>
-                                                            <td>{list.purchase_License.length}개</td>
+                                                            <td>{list.purchase_License.length} 건</td>
 
                                                             <td>
                                                                 {moment(

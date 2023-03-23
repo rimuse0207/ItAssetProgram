@@ -267,9 +267,9 @@ const PCAssetAllData = ({ SelectCompany }: PCAssetAllDataProps) => {
                     <Link to="/PCAsset/Discard">
                         <li className={type === 'Discard' ? 'Select_Menus' : ''}>폐기</li>
                     </Link>
-                    <Link to="/PCAsset/ExcellUpload">
+                    {/* <Link to="/PCAsset/ExcellUpload">
                         <li className={type === 'ExcellUpload' ? 'Select_Menus' : ''}>엑셀 업로드 및 수정</li>
-                    </Link>
+                    </Link> */}
                 </ul>
             </div>
             {type !== 'ExcellUpload' ? (

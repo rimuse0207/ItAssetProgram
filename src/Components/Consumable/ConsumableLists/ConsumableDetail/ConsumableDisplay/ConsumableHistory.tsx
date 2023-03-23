@@ -6,8 +6,26 @@ import { RiChatHistoryFill } from 'react-icons/ri';
 
 export const ConsumableHistoryMainDivBox = styled.div`
     .History_Table_Container {
-        max-height: 60vh;
+        max-height: 40vh;
         overflow: auto;
+        direction: ltr;
+        scrollbar-color: #d4aa70 #036;
+        scrollbar-width: thin;
+        ::-webkit-scrollbar {
+            width: 20px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #e4e4e4;
+            border-radius: 100px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 100px;
+            border: 7px solid transparent;
+            background-clip: content-box;
+            background-color: #036;
+        }
         table.type09 {
             font-size: 0.8em;
             border-collapse: collapse;
@@ -51,7 +69,7 @@ const ConsumableHistory = ({ Detail_Consumable, Consumable_Detail_Data_Getting }
             <h2>
                 지급 내역<RiChatHistoryFill></RiChatHistoryFill>
             </h2>
-            <div className="History_Table_Container">
+            <div className="History_Table_Container" style={{ maxHeight: '70vh' }}>
                 <table className="type09">
                     <thead>
                         <tr className="Thead_tr_table">
@@ -68,7 +86,7 @@ const ConsumableHistory = ({ Detail_Consumable, Consumable_Detail_Data_Getting }
                             return (
                                 <tr key={list.consumable_user_count_info_indexs}>
                                     <td>{Detail_Consumable?.Consumable_list_USer_Data_Rows.length - j}</td>
-                                    <td>{list.name}</td>
+                                    <td>{list.name ? list.name : list.consumable_user_count_info_id}</td>
                                     <td>{list.team}</td>
                                     <td>{list.position}</td>
                                     <td>{list.consumable_user_count_info_count} 개</td>

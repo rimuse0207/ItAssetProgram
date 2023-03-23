@@ -270,7 +270,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
         <PcAssetMenuIconsMainPageDivBox>
             <div></div>
             <div className="IconsClickMenu">
-                <div>
+                {/* <div>
                     <div
                         className="FiterIcons"
                         onClick={() =>
@@ -283,7 +283,7 @@ const PcAssetMenuIconsMainPage = ({ SelectCompany, type }: PcAssetMenuIconsMainP
                         <FaFilter></FaFilter>
                     </div>
                     <div className="IconText">필터 검색</div>
-                </div>
+                </div> */}
                 <div>
                     <div
                         className="NewDataIcons"

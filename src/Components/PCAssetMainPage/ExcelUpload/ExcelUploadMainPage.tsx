@@ -10,8 +10,7 @@ const ExcelUploadMainPage = () => {
         <ExcelUploadMainPageMainDivBox>
             <div>
                 <ul>
-                    <li>자산 추가 Excel 업로드</li>
-                    <li>자산 수정 Excel 업로드</li>
+                    <li>Excel 업로드 개발 예정</li>
                 </ul>
             </div>
         </ExcelUploadMainPageMainDivBox>

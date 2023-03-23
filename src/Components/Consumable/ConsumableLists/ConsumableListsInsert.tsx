@@ -141,20 +141,27 @@ Modal.setAppElement('#ModalMainDiv');
 type ConsumableListsInsertPropsTypes = {
     ModalisOpen: boolean;
     setModalisOpen: () => void;
+    Consumable_List_Data_Getting: () => void;
+    SelectCompany: string;
 };
 
 type FileStateDataTypes = {
     filename: string;
 };
 
-const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsInsertPropsTypes) => {
+const ConsumableListsInsert = ({
+    ModalisOpen,
+    setModalisOpen,
+    Consumable_List_Data_Getting,
+    SelectCompany,
+}: ConsumableListsInsertPropsTypes) => {
     const LoginInfoData = useSelector((state: RootState) => state.LoginCheck);
     const [FileStateData, setFileStateData] = useState<FileStateDataTypes | null>(null);
     const [ConsumableList_Data, setConsumableList_Data] = useState({
         ConsumableList_Code: uuid(),
         ConsumableList_Name: '',
         ConsumableList_Count: 1,
-        ConsumableList_Compnay: 'DHKS',
+        ConsumableList_Compnay: SelectCompany,
         ConsumableList_Date: new Date(),
         ID: LoginInfoData.email,
     });
@@ -187,6 +194,8 @@ const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsI
                     successCheck: true,
                     duration: 6000,
                 });
+                Consumable_List_Data_Getting();
+                setModalisOpen();
             } else {
                 toast.show({
                     title: `확인 후 다시 시도해주세요.`,
@@ -245,14 +254,7 @@ const ConsumableListsInsert = ({ ModalisOpen, setModalisOpen }: ConsumableListsI
                                 <input type="file" accept="image/*" name="thumbnail" onChange={onUploadImage}></input>
                             </div>
                         )}
-                        {/* <div>
-                            <div className="Menu_Title">소모품 코드 : </div>
-                            <input
-                                value={ConsumableList_Data.ConsumableList_Code}
-                                placeholder="소모품 코드명을 입력 해주세요. 미 입력 시 자동으로 생성 됩니다."
-                                onChange={e => setConsumableList_Data({ ...ConsumableList_Data, ConsumableList_Code: e.target.value })}
-                            ></input>
-                        </div> */}
+
                         <div>
                             <div className="Menu_Title">소모품 메뉴명 : </div>
                             <input

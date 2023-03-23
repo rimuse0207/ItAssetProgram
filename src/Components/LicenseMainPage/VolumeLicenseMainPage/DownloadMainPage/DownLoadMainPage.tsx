@@ -135,7 +135,7 @@ const DownLoadMainPage = ({
         <DonwLoadMianPageMainDivBox>
             <div></div>
             <div className="IconsClickMenu">
-                <div>
+                {/* <div>
                     <div
                         className="FiterIcons"
                         onClick={() =>
@@ -148,7 +148,7 @@ const DownLoadMainPage = ({
                         <FaFilter></FaFilter>
                     </div>
                     <div className="IconText">필터 검색</div>
-                </div>
+                </div> */}
                 <div>
                     <div
                         className="NewDataIcons"

@@ -116,7 +116,7 @@ const ConsumableSelectBasic = ({ Detail_Consumable, MenuSelect }: ConsumableSele
                                             return (
                                                 <tr key={list.consumable_user_count_info_indexs}>
                                                     <td>{Detail_Consumable?.Consumable_list_USer_Data_Rows.length - j}</td>
-                                                    <td>{list.name}</td>
+                                                    <td>{list.name ? list.name : list.consumable_user_count_info_id}</td>
                                                     <td>{list.team}</td>
                                                     <td>{list.position}</td>
                                                     <td>{list.consumable_user_count_info_count} 개</td>
