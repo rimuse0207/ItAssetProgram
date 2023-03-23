@@ -23,6 +23,7 @@ export type FilteringState = {
         asset_disk: string;
         asset_model: string;
         asset_newcode: string;
+        asset_notepad: string;
         asset_not_used_user: boolean;
     };
 };
@@ -40,6 +41,7 @@ const initialState: FilteringState = {
         asset_disk: '',
         asset_model: '',
         asset_newcode: '',
+        asset_notepad: '',
         asset_not_used_user: false,
     },
 };

@@ -224,34 +224,9 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
 
             console.log(PersonalDatas);
             if (PersonalDatas.data.dataSuccess) {
-                // const datas = PersonalDatas.data.datas.License.filter(
-                //     (arr: any, index: any, callback: any) =>
-                //         index === callback.findIndex((t: any) => t.license_product_name === arr.license_product_name)
-                // );
-
                 setUserInfoDatas(PersonalDatas.data.datas.UserInfo);
-                // setAssetDatas(PersonalDatas.data.datas.Asset);
-                // setLicneseExistLicense(PersonalDatas.data.datas.SoftWare);
+
                 setUserInfoShowData(PersonalDatas.data.datas.Datas);
-
-                // setLicneseExistLicense(PersonalDatas.data.datas.ExistLicense);
-                // setLicneseNoneExistLicense(PersonalDatas.data.datas.NoneExistLicense);
-
-                // var arr = datas;
-                // arr.sort(function (a: any, b: any) {
-                //     var nameA = a.userinfo_email ? a.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
-                //     var nameB = b.userinfo_email ? b.userinfo_email.toUpperCase() : 'ZZZZZZZZ'; // ignore upper and lowercase
-                //     if (nameA < nameB) {
-                //         return -1;
-                //     }
-                //     if (nameA > nameB) {
-                //         return 1;
-                //     }
-
-                //     // 이름이 같을 경우
-                //     return 0;
-                // });
-                // setUserLicenseDatas(arr);
             }
         } catch (error) {
             console.log(error);
@@ -345,83 +320,29 @@ const PersonalMainPage = ({ names }: PersonalMainPageProps) => {
                                 <th scope="cols">소프트웨어</th>
                                 <th scope="cols">제조사</th>
                                 <th scope="cols">구분</th>
-                                <th scope="cols">라이선스 필요 여부</th>
+                                <th scope="cols">라이선스 구매 필수 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {userLicenseDatas.map((list, i) => {
-                                return (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>
-                                            {list.asset_info_asset_management_number
-                                                ? `${list?.asset_division}_${moment(list.asset_purchase_date).format('YYYY-MM-DD')}`
-                                                : '-'}
-                                        </td>
-                                        <td>{list.license_product_name}</td>
-                                        <td>{list.asset_info_asset_management_number ? 'O' : 'X'}</td>
-                                        <td>
-                                            {list.license_register_date ? moment(list.license_register_date).format('YYYY-MM-DD') : '-'}
-                                        </td>
-                                    </tr>
-                                );
-                            })} */}
                             {UserInfoShowData.map((item, j) => {
-                                return item.SoftWare_Data.map((list, i) => {
-                                    return (
-                                        <tr key={list.InName} style={list.Type === 1 ? { background: 'lightgray' } : {}}>
-                                            <td>{i + 1}</td>
-                                            <td>{list.InName}</td>
-                                            <td>{list.Company}</td>
-                                            <td>{list.Name}</td>
-                                            <td>{list.Type === 1 ? 'IT팀 승인 후 사용 가능' : 'X'}</td>
-                                        </tr>
-                                    );
-                                });
+                                return j === 0
+                                    ? item.SoftWare_Data.map((list, i) => {
+                                          return (
+                                              <tr key={list.InName} style={list.Type === 1 ? { background: 'lightgray' } : {}}>
+                                                  <td>{i + 1}</td>
+                                                  <td>{list.InName}</td>
+                                                  <td>{list.Company}</td>
+                                                  <td>{list.Name}</td>
+                                                  <td>{list.Type === 1 ? 'IT팀 승인 후 사용 가능' : 'X'}</td>
+                                              </tr>
+                                          );
+                                      })
+                                    : '';
                             })}
                         </tbody>
                     </table>
                 </div>
             </div>
-            {/* <div className="AssetPersonalInfo">
-                <div>
-                    <div>
-                        <h3>미등록 소프트웨어</h3>
-                    </div>
-                </div>
-                <div className="AssetTableContainer">
-                    <table className="type09">
-                        <thead>
-                            <tr>
-                                <th scope="cols">인덱스</th>
-                                <th scope="cols">등록 PC</th>
-                                <th scope="cols">구분</th>
-                                <th scope="cols">사용 가능 여부</th>
-                                <th scope="cols">지급 일자</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {LicenseNoneExistLicense.map((list, i) => {
-                                return (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>
-                                            {list.asset_info_asset_management_number
-                                                ? `${list?.asset_division}_${moment(list.asset_purchase_date).format('YYYY-MM-DD')}`
-                                                : '-'}
-                                        </td>
-                                        <td>{list.license_product_name}</td>
-                                        <td>{list.asset_info_asset_management_number ? 'O' : 'X'}</td>
-                                        <td>
-                                            {list.license_register_date ? moment(list.license_register_date).format('YYYY-MM-DD') : '-'}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div> */}
         </PersonalMainPageDivBox>
     );
 };
