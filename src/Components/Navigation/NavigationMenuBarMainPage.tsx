@@ -155,6 +155,7 @@ const NavigationMenuBarMainPageMainDivBox = styled.nav<NavigationMenuBarMainPage
         }
     }
     .MenuListsCotainerUl {
+        color: white;
         li:hover {
             cursor: pointer;
         }
@@ -219,15 +220,17 @@ const NavigationMenuBarMainPage = () => {
                                 <>
                                     <Link to="/PCAsset/All">
                                         <li>
-                                            <BsCircleSquare></BsCircleSquare>
+                                            <FaLaptopCode></FaLaptopCode>
                                         </li>
                                     </Link>
-                                    {/* <li>
-                                        <BsPieChartFill></BsPieChartFill>
-                                    </li> */}
                                     <Link to="/license/volume_license">
                                         <li>
-                                            <GrLicense></GrLicense>
+                                            <VscKey></VscKey>
+                                        </li>
+                                    </Link>
+                                    <Link to="/ITConsumable">
+                                        <li>
+                                            <BsMouseFill></BsMouseFill>
                                         </li>
                                     </Link>
                                     <Link to="/PersonnelDashBoard/Select">
@@ -237,20 +240,13 @@ const NavigationMenuBarMainPage = () => {
                                     </Link>
                                     <Link to="/Change_log">
                                         <li>
-                                            <GrCatalog></GrCatalog>
+                                            <AiFillSetting></AiFillSetting>
                                         </li>
                                     </Link>
-                                    {/* <li>
-                                        <BiServer></BiServer>
-                                    </li> */}
                                 </>
                             ) : (
                                 ''
                             )}
-
-                            <li>
-                                <AiFillSetting></AiFillSetting>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -399,9 +395,9 @@ const NavigationMenuBarMainPage = () => {
                             <div className="SubHiddenListsMenu">
                                 {MenuCheckedSubLists.setting ? (
                                     <ul className="settingClassNamesOn">
-                                        <Link to="/LicenseSettingSelect">
+                                        {/* <Link to="/LicenseSettingSelect">
                                             <li>라이선스 설정</li>
-                                        </Link>
+                                        </Link> */}
                                         {/* <li>비밀번호 변경</li> */}
 
                                         <Link to="/Change_log">

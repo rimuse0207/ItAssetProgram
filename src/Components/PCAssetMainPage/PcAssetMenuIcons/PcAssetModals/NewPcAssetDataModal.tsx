@@ -525,33 +525,18 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
         }
     };
 
-    // 라이선스 설정 관련
-
-    // const getSettingData = async () => {
-    //     try {
-    //         const getLicenseDatas = await CompanyInfoGet('/UserInfo_app_server/LicenseSettingInfo', {
-    //             SelectCompany,
-    //         });
-    //         if (getLicenseDatas.data.dataSuccess) {
-    //             console.log('asdasjdlkkl', getLicenseDatas);
-    //             setLicenseSelectResult(getLicenseDatas.data.data);
-    //             setBasicSelectResult(getLicenseDatas.data.data);
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
     const handleClicksLicense = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
-        const DeleteLicenseData = LicenseSelectResult.filter((item, j) =>
-            item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
+        console.log(licenseData);
+        setLicenseSelectResult(
+            LicenseSelectResult.filter((item, j) =>
+                item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item
+            )
         );
-        setLicenseSelectResult(DeleteLicenseData);
 
         //데이터 추가
-        const dataAdd = SelectedLicenseData.concat(licenseData);
-        setSelectedLicenseData(dataAdd);
+
+        setSelectedLicenseData(SelectedLicenseData.concat(licenseData));
     };
 
     const handleClicksLicenseDelete = (licenseData: LicenseSettingProps) => {
@@ -878,7 +863,6 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
                                                             onChange={(date: any) =>
                                                                 setUserWriteData({ ...UserWriteData, asset_distribute_date: date })
                                                             }
-                                                            withPortal
                                                             locale={ko}
                                                             dateFormat="yyyy-MM-dd"
                                                             maxDate={new Date()}

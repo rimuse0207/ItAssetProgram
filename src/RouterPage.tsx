@@ -55,7 +55,7 @@ const RouterPage = () => {
                             <Route exact path="/license/:type" component={LicenseMainPage}></Route>
                             <Route path="/PCAsset/:type" component={PcAssetMainPage}></Route>
                             <Route path="/Test" component={TestPage}></Route>
-                            <Route path="/settingChange" component={SettingChangeMainPage}></Route>
+                            {/* <Route path="/settingChange" component={SettingChangeMainPage}></Route> */}
                             <Route exact path="/PersonnelDashBoard/:type" component={PersonnelAdminDashBoardMainPage}></Route>
                             <Route path="/TotalDashBoard" component={TotalDashBoardMainPage}></Route>
                             <Route path="/LicenseSettingAdd" component={LicenseSettingMainPage}></Route>
