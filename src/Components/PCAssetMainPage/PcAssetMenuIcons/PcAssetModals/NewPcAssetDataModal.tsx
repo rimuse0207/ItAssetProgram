@@ -527,7 +527,7 @@ const NewAssetDataModal = ({ SelectClicksModals, setSelectClicksModals, SelectCo
 
     const handleClicksLicense = (licenseData: LicenseSettingProps) => {
         //데이터 삭제
-        console.log(licenseData);
+
         setLicenseSelectResult(
             LicenseSelectResult.filter((item, j) =>
                 item.asset_license_list_info_code === licenseData.asset_license_list_info_code ? '' : item

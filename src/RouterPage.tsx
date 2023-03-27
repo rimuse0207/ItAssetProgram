@@ -19,6 +19,7 @@ import axios from 'axios';
 import PrinterLogMonitoringMainPage from './Components/PrinterLogMonitoring/PrinterLogMonitoringMainPage';
 import ConsumableMainPage from './Components/Consumable/ConsumableMainPage';
 import ConsumableDetailMainPage from './Components/Consumable/ConsumableLists/ConsumableDetail/ConsumableDetailMainPage';
+import SoftWareInstallMainPage from './Components/SoftwareInstall/SoftWareInstallMainPage';
 
 const RouterPage = () => {
     const LoginCheckData = useSelector((state: RootState) => state.LoginCheck);
@@ -63,6 +64,7 @@ const RouterPage = () => {
                             <Route path="/Change_log" component={LogMainPage}></Route>
                             <Route exact path="/ITConsumable" component={ConsumableMainPage}></Route>
                             <Route path="/ITConsumable/Detail/:It_Code/:Select_Company" component={ConsumableDetailMainPage}></Route>
+                            <Route path="/Install_SoftWare" component={SoftWareInstallMainPage}></Route>
                             {/* <Route path="/PrinterLogMonitoring" component={PrinterLogMonitoringMainPage}></Route> */}
                         </div>
                     ) : (

@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { GrCatalog, GrLicense } from 'react-icons/gr';
 import { VscKey } from 'react-icons/vsc';
 import { FaLaptopCode } from 'react-icons/fa';
+import { RiInstallFill } from 'react-icons/ri';
 
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
@@ -192,8 +193,8 @@ const NavigationMenuBarMainPage = () => {
     const PathLocation = useLocation();
 
     const handleLogout = async () => {
-        await dispatch(LogoutRedux());
-        await dispatch(ResetAccessKeyMenuBarRedux());
+        dispatch(LogoutRedux());
+        dispatch(ResetAccessKeyMenuBarRedux());
     };
     return (
         <NavigationMenuBarMainPageMainDivBox
@@ -231,6 +232,11 @@ const NavigationMenuBarMainPage = () => {
                                     <Link to="/ITConsumable">
                                         <li>
                                             <BsMouseFill></BsMouseFill>
+                                        </li>
+                                    </Link>
+                                    <Link to="/Install_SoftWare">
+                                        <li>
+                                            <RiInstallFill></RiInstallFill>
                                         </li>
                                     </Link>
                                     <Link to="/PersonnelDashBoard/Select">
@@ -306,7 +312,7 @@ const NavigationMenuBarMainPage = () => {
                                             </div>
                                         </Link>
                                     </li> */}
-                                    <li className={window.location.pathname === '/PrinterLogMonitoring' ? 'NowPageSelect' : ''}>
+                                    <li className={window.location.pathname === '/ITConsumable' ? 'NowPageSelect' : ''}>
                                         <Link to="/ITConsumable">
                                             <div className="listStyleDivBox">
                                                 <div>
@@ -317,6 +323,16 @@ const NavigationMenuBarMainPage = () => {
                                         </Link>
                                     </li>
 
+                                    <li className={window.location.pathname === '/Install_SoftWare' ? 'NowPageSelect' : ''}>
+                                        <Link to="/Install_SoftWare">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <RiInstallFill></RiInstallFill>
+                                                </div>
+                                                <div className="listStyleSubLists">소프웨어 설치</div>
+                                            </div>
+                                        </Link>
+                                    </li>
                                     <li>
                                         <div className="listStyleDivBox">
                                             <div>
