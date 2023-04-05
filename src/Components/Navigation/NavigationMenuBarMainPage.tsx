@@ -14,7 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { GrCatalog, GrLicense } from 'react-icons/gr';
 import { VscKey } from 'react-icons/vsc';
 import { FaLaptopCode } from 'react-icons/fa';
-import { RiInstallFill } from 'react-icons/ri';
+import { RiInstallFill,RiMailForbidFill } from 'react-icons/ri';
 
 type NavigationMenuBarMainPageMainDivBoxProps = {
     menuStatus: boolean;
@@ -234,9 +234,14 @@ const NavigationMenuBarMainPage = () => {
                                             <BsMouseFill></BsMouseFill>
                                         </li>
                                     </Link>
-                                    <Link to="/Install_SoftWare">
+                                    {/* <Link to="/Install_SoftWare">
                                         <li>
                                             <RiInstallFill></RiInstallFill>
+                                        </li>
+                                    </Link> */}
+                                     <Link to="/Install_SoftWare">
+                                        <li>
+                                            <RiMailForbidFill></RiMailForbidFill>
                                         </li>
                                     </Link>
                                     <Link to="/PersonnelDashBoard/Select">
@@ -322,7 +327,7 @@ const NavigationMenuBarMainPage = () => {
                                             </div>
                                         </Link>
                                     </li>
-
+{/* 
                                     <li className={window.location.pathname === '/Install_SoftWare' ? 'NowPageSelect' : ''}>
                                         <Link to="/Install_SoftWare">
                                             <div className="listStyleDivBox">
@@ -330,6 +335,17 @@ const NavigationMenuBarMainPage = () => {
                                                     <RiInstallFill></RiInstallFill>
                                                 </div>
                                                 <div className="listStyleSubLists">소프웨어 설치</div>
+                                            </div>
+                                        </Link>
+                                        </li> */}
+                                        
+                                    <li className={window.location.pathname === '/Spam_Training' ? 'NowPageSelect' : ''}>
+                                        <Link to="/Spam_Training">
+                                            <div className="listStyleDivBox">
+                                                <div>
+                                                    <RiMailForbidFill></RiMailForbidFill>
+                                                </div>
+                                                <div className="listStyleSubLists">스팸메일</div>
                                             </div>
                                         </Link>
                                     </li>
