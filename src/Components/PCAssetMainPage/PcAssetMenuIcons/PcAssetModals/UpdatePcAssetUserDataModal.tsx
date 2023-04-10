@@ -377,8 +377,6 @@ const UpdatePcAssetUserDataModal = ({
     useEffect(() => {
         if (SelectAssetData?.userinfo_email) {
             setCompanySelectAccessKey([
-                // { name: '소프트웨어 조회', AccessKey: true },
-                // { name: '프린트 이력조회', AccessKey: false },
                 { name: '반납', AccessKey: true },
                 { name: '이관', AccessKey: false },
                 { name: '폐기', AccessKey: false },
@@ -387,8 +385,6 @@ const UpdatePcAssetUserDataModal = ({
             setCompanySelectAccessKey([{ name: '폐기 복원', AccessKey: true }]);
         } else {
             setCompanySelectAccessKey([
-                // { name: '소프트웨어 조회', AccessKey: true },
-                // { name: '프린트 이력조회', AccessKey: false },
                 { name: '사용자 등록', AccessKey: true },
                 { name: '폐기', AccessKey: false },
             ]);
@@ -451,19 +447,7 @@ const UpdatePcAssetUserDataModal = ({
             };
             const UserAssetAdd = await AssetDelete('/Asset_app_server/AssetDeleteData', ParamasData);
             if (UserAssetAdd.data.dataSuccess) {
-                // const ParamasDatas = {
-                //     types: SelectAssetData?.asset_division,
-                //     SelectCompany,
-                //     FilteringData,
-                // };
-                // if (SelectAssetData?.asset_division === '데스크탑') {
-                //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                // } else if (SelectAssetData?.asset_division === '노트북') {
-                //     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                // }
-                // else {
-                //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
-                // }
+              
                 const paramasData = {
                     company: SelectCompany,
                     type,
@@ -507,18 +491,7 @@ const UpdatePcAssetUserDataModal = ({
                 const Asset_Delete_Data = await AssetDelete('/Asset_app_server/Asset_Delete', ParamasData);
 
                 if (Asset_Delete_Data.data.dataSuccess) {
-                    // const ParamasDatas = {
-                    //     types: SelectAssetData?.asset_division,
-                    //     SelectCompany,
-                    //     FilteringData,
-                    // };
-                    // if (SelectAssetData?.asset_division === '데스크탑') {
-                    //     await dispatch(DeskTopAsset_getDeskTopAssetDataThunk(ParamasDatas));
-                    // } else if (SelectAssetData?.asset_division === '노트북') {
-                    //     await dispatch(NoteBookAsset_getNoteBookAssetDataThunk(ParamasDatas));
-                    // } else {
-                    //     await dispatch(MonitorAsset_getMonitorAssetDataThunk(ParamasDatas));
-                    // }
+                  
                     const paramasData = {
                         company: SelectCompany,
                         type,
@@ -669,103 +642,7 @@ const UpdatePcAssetUserDataModal = ({
                                                             ''
                                                         );
                                                     })}
-                                                    {/* {CompanySelectAccessKey.map((list, i) => {
-                                                        return list.AccessKey && list.name === '소프트웨어 조회' ? (
-                                                            <SoftWareSelectMainPage
-                                                                key={list.name}
-                                                                SelectAssetData={SelectAssetData}
-                                                                SelectCompany={SelectCompany}
-                                                                setBasicLicenseData={(data: LicenseDataTypes[]) =>
-                                                                    setBasicLicenseData(data)
-                                                                }
-                                                                setChangeBasicLicenseData={(data: LicenseDataTypes[]) =>
-                                                                    setChangeBasicLicenseData(data)
-                                                                }
-                                                            ></SoftWareSelectMainPage>
-                                                        ) : (
-                                                            ''
-                                                        );
-                                                    })}
-                                                    {CompanySelectAccessKey.map((list, i) => {
-                                                        return list.AccessKey && list.name === '프린트 이력조회' ? (
-                                                            <PrinterSelectMainPage
-                                                                key={list.name}
-                                                                SelectAssetData={SelectAssetData}
-                                                                SelectCompany={SelectCompany}
-                                                                setBasicLicenseData={(data: LicenseDataTypes[]) =>
-                                                                    setBasicLicenseData(data)
-                                                                }
-                                                                setChangeBasicLicenseData={(data: LicenseDataTypes[]) =>
-                                                                    setChangeBasicLicenseData(data)
-                                                                }
-                                                            ></PrinterSelectMainPage>
-                                                        ) : (
-                                                            ''
-                                                        );
-                                                    })} */}
-
-                                                    {/* {CompanySelectAccessKey.map((list, i) => {
-                                                        return list.AccessKey && list.name === '라이선스 등록' ? (
-                                                            <LicenseRegisterMainPage
-                                                                key={list.name}
-                                                                SelectAssetData={SelectAssetData}
-                                                                SelectCompany={SelectCompany}
-                                                                setBasicLicenseData={(data: LicenseDataTypes[]) =>
-                                                                    setBasicLicenseData(data)
-                                                                }
-                                                                setChangeBasicLicenseData={(data: LicenseDataTypes[]) =>
-                                                                    setChangeBasicLicenseData(data)
-                                                                }
-                                                            ></LicenseRegisterMainPage>
-                                                        ) : (
-                                                            ''
-                                                        );
-                                                    })} */}
-
-                                                    {/* {CompanySelectAccessKey.map((list, i) => {
-                                                    return list.AccessKey && list.name === '사용자 등록' ? (
-                                                        <dl className="inputbox" key={'사용자 목록' + list.name}>
-                                                            <dt className="inputbox-title">사용자</dt>
-                                                            <dd className="inputbox-content">
-                                                                <Select
-                                                                    options={InfoUserData}
-                                                                    onChange={(value: any) =>
-                                                                        setSelectedData({ ...SelectedData, selected_user: value })
-                                                                    }
-                                                                ></Select>
-                                                                <span className="underline"></span>
-                                                            </dd>
-                                                        </dl>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })}
-                                                {CompanySelectAccessKey.map((list, i) => {
-                                                    return list.AccessKey && list.name !== '사용자 등록' ? (
-                                                        <dl className="inputbox" key={'사용자 등록' + list.name}>
-                                                            <dt className="inputbox-title">
-                                                                {CompanySelectAccessKey.map((list, i) => {
-                                                                    return list.AccessKey ? list.name : '';
-                                                                })}
-                                                                사유
-                                                            </dt>
-                                                            <dd className="inputbox-content">
-                                                                <textarea
-                                                                    value={SelectedData.selected_reason}
-                                                                    onChange={e =>
-                                                                        setSelectedData({
-                                                                            ...SelectedData,
-                                                                            selected_reason: e.target.value,
-                                                                        })
-                                                                    }
-                                                                ></textarea>
-                                                                <span className="underline"></span>
-                                                            </dd>
-                                                        </dl>
-                                                    ) : (
-                                                        ''
-                                                    );
-                                                })} */}
+                                                  
                                                 </section>
                                             </div>
                                         </div>
