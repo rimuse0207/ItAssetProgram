@@ -171,7 +171,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                     LicenseData.data.map((list: LicenseDataType, i: number) => {
                                         return (
                                             <React.Fragment key={list.basic_License.asset_license_list_info_code}>
-                                                <tr key={list.basic_License.asset_license_list_info_code}>
+                                                <tr key={list.basic_License.asset_license_list_info_code} style={list.basic_License.license_permit_count_sum-list.basic_License.license_user_used_count_sum <0 ? {backgroundColor:"#edafaf"}:{}}>
                                                     <th scope="row" rowSpan={LicenseAllShow ? list.purchase_License.length + 1 : 1}>
                                                         {i + 1}
                                                     </th>
@@ -262,13 +262,7 @@ const VolumeLicenseMainPage = ({ SelectCompany, type }: VolumeLicenseMainPagePro
                                                           return (
                                                               <tr
                                                                   key={item.asset_license_purchase_info_indexs}
-                                                                  style={
-                                                                      item.asset_license_purchase_info_permit_count -
-                                                                          item.asset_license_purchase_info_indexs <
-                                                                      0
-                                                                          ? { backgroundColor: '#edafaf' }
-                                                                          : {}
-                                                                  }
+                                                                  
                                                               >
                                                                   <td>{j + 1}</td>
 

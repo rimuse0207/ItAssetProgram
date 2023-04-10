@@ -3,6 +3,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { ConsumableSelectBasicPropsTypes } from '../ConsumableSelectBasic';
 import { RiChatHistoryFill } from 'react-icons/ri';
+import {TiUserDelete} from "react-icons/ti";
+import { request } from '../../../../../Apis/core';
+import { Detail_ConsumableTypes } from '../ConsumableDetailMainPage';
+import { Consumable_list_USer_Data_RowsTypes } from '../ConsumableDetailMainPage';
+import { toast } from '../../../../../PublicComponents/ToastMessage/ToastManager';
+import { ToastTime } from '../../../../../Configs/ToastTimerConfig';
+
 
 export const ConsumableHistoryMainDivBox = styled.div`
     .History_Table_Container {
@@ -61,9 +68,42 @@ export const ConsumableHistoryMainDivBox = styled.div`
             }
         }
     }
+
+    .Delete_User{
+        color:red;
+        :hover{
+            cursor:pointer;
+
+        }
+    }
 `;
 
 const ConsumableHistory = ({ Detail_Consumable, Consumable_Detail_Data_Getting }: ConsumableSelectBasicPropsTypes) => {
+
+    const handleDeleteUser = async (data:Consumable_list_USer_Data_RowsTypes) => {
+        try {
+            if (window.confirm("정말 삭제 하시겠습니까?")) {
+                const User_Delete_Consumable_History_Axios = await request.post(`/IT_Consumable_app_server/User_Delete_Consumable_History`, {
+                data
+            });
+                if (User_Delete_Consumable_History_Axios.data.dataSuccess) {
+                    Consumable_Detail_Data_Getting();
+                      toast.show({
+                    title: `${data.name}님에게 지급했던 물품을 삭제 처리 하였습니다.`,
+                    successCheck: false,
+                    duration: ToastTime,
+                });
+                }    
+            } else {
+                return;
+            }
+            
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <ConsumableHistoryMainDivBox>
             <h2>
@@ -79,6 +119,7 @@ const ConsumableHistory = ({ Detail_Consumable, Consumable_Detail_Data_Getting }
                             <th>직급</th>
                             <th>지급 수량</th>
                             <th>지급 날짜</th>
+                            <th>삭제</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,6 +132,7 @@ const ConsumableHistory = ({ Detail_Consumable, Consumable_Detail_Data_Getting }
                                     <td>{list.position}</td>
                                     <td>{list.consumable_user_count_info_count} 개</td>
                                     <td>{list.consumable_user_count_info_use_date}</td>
+                                    <td className="Delete_User" style={{color:'red'}} onClick={()=>handleDeleteUser(list)}><TiUserDelete></TiUserDelete></td>
                                 </tr>
                             );
                         })}

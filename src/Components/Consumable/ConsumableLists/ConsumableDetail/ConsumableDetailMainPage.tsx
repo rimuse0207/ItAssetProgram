@@ -92,14 +92,14 @@ type ParamsTypes = {
     Select_Company: string;
 };
 
-type Consumable_list_USer_Data_RowsTypes = {
+export type Consumable_list_USer_Data_RowsTypes = {
     companyinfo_companycode: string;
     consumable_user_count_info_code: string;
-    consumable_user_count_info_count: number;
     consumable_user_count_info_id: string;
     consumable_user_count_info_indexs: number;
     consumable_user_count_info_update_date: string;
     consumable_user_count_info_use_date: string;
+    consumable_user_count_info_count: number;
     email: string;
     inservice: number;
     name: string;

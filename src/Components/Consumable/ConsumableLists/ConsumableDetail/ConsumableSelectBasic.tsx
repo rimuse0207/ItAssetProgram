@@ -108,7 +108,9 @@ const ConsumableSelectBasic = ({ Detail_Consumable, MenuSelect }: ConsumableSele
                                             <th>팀명</th>
                                             <th>직급</th>
                                             <th>지급 수량</th>
-                                            <th>지급 날짜</th>
+                                                <th>지급 날짜</th>
+                                                
+                                                
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -121,6 +123,7 @@ const ConsumableSelectBasic = ({ Detail_Consumable, MenuSelect }: ConsumableSele
                                                     <td>{list.position}</td>
                                                     <td>{list.consumable_user_count_info_count} 개</td>
                                                     <td>{list.consumable_user_count_info_use_date}</td>
+                                                    
                                                 </tr>
                                             );
                                         })}

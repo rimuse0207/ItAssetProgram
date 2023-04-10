@@ -88,7 +88,6 @@ const SpamTrainingTableMainPage = ({ SelectCompany, SelectDate }: SpamTrainingTa
             })
 
             if (Contact_Checking_SQL_Axios.data.dataSuccess) {
-                console.log(Contact_Checking_SQL_Axios);
                 Getting_user_Info_Data();
             }
 
